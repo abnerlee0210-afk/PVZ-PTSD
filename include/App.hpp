@@ -3,6 +3,7 @@
 
 #include "pch.hpp" // IWYU pragma: export
 #include "Scene/MenuScene.hpp"
+#include "Scene/LevelSelectScene.hpp"
 
 class App {
 public:
@@ -26,6 +27,7 @@ private:
 private:
     State m_CurrentState = State::START;
     std::shared_ptr<MenuScene> m_MenuScene;
+    std::shared_ptr<LevelSelectScene> m_LevelSelectScene;
 };
 
 #endif

@@ -7,14 +7,19 @@
 
 void App::Start() {
     LOG_TRACE("Start");
+
     m_MenuScene = std::make_shared<MenuScene>();
     m_MenuScene->on_enter();
+
+    m_LevelSelectScene = std::make_shared<LevelSelectScene>();
 
     m_CurrentState = State::UPDATE;
 }
 
 void App::Update() {
-    
+    //if (m_LevelSelectScene != nullptr) {
+    //    m_LevelSelectScene -> Update();
+    //}
     if (m_MenuScene != nullptr) {
         m_MenuScene->on_update();
         m_MenuScene->on_render();

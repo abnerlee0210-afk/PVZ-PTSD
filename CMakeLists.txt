@@ -42,6 +42,10 @@ add_executable(${PROJECT_NAME}
         include/Scene/Scene.hpp
         include/Screen/BackgroundImage.hpp
         src/Screen/BackgroundImage.cpp
+        include/Scene/LevelSelectScene.hpp
+        src/Scene/LevelSelectScene.cpp
+        include/UI/LevelCard.hpp
+        src/UI/LevelCard.cpp
 )
 
 if(MSVC)
