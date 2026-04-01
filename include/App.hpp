@@ -2,6 +2,7 @@
 #define APP_HPP
 
 #include "pch.hpp" // IWYU pragma: export
+#include "Scene/MenuScene.hpp"
 
 class App {
 public:
@@ -24,6 +25,7 @@ private:
 
 private:
     State m_CurrentState = State::START;
+    std::shared_ptr<MenuScene> m_MenuScene;
 };
 
 #endif

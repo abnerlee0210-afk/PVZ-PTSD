@@ -35,6 +35,13 @@ add_executable(${PROJECT_NAME}
     ${SRC_DIR}/main.cpp
     ${SRC_FILES}
     ${HEADER_FILES}
+        include/Scene/MenuScene.hpp
+        include/UI/Button.hpp
+        src/UI/Button.cpp
+        src/Scene/MenuScene.cpp
+        include/Scene/Scene.hpp
+        include/Screen/BackgroundImage.hpp
+        src/Screen/BackgroundImage.cpp
 )
 
 if(MSVC)

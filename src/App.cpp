@@ -7,12 +7,18 @@
 
 void App::Start() {
     LOG_TRACE("Start");
+    m_MenuScene = std::make_shared<MenuScene>();
+    m_MenuScene->on_enter();
+
     m_CurrentState = State::UPDATE;
 }
 
 void App::Update() {
     
-    //TODO: do your things here and delete this line <3
+    if (m_MenuScene != nullptr) {
+        m_MenuScene->on_update();
+        m_MenuScene->on_render();
+    }
     
     /*
      * Do not touch the code below as they serve the purpose for
