@@ -9,34 +9,51 @@
 #include "Util/Time.hpp"
 
 LevelSelectScene::LevelSelectScene() {
-    auto bgImage = std::make_shared<Util::Image>(RESOURCE_DIR "/graphics/Screen/select_bg.png");
-    m_Background = std::make_shared<Util::GameObject>(bgImage, 0.0f);
-    m_Background->m_Transform.translation = {0.0f, 0.0f};
-    m_Renderer.AddChild(m_Background);
+    LOG_DEBUG("MenuScene Constructor");
+}
 
-    auto playImage = std::make_shared<Util::Image>(RESOURCE_DIR "/graphics/Screen/play_button.png");
-    m_PlayButton = std::make_shared<Util::GameObject>(playImage, 30.0f);
-    m_PlayButton->m_Transform.translation = {680.0f, 520.0f};
-    m_Renderer.AddChild(m_PlayButton);
+LevelSelectScene::~LevelSelectScene() {
+    LOG_DEBUG("MenuScene Destructor");
+}
+
+
+void LevelSelectScene::on_enter() {
+    m_Background = std::make_shared<BackgroundImage>();
+    m_Background->Set_Background(BackgroundImagePath);
+
+    m_PlayButton = std::make_shared<Button>(PlayButtonImage,glm::vec2(0.0f, 0.0f));
+    m_BackButton = std::make_shared<Button>(BackButtonImage, glm::vec2(-600,-300));
 
     for (int i = 0; i < 10; ++i) {
         auto card = std::make_shared<LevelCard>(
             i + 1,
-            RESOURCE_DIR "/graphics/Screen/level_card.png",
+            LevelCardImage + std::to_string(i+1) + ".png",
             glm::vec2(0.0f, m_CardY),
             true
         );
 
         m_LevelCards.push_back(card);
-        m_Renderer.AddChild(card->GetImageObject());
-        m_Renderer.AddChild(card->GetTextObject());
+        m_Root.AddChild(card->GetImageObject());
+        // m_Root.AddChild(card->GetTextObject());
     }
 
-    UpdateCardPositions();
-    UpdateSelectionVisual();
+    // 問題：Update 每秒執行 60 次，你就設定了 60 次 Callback。這會造成不必要的記憶體分配。
+    // 修正：把 SetCallback 移到 on_enter()。
+    m_PlayButton->SetCallback([]() {
+        LOG_DEBUG("PlayButton pressed, switching to SelectScene");
+        //scene_manager.switch_to(SceneManager::SceneType::SELECT);
+    });
+    m_BackButton->SetCallback([]() {
+        LOG_DEBUG("BackButton pressed, switching to MenuScene");
+        //scene_manager.switch_to(SceneManager::SceneType::SELECT);
+    });
+
+    m_Root.AddChild(m_Background);
+    m_Root.AddChild(m_PlayButton);
+    m_Root.AddChild(m_BackButton);
 }
 
-void LevelSelectScene::Update() {
+void LevelSelectScene::on_update() {
     HandleInput();
 
     // 平滑移動
@@ -45,11 +62,26 @@ void LevelSelectScene::Update() {
 
     UpdateCardPositions();
     UpdateSelectionVisual();
-
-    m_Renderer.Update();
 }
 
+void LevelSelectScene::on_render() {
+    m_Root.Update();
+}
+
+void LevelSelectScene::on_exit() {
+    LOG_DEBUG("Exiting MenuScene");
+    m_Root.RemoveChild(m_Background);
+    m_Root.RemoveChild(m_PlayButton);
+    m_Root.RemoveChild( m_BackButton);
+    for (auto& L : m_LevelCards) {
+        m_Root.RemoveChild((L->GetImageObject()));
+    }
+    m_LevelCards.clear(); // 清空 vector
+}
+
+
 void LevelSelectScene::HandleInput() {
+    // 處理鍵盤左右鍵切換關卡
     if (Util::Input::IsKeyDown(Util::Keycode::RIGHT)) {
         if (m_SelectedIndex < static_cast<int>(m_LevelCards.size()) - 1) {
             ++m_SelectedIndex;
@@ -66,21 +98,33 @@ void LevelSelectScene::HandleInput() {
         }
     }
 
-    const bool isMousePressed = Util::Input::IsKeyDown(Util::Keycode::MOUSE_LB);
-
-    if (isMousePressed && !m_WasMousePressed) {
-        const glm::vec2 mousePos = Util::Input::GetCursorPosition();
-
-        TrySelectCardByMouse();
-
-        if (IsPlayButtonClicked(mousePos)) {
+    // 處理 PlayButton 進入指定遊戲關卡
+    m_PlayButton->Update();
+    if (m_PlayButton->IsMouseHovering()) {
+        m_PlayButton->SetImage(PlayButtonFeedback);
+        if (Util::Input::IsKeyDown(Util::Keycode::MOUSE_LB)) {
             LOG_DEBUG("Play level => {}", GetSelectedLevel());
+            m_PlayButton->SetVisualScaleFactor(1.2f);
             // 之後這裡接進 App 的切場景邏輯
         }
+        else {m_PlayButton->SetVisualScaleFactor(1.0f);}
     }
+    else {m_PlayButton->SetImage(PlayButtonImage);}
 
-    m_WasMousePressed = isMousePressed;
+    // 處理 BackButton 返回 MenuScene
+    m_BackButton->Update();
+    if (m_BackButton->IsMouseHovering()) {
+        m_BackButton->SetImage(BackButtonFeedback);
+        if (Util::Input::IsKeyDown(Util::Keycode::MOUSE_LB)) {
+            LOG_DEBUG("Back to Menu");
+            m_BackButton->SetVisualScaleFactor(1.2f);
+            // 之後這裡接進 App 的切場景邏輯
+        }
+        else {m_BackButton->SetVisualScaleFactor(1.0f);}
+    }
+    else {m_BackButton->SetImage(BackButtonImage);}
 }
+
 
 void LevelSelectScene::UpdateCardPositions() {
     for (int i = 0; i < static_cast<int>(m_LevelCards.size()); ++i) {
@@ -93,31 +137,6 @@ void LevelSelectScene::UpdateSelectionVisual() {
     for (int i = 0; i < static_cast<int>(m_LevelCards.size()); ++i) {
         m_LevelCards[i]->SetSelected(i == m_SelectedIndex);
     }
-}
-
-void LevelSelectScene::TrySelectCardByMouse() {
-    const glm::vec2 mousePos = Util::Input::GetCursorPosition();
-
-    for (int i = 0; i < static_cast<int>(m_LevelCards.size()); ++i) {
-        if (m_LevelCards[i]->ContainsPoint(mousePos)) {
-            m_SelectedIndex = i;
-            m_TargetScrollOffset = -m_SelectedIndex * m_CardSpacing;
-            LOG_DEBUG("Mouse select level => {}", m_SelectedIndex + 1);
-            return;
-        }
-    }
-}
-
-bool LevelSelectScene::IsPlayButtonClicked(const glm::vec2& mousePos) const {
-    const glm::vec2 pos = m_PlayButton->m_Transform.translation;
-
-    const float left = pos.x;
-    const float right = pos.x + 220.0f;
-    const float top = pos.y;
-    const float bottom = pos.y + 90.0f;
-
-    return mousePos.x >= left && mousePos.x <= right &&
-           mousePos.y >= top && mousePos.y <= bottom;
 }
 
 int LevelSelectScene::GetSelectedLevel() const {

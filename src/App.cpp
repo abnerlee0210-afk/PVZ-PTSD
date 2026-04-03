@@ -12,18 +12,20 @@ void App::Start() {
     m_MenuScene->on_enter();
 
     m_LevelSelectScene = std::make_shared<LevelSelectScene>();
+    m_LevelSelectScene->on_enter();
 
     m_CurrentState = State::UPDATE;
 }
 
 void App::Update() {
-    //if (m_LevelSelectScene != nullptr) {
-    //    m_LevelSelectScene -> Update();
-    //}
-    if (m_MenuScene != nullptr) {
-        m_MenuScene->on_update();
-        m_MenuScene->on_render();
+    if (m_LevelSelectScene != nullptr) {
+        m_LevelSelectScene -> on_update();
+        m_LevelSelectScene -> on_render();
     }
+    //  if (m_MenuScene != nullptr) {
+    //     m_MenuScene->on_update();
+    //     m_MenuScene->on_render();
+    // }
     
     /*
      * Do not touch the code below as they serve the purpose for

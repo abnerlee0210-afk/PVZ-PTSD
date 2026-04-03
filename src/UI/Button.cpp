@@ -29,7 +29,7 @@ void Button::Update() {
     if (IsMouseHovering()) {
         // 如果想做懸停效果（例如按鈕變亮），可以寫在這裡
 
-        if (Util::Input::IsKeyDown(Util::Keycode::MOUSE_LB)) {
+        if (Util::Input::IsKeyDown(Util::Keycode::MOUSE_LB) ) {
             if (m_Callback) m_Callback();
         }
     }

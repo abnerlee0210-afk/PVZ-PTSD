@@ -2,6 +2,8 @@
 #define APP_HPP
 
 #include "pch.hpp" // IWYU pragma: export
+#include "Scene/SceneManager.hpp"
+
 #include "Scene/MenuScene.hpp"
 #include "Scene/LevelSelectScene.hpp"
 
@@ -28,6 +30,7 @@ private:
     State m_CurrentState = State::START;
     std::shared_ptr<MenuScene> m_MenuScene;
     std::shared_ptr<LevelSelectScene> m_LevelSelectScene;
+    std::shared_ptr<SceneManager> m_SceneManager;
 };
 
 #endif

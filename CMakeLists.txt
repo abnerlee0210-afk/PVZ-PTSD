@@ -46,6 +46,8 @@ add_executable(${PROJECT_NAME}
         src/Scene/LevelSelectScene.cpp
         include/UI/LevelCard.hpp
         src/UI/LevelCard.cpp
+        include/Scene/SceneManager.hpp
+        src/Scene/SceneManager.cpp
 )
 
 if(MSVC)
