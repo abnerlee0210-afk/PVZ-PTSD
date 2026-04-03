@@ -78,10 +78,3 @@ void SceneManager::on_exit() {
     }
     m_Scenes.clear(); // 清空場景庫
 }
-
-
-// void SceneManager::set_current_scene(std::shared_ptr<Scene> scene) {
-//     current_scene = scene.get();
-//     if (current_scene)
-//         current_scene->on_enter();
-// }

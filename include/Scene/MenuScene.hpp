@@ -18,10 +18,13 @@
 #include "functional"
 #include <iostream>
 
+class SceneManager; // 前向宣告，避免循環包含
+
 class MenuScene : public Scene
 {
 public:
-    MenuScene();
+    // 修改建構子，接收 SceneManager 的指標
+    explicit MenuScene(SceneManager* manager);
     ~MenuScene();
 
     void on_enter() override;
@@ -30,6 +33,8 @@ public:
     void on_exit() override;
 
 private:
+    SceneManager* m_Manager; // 用原始指標即可，因為 Manager 的生命週期比 Scene 長
+
     // MenuScene 物件
     std::shared_ptr<BackgroundImage> m_Background;
     std::shared_ptr<Button> m_PlayButton;

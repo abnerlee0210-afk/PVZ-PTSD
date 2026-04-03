@@ -2,13 +2,14 @@
 // Created by 李政翰 on 2026/4/1.
 //
 #include "Scene/LevelSelectScene.hpp"
+#include "Scene/SceneManager.hpp"
 
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
 #include "Util/Logger.hpp"
 #include "Util/Time.hpp"
 
-LevelSelectScene::LevelSelectScene() {
+LevelSelectScene::LevelSelectScene(SceneManager* manager) : m_Manager(manager){
     LOG_DEBUG("MenuScene Constructor");
 }
 
@@ -41,11 +42,15 @@ void LevelSelectScene::on_enter() {
     // 修正：把 SetCallback 移到 on_enter()。
     m_PlayButton->SetCallback([]() {
         LOG_DEBUG("PlayButton pressed, switching to SelectScene");
-        //scene_manager.switch_to(SceneManager::SceneType::SELECT);
+        // if (m_Manager) {
+        //     m_Manager->switch_to(SceneManager::SceneType::MENU);
+        // }
     });
-    m_BackButton->SetCallback([]() {
+    m_BackButton->SetCallback([this]() {
         LOG_DEBUG("BackButton pressed, switching to MenuScene");
-        //scene_manager.switch_to(SceneManager::SceneType::SELECT);
+        if (m_Manager) {
+            m_Manager->switch_to(SceneManager::SceneType::MENU);
+        }
     });
 
     m_Root.AddChild(m_Background);

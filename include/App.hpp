@@ -28,9 +28,7 @@ private:
 
 private:
     State m_CurrentState = State::START;
-    std::shared_ptr<MenuScene> m_MenuScene;
-    std::shared_ptr<LevelSelectScene> m_LevelSelectScene;
-    std::shared_ptr<SceneManager> m_SceneManager;
+    SceneManager m_SceneManager;
 };
 
 #endif

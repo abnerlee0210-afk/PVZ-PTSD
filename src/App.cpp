@@ -8,24 +8,23 @@
 void App::Start() {
     LOG_TRACE("Start");
 
-    m_MenuScene = std::make_shared<MenuScene>();
-    m_MenuScene->on_enter();
+    // 1. 建立場景實體
+    auto menu = std::make_shared<MenuScene>(&m_SceneManager);
+    auto select = std::make_shared<LevelSelectScene>(&m_SceneManager);
 
-    m_LevelSelectScene = std::make_shared<LevelSelectScene>();
-    m_LevelSelectScene->on_enter();
+    // 2. 將場景註冊到 Manager (對應你在 SceneManager.hpp 定義的 Enum)
+    m_SceneManager.AddScene(SceneManager::SceneType::MENU, menu);
+    m_SceneManager.AddScene(SceneManager::SceneType::SELECT, select);
+
+    // 3. 切換到初始場景 (這會自動觸發 MenuScene 的 on_enter)
+    m_SceneManager.switch_to(SceneManager::SceneType::MENU);
 
     m_CurrentState = State::UPDATE;
 }
 
 void App::Update() {
-    if (m_LevelSelectScene != nullptr) {
-        m_LevelSelectScene -> on_update();
-        m_LevelSelectScene -> on_render();
-    }
-    //  if (m_MenuScene != nullptr) {
-    //     m_MenuScene->on_update();
-    //     m_MenuScene->on_render();
-    // }
+    m_SceneManager.on_update();
+    m_SceneManager.on_render();
     
     /*
      * Do not touch the code below as they serve the purpose for

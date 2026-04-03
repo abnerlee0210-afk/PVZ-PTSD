@@ -2,9 +2,10 @@
 // Created by 李政翰 on 2026/3/31.
 //
 #include "Scene/MenuScene.hpp"
+#include "Scene/SceneManager.hpp"  // <--- 補上這行！這能讓 .cpp 看到完整的定義
 
-MenuScene::MenuScene() {
-    LOG_DEBUG("MenuScene Constructor");
+MenuScene::MenuScene(SceneManager* manager) : m_Manager(manager) {
+    LOG_DEBUG("MenuScene Constructor with Manager");
 }
 
 MenuScene::~MenuScene() {
@@ -19,6 +20,14 @@ void MenuScene::on_enter() {
 
     m_PlayButton = std::make_shared<Button>(PlayButtonNormal, glm::vec2(270, 180));
 
+    m_PlayButton->SetCallback([this]() {
+        LOG_DEBUG("Button pressed, switching to SelectScene");
+        // 使用儲存好的 m_Manager 進行切換
+        if (m_Manager) {
+            m_Manager->switch_to(SceneManager::SceneType::SELECT);
+        }
+    });
+
     m_Root.AddChild(m_Background);
     m_Root.AddChild(m_PlayButton);
 }
@@ -26,10 +35,7 @@ void MenuScene::on_enter() {
 void MenuScene::on_update() {
     // Button
     m_PlayButton->Update();
-    m_PlayButton->SetCallback([]() {
-        LOG_DEBUG("Button pressed, switching to SelectScene");
-        //scene_manager.switch_to(SceneManager::SceneType::SELECT);
-    });
+
     // Button懸停效果（鼠標在範圍內Button變暗，點擊後縮放）
     if (m_PlayButton->IsMouseHovering()) {
         m_PlayButton->SetImage(PlayButtonFeedback);

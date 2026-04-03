@@ -8,6 +8,8 @@
 #include <memory>
 
 #include "Scene.hpp"
+
+
 #include "Screen/BackgroundImage.hpp"
 #include "UI/Button.hpp"
 #include "UI/LevelCard.hpp"
@@ -18,10 +20,12 @@
 #include "functional"
 #include <iostream>
 
+class SceneManager; // 前向宣告，避免循環包含
+
 class LevelSelectScene : public Scene
 {
 public:
-    LevelSelectScene();
+    explicit  LevelSelectScene(SceneManager* manager);
     ~LevelSelectScene();
 
     void on_enter() override;
@@ -36,6 +40,8 @@ private:
     void UpdateSelectionVisual();
 
 private:
+    SceneManager* m_Manager; // 用原始指標即可，因為 Manager 的生命週期比 Scene 長
+
     // LevelSelectScene 物件
     std::shared_ptr<BackgroundImage> m_Background;
     std::shared_ptr<Button> m_BackButton;
