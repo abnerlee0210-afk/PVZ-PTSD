@@ -40,36 +40,24 @@ void NormalLevelScene::on_exit() {
 }
 
 void NormalLevelScene::CreateBackground() {
-    auto backgroundImage = std::make_shared<Util::Image>(
-        m_Config.backgroundPath
-    );
-
-    m_Background = std::make_shared<Util::GameObject>(backgroundImage, 0.0f);
-    m_Background->m_Transform.translation = {0.0f, 0.0f};
+    m_Background = std::make_shared<BackgroundImage>(m_Config.backgroundPath);
 
     m_Objects.push_back(m_Background);
     m_Root.AddChild(m_Background);
 }
 
 void NormalLevelScene::CreateSunText() {
-    m_SunText = std::make_shared<Util::Text>(
-        fontDir,
-        32,
-        "Sun: 0",
-        Util::Color(255, 200, 0)
-    );
+    m_SunText = std::make_shared<Text>("0",20.0f);
+    m_SunText->m_Transform.translation = {-510.0f, 230.0f};
 
-    m_SunTextObject = std::make_shared<Util::GameObject>(m_SunText, 50.0f);
-    m_SunTextObject->m_Transform.translation = {-510.0f, 230.0f};
-
-    m_Objects.push_back(m_SunTextObject);
-    m_Root.AddChild(m_SunTextObject);
+    m_Objects.push_back(m_SunText);
+    m_Root.AddChild(m_SunText);
 }
 
 void NormalLevelScene::CreateSeedCardsFromConfig() {
-    float startX = 20.0f;
-    float y = 90.0f;
-    float spacing = 110.0f;
+    float startX = -455.0f;
+    float y = 262.0f;
+    float spacing = 55.0f;
 
     for (int i = 0; i < static_cast<int>(m_Config.allowedPlants.size()); ++i) {
         PlantType type = m_Config.allowedPlants[i];
@@ -108,6 +96,6 @@ void NormalLevelScene::CreateSeedCardsFromConfig() {
 
 void NormalLevelScene::UpdateSunText() {
     if (m_SunText != nullptr) {
-        m_SunText->SetText("Sun: " + std::to_string(m_SunPoints));
+        m_SunText->SetText(std::to_string(m_SunPoints));
     }
 }

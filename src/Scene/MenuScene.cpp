@@ -15,8 +15,7 @@ MenuScene::~MenuScene() {
 void MenuScene::on_enter() {
     LOG_DEBUG("Entering MenuScene");
 
-    m_Background = std::make_shared<BackgroundImage>();
-    m_Background->Set_Background(BackgroundImagePath);
+    m_Background = std::make_shared<BackgroundImage>(BackgroundImagePath);
 
     m_PlayButton = std::make_shared<Button>(PlayButtonNormal, PlayButtonPos);
 

@@ -4,9 +4,9 @@
 
 #include "Screen/BackgroundImage.hpp"
 
-BackgroundImage::BackgroundImage()
+BackgroundImage::BackgroundImage(std::string& path)
     : GameObject(
-        std::make_unique<Util::Image>(RESOURCE_DIR "/graphics/Screen/MainMenu.png"),
+        std::make_unique<Util::Image>(path),
         -10
     )
 {
@@ -22,7 +22,7 @@ void BackgroundImage::Set_Background(const std::string path) {
     }
 }
 
-void BackgroundImage::SetPosition(const glm::vec2& Position) {
-    m_Transform.translation = Position;
-}
+// void BackgroundImage::SetPosition(const glm::vec2& Position) {
+//     m_Transform.translation = Position;
+// }
 

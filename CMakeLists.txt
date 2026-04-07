@@ -82,6 +82,8 @@ add_executable(${PROJECT_NAME}
         src/Scene/NormalLevelScene.cpp
         src/UI/SeedCard.cpp
         src/UI/ShovelButton.cpp
+        include/Screen/Text.hpp
+        src/Screen/Text.cpp
 )
 
 if(MSVC)

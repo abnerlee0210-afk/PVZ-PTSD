@@ -19,8 +19,7 @@ LevelSelectScene::~LevelSelectScene() {
 
 
 void LevelSelectScene::on_enter() {
-    m_Background = std::make_shared<BackgroundImage>();
-    m_Background->Set_Background(BackgroundImagePath);
+    m_Background = std::make_shared<BackgroundImage>(BackgroundImagePath);
 
     m_PlayButton = std::make_shared<Button>(PlayButtonImage,PlayButtonPos);
     m_BackButton = std::make_shared<Button>(BackButtonImage, BackButtonPos);

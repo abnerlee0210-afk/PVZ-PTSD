@@ -6,6 +6,8 @@
 #define NORMALLEVELSCENE_HPP
 
 #include "Scene/Scene.hpp"
+#include "Screen/BackgroundImage.hpp"
+#include "Screen/Text.hpp"
 
 #include "Level/LevelConfig.hpp"
 #include "Board/GameBoard.hpp"
@@ -38,13 +40,13 @@ private:
     LevelConfig m_Config;
     GameBoard m_Board;
 
-    std::shared_ptr<Util::GameObject> m_Background;
-    std::shared_ptr<Util::Text> m_SunText;
-    std::shared_ptr<Util::GameObject> m_SunTextObject;
+    std::shared_ptr<BackgroundImage> m_Background;
+    std::shared_ptr<Text> m_SunText;
 
     std::vector<std::shared_ptr<SeedCard>> m_SeedCards;
 
     int m_SunPoints = 0;
+
 
     std::string fontDir = RESOURCE_DIR "/font.ttf";
 };

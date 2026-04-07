@@ -14,11 +14,9 @@
 class BackgroundImage : public Util::GameObject {
 
 public:
-    BackgroundImage();
+    BackgroundImage(std::string& path);
 
     void Set_Background(const std::string path);
-    void SetPosition(const glm::vec2& Position);
-
 };
 
 #endif //BACKGROUNDIMAGE_HPP
