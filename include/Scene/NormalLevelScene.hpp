@@ -13,6 +13,8 @@
 #include "Board/GameBoard.hpp"
 #include "UI/SeedCard.hpp"
 
+#include "Factory/SeedCardFactory.hpp"
+
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
 #include "Util/Text.hpp"

@@ -62,26 +62,10 @@ void NormalLevelScene::CreateSeedCardsFromConfig() {
     for (int i = 0; i < static_cast<int>(m_Config.allowedPlants.size()); ++i) {
         PlantType type = m_Config.allowedPlants[i];
 
-        std::shared_ptr<SeedCard> card = nullptr;
-
-        if (type == PlantType::PEASHOOTER) {
-            card = std::make_shared<SeedCard>(
-                RESOURCE_DIR "/graphics/Cards/card_peashooter.png",
-                CardPlantType::PEASHOOTER,
-                100,
-                5.0f,
-                glm::vec2(startX + i * spacing, y)
-            );
-        }
-        else if (type == PlantType::SUNFLOWER) {
-            card = std::make_shared<SeedCard>(
-                RESOURCE_DIR "/card_sunflower.png",
-                CardPlantType::SUNFLOWER,
-                50,
-                5.0f,
-                glm::vec2(startX + i * spacing, y)
-            );
-        }
+        auto card = SeedCardFactory::CreateSeedCard(
+            type,
+            glm::vec2(startX + i * spacing, y)
+        );
 
         if (card != nullptr) {
             m_SeedCards.push_back(card);

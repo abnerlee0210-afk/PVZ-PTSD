@@ -4,7 +4,7 @@
 #include "UI/SeedCard.hpp"
 
 SeedCard::SeedCard(const std::string& imagePath,
-                   CardPlantType plantType,
+                   PlantType plantType,
                    int cost,
                    float cooldown,
                    const glm::vec2& position)

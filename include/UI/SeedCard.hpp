@@ -10,22 +10,24 @@
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
 
-// 植物種類
-enum class CardPlantType {
-    PEASHOOTER,
-    SUNFLOWER,
-    CHERRYBOMB
-};
+#include "Level/LevelTypes.hpp"
+
+// // 植物種類
+// enum class CardPlantType {
+//     PEASHOOTER,
+//     SUNFLOWER,
+//     CHERRYBOMB
+// };
 
 class SeedCard : public Util::GameObject {
 public:
     SeedCard(const std::string& imagePath,
-             CardPlantType plantType,
+             PlantType plantType,
              int cost,
              float cooldown,
              const glm::vec2& position);
 
-    CardPlantType GetPlantType() const { return m_PlantType; }
+    PlantType GetPlantType() const { return m_PlantType; }
     int GetCost() const { return m_Cost; }
 
     bool ContainsPoint(const glm::vec2& point) const;
@@ -43,7 +45,7 @@ public:
     void SetVisualScaleFactor(float factor);
 
 private:
-    CardPlantType m_PlantType;
+    PlantType m_PlantType;
     int m_Cost;
     bool m_Selected;
 
