@@ -6,16 +6,14 @@
 //#include "Entity/Plant.hpp"
 
 // 建構子與初始化 (Constructor)
-GameBoard::GameBoard()
-    : m_GridStartX(-460.0f), // 參數設定：定義了棋盤在螢幕上的起點 (460,-270)(左下角) 以及每一格的寬度與高度。
-      m_GridStartY(-270.0f),
+GameBoard::GameBoard(int rows, int cols, float startX, float startY)
+    : m_Rows(rows),
+      m_Cols(cols),
+      m_GridStartX(startX), // 參數設定：定義了棋盤在螢幕上的起點 (460,-270)(左下角) 以及每一格的寬度與高度。
+      m_GridStartY(startY),
       m_CellWidth(85.0f),
-      m_CellHeight(100.0f) {
-    for (int r = 0; r < ROWS; ++r) {    // 清空棋盤：使用雙重迴圈將二維陣列 m_Grid 初始化為 nullptr，代表遊戲開始時所有格子都沒有植物。
-        for (int c = 0; c < COLS; ++c) {
-            m_Grid[r][c] = nullptr;
-        }
-    }
+      m_CellHeight(100.0f),
+      m_Grid(rows, std::vector<Plant*>(cols, nullptr)){
 }
 
 // 用於判斷玩家點擊了哪一格
@@ -31,7 +29,7 @@ bool GameBoard::ScreenToGrid(float x, float y, int& row, int& col) const {
     row = static_cast<int>((y - m_GridStartY) / m_CellHeight);
 
     // 3. 邊界檢查：確保算出來的 row 和 col 不會超出陣列範圍 (0~4, 0~8)
-    if (row < 0 || row >= ROWS || col < 0 || col >= COLS) {
+    if (row < 0 || row >= m_Rows || col < 0 || col >= m_Cols) {
         return false;
     }
 
@@ -58,7 +56,7 @@ glm::vec2 GameBoard::GetCellCenter(int row, int col) const {
 // IsCellEmpty：檢查 m_Grid[row][col] 是否為空指標。
 // 如果玩家想在已經有植物的地方再種一顆，這個函式就能用來擋掉。
 bool GameBoard::IsCellEmpty(int row, int col) const {
-    if (row < 0 || row >= ROWS || col < 0 || col >= COLS) {
+    if (row < 0 || row >= m_Rows || col < 0 || col >= m_Cols) {
         return false;
     }
     return m_Grid[row][col] == nullptr;
@@ -66,7 +64,7 @@ bool GameBoard::IsCellEmpty(int row, int col) const {
 
 // PlacePlant：將植物物件的指標存入陣列中。
 void GameBoard::PlacePlant(Plant* plant, int row, int col) {
-    if (row < 0 || row >= ROWS || col < 0 || col >= COLS) {
+    if (row < 0 || row >= m_Rows || col < 0 || col >= m_Cols) {
         return;
     }
     m_Grid[row][col] = plant;
@@ -74,7 +72,7 @@ void GameBoard::PlacePlant(Plant* plant, int row, int col) {
 
 // GetPlant：取得特定位置的植物指標（例如用於判斷殭屍是否正在啃食該格的植物）。
 Plant* GameBoard::GetPlant(int row, int col) const {
-    if (row < 0 || row >= ROWS || col < 0 || col >= COLS) {
+    if (row < 0 || row >= m_Rows || col < 0 || col >= m_Cols) {
         return nullptr;
     }
     return m_Grid[row][col];
@@ -83,7 +81,7 @@ Plant* GameBoard::GetPlant(int row, int col) const {
 // 讓 GameBoard 能移除植物
 // 移除植物：當植物被打死或玩家用鏟子移除時調用
 void GameBoard::RemovePlant(int row, int col) {
-    if (row < 0 || row >= ROWS || col < 0 || col >= COLS) {
+    if (row < 0 || row >= m_Rows || col < 0 || col >= m_Cols) {
         return;
     }
     m_Grid[row][col] = nullptr;
