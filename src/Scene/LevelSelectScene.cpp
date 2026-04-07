@@ -2,7 +2,7 @@
 // Created by 李政翰 on 2026/4/1.
 //
 #include "Scene/LevelSelectScene.hpp"
-#include "Scene/SceneManager.hpp"
+#include "../../include/Manager/SceneManager.hpp"
 
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"

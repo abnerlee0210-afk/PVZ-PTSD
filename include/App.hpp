@@ -2,7 +2,7 @@
 #define APP_HPP
 
 #include "pch.hpp" // IWYU pragma: export
-#include "Scene/SceneManager.hpp"
+#include "Manager/SceneManager.hpp"
 
 #include "Scene/MenuScene.hpp"
 #include "Scene/LevelSelectScene.hpp"

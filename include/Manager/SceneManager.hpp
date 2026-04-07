@@ -7,7 +7,7 @@
 
 #include <map>
 #include <memory>
-#include "Scene.hpp"
+#include "Scene/Scene.hpp"
 #include "Util/Logger.hpp"
 
 class SceneManager {
@@ -37,6 +37,7 @@ public:
             LOG_ERROR("試圖註冊一個空的場景指標！");
         }
     }
+    // 遊戲啟動時，你會把所有場景先丟進這個管理器的「倉庫」裡。
 
     /**
      * @brief 切換目前執行的場景
@@ -63,7 +64,7 @@ private:
     /**
      * @brief 儲存所有已註冊的場景，由 SceneType 對應其 shared_ptr
      */
-    std::map<SceneType, std::shared_ptr<Scene>> m_Scenes;
+    std::map<SceneType, std::shared_ptr<Scene>> m_Scenes; // 這是一個鍵值對容器，把 SceneType (標籤) 對應到 shared_ptr<Scene> (實際的場景物件)。
 
     /**
      * @brief 指向目前正在運行的場景

@@ -36,8 +36,8 @@ add_executable(${PROJECT_NAME}
     ${SRC_FILES}
     ${HEADER_FILES}
         include/Scene/MenuScene.hpp
-        include/UI/Button.hpp
-        src/UI/Button.cpp
+        include/UI/Base/Button.hpp
+        src/UI/Base/Button.cpp
         src/Scene/MenuScene.cpp
         include/Scene/Scene.hpp
         include/Screen/BackgroundImage.hpp
@@ -46,8 +46,42 @@ add_executable(${PROJECT_NAME}
         src/Scene/LevelSelectScene.cpp
         include/UI/LevelCard.hpp
         src/UI/LevelCard.cpp
-        include/Scene/SceneManager.hpp
-        src/Scene/SceneManager.cpp
+        include/Manager/SceneManager.hpp
+        src/Manager/SceneManager.cpp
+        include/Board/GameBoard.hpp
+        src/Board/GameBoard.cpp
+        include/Entity/BasicZombie.hpp
+        "include/Entity/ConeheadZombie.hpp"
+        include/Entity/LawnMower.hpp
+        include/Entity/Pea.hpp
+        include/Entity/Peashooter.hpp
+        include/Entity/Plant.hpp
+        include/Entity/Projectile.hpp
+        include/Entity/Sun.hpp
+        include/Entity/Sunflower.hpp
+        include/Entity/Zombie.hpp
+        include/Level/LevelConfig.hpp
+        include/Level/LevelRepository.hpp
+        include/Level/LevelTypes.hpp
+        include/UI/SeedCard.hpp
+        include/UI/ShovelButton.hpp
+        include/Scene/BowlingLevelScene.hpp
+        include/Scene/NormalLevelScene.hpp
+        src/Entity/BasicZombie.cpp
+        src/Entity/ConeheadZombie.cpp
+        src/Entity/LawnMower.cpp
+        src/Entity/Pea.cpp
+        src/Entity/Peashooter.cpp
+        src/Entity/Plant.cpp
+        src/Entity/Projectile.cpp
+        src/Entity/Sun.cpp
+        src/Entity/Sunflower.cpp
+        src/Entity/Zombie.cpp
+        src/Level/LevelRepository.cpp
+        src/Scene/BowlingLevelScene.cpp
+        src/Scene/NormalLevelScene.cpp
+        src/UI/SeedCard.cpp
+        src/UI/ShovelButton.cpp
 )
 
 if(MSVC)

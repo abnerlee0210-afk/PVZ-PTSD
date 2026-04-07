@@ -10,7 +10,7 @@
 
 #include "Scene.hpp"
 #include "Screen/BackgroundImage.hpp"
-#include "UI/Button.hpp"
+#include "UI/Base/Button.hpp"
 #include "Util/Renderer.hpp"
 #include "Util/Logger.hpp"
 

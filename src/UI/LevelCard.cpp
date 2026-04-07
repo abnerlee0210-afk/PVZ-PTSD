@@ -17,16 +17,6 @@ LevelCard::LevelCard(int levelId,
     m_ImageObject = std::make_shared<Util::GameObject>(image, 20.0f);
     m_ImageObject->m_Transform.translation = position;
     m_ImageObject->m_Transform.scale = {1.0f, 1.0f};
-
-    // m_TextDrawable = std::make_shared<Util::Text>(
-    //     RESOURCE_DIR "/font.ttf",
-    //     28,
-    //     "Level " + std::to_string(levelId),
-    //     Util::Color(255, 255, 255)
-    // );
-
-    // m_TextObject = std::make_shared<Util::GameObject>(m_TextDrawable, 21.0f);
-    // m_TextObject->m_Transform.translation = {position.x + 15.0f, position.y + 130.0f};
 }
 
 void LevelCard::SetPosition(const glm::vec2& position) {

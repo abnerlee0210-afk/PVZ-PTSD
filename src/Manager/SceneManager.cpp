@@ -1,7 +1,7 @@
 //
 // Created by 李政翰 on 2026/4/3.
 //
-#include "Scene/SceneManager.hpp"
+#include "../../include/Manager/SceneManager.hpp"
 
 /**
  * 建構子與解構子

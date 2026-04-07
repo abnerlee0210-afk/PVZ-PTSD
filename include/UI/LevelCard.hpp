@@ -35,7 +35,6 @@ public:
     bool IsMouseHovering() const;
 
     std::shared_ptr<Util::GameObject> GetImageObject() const { return m_ImageObject; }
-    // std::shared_ptr<Util::GameObject> GetTextObject() const { return m_TextObject; }
 
 private:
     int m_LevelId;
@@ -47,8 +46,6 @@ private:
     float m_Height;
 
     std::shared_ptr<Util::GameObject> m_ImageObject;
-    // std::shared_ptr<Util::Text> m_TextDrawable;
-    // std::shared_ptr<Util::GameObject> m_TextObject;
 };
 
 #endif
