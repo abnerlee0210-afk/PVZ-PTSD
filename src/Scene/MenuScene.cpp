@@ -18,7 +18,7 @@ void MenuScene::on_enter() {
     m_Background = std::make_shared<BackgroundImage>();
     m_Background->Set_Background(BackgroundImagePath);
 
-    m_PlayButton = std::make_shared<Button>(PlayButtonNormal, glm::vec2(270, 180));
+    m_PlayButton = std::make_shared<Button>(PlayButtonNormal, PlayButtonPos);
 
     m_PlayButton->SetCallback([this]() {
         LOG_DEBUG("Button pressed, switching to SelectScene");

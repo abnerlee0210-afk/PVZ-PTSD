@@ -43,6 +43,9 @@ private:
     std::string BackgroundImagePath = RESOURCE_DIR "/graphics/Screen/MainMenu.png";
     std::string PlayButtonNormal = RESOURCE_DIR "/graphics/Screen/Adventure_0.png";
     std::string PlayButtonFeedback = RESOURCE_DIR "/graphics/Screen/Adventure_1.png";
+
+    // 場景物件位置
+    glm::vec2 PlayButtonPos = glm::vec2(270, 180);
 };
 
 #endif //MENUSCENE_HPP

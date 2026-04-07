@@ -27,6 +27,9 @@ struct LevelConfig {
     int rows = 5;
     int cols = 9;
 
+    float startX = -460.0f;
+    float startY = -270.0f;
+
     std::string backgroundPath;
 
     int initialSun = 50;

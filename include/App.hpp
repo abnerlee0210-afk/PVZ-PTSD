@@ -6,6 +6,9 @@
 
 #include "Scene/MenuScene.hpp"
 #include "Scene/LevelSelectScene.hpp"
+#include "Scene/NormalLevelScene.hpp"
+
+#include "Level/LevelRepository.hpp"
 
 class App {
 public:

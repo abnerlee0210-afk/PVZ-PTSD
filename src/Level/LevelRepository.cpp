@@ -23,6 +23,8 @@ LevelConfig LevelRepository::CreateLevel1() {
     level.rows = 1;
     level.cols = 9;
 
+    level.startY = -70.0f;
+
     level.initialSun = 150;
 
     level.hasSkySun = true;

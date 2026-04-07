@@ -1,7 +1,9 @@
 //
 // Created by 李政翰 on 2026/4/3.
 //
-#include "../../include/Manager/SceneManager.hpp"
+#include "Manager/SceneManager.hpp"
+#include "Level/LevelRepository.hpp"
+#include "Scene/NormalLevelScene.hpp"
 
 /**
  * 建構子與解構子
@@ -19,18 +21,26 @@ SceneManager::~SceneManager() {
 /**
  * 切換場景邏輯
  */
-void SceneManager::switch_to(SceneType type) {
-    // 1. 在 Map 中尋找目標場景類型
-    auto it = m_Scenes.find(type);
+void SceneManager::switch_to(SceneType type, int levelId) {
+    std::shared_ptr<Scene> next_scene = nullptr;
+    if (type == SceneType::NORMALGAME) {
+        LOG_DEBUG("Switching to NORMALGAME with level {}", levelId);
 
-    // 2. 防呆：如果該場景類型尚未被 AddScene 註冊，則停止切換
-    if (it == m_Scenes.end()) {
-        LOG_ERROR("Cannot switch to scene: Scene type not registered!");
-        return;
+        LevelConfig config = LevelRepository::GetLevel(levelId);
+        next_scene = std::make_shared<NormalLevelScene>(config,this);
     }
+    else {
+        // 1. 在 Map 中尋找目標場景類型
+        auto it = m_Scenes.find(type);
 
-    // 3. 獲取目標場景的 shared_ptr
-    std::shared_ptr<Scene> next_scene = it->second;
+        // 2. 防呆：如果該場景類型尚未被 AddScene 註冊，則停止切換
+        if (it == m_Scenes.end()) {
+            LOG_ERROR("Cannot switch to scene: Scene type not registered!");
+            return;
+        }
+        // 3. 獲取目標場景的 shared_ptr
+        next_scene = it->second;
+    }
 
     // 4. 如果目前已經在這個場景，就不用重複進入 (避免資源重複載入)
     if (m_CurrentScene == next_scene) {

@@ -15,9 +15,11 @@
 #include "Util/Image.hpp"
 #include "Util/Text.hpp"
 
+class SceneManager;
+
 class NormalLevelScene : public Scene {
 public:
-    explicit NormalLevelScene(const LevelConfig& config);
+    explicit NormalLevelScene(const LevelConfig& config, SceneManager* manager);
 
     void on_enter() override;
     void on_update() override;
@@ -31,6 +33,8 @@ private:
     void UpdateSunText();
 
 private:
+    SceneManager* m_Manager;
+
     LevelConfig m_Config;
     GameBoard m_Board;
 
@@ -41,6 +45,8 @@ private:
     std::vector<std::shared_ptr<SeedCard>> m_SeedCards;
 
     int m_SunPoints = 0;
+
+    std::string fontDir = RESOURCE_DIR "/font.ttf";
 };
 
 #endif //NORMALLEVELSCENE_HPP

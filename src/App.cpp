@@ -7,6 +7,7 @@
 
 void App::Start() {
     LOG_TRACE("Start");
+    LevelConfig config = LevelRepository::GetLevel(1);
 
     // 1. 建立場景實體
     auto menu = std::make_shared<MenuScene>(&m_SceneManager);

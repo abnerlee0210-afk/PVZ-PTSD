@@ -1,3 +1,113 @@
 //
 // Created by 李政翰 on 2026/4/7.
 //
+#include "Scene/NormalLevelScene.hpp"
+#include "Manager/SceneManager.hpp"
+
+#include "Level/LevelTypes.hpp"
+#include "Util/Logger.hpp"
+#include "Util/Input.hpp"
+#include "Util/Keycode.hpp"
+
+NormalLevelScene::NormalLevelScene(const LevelConfig& config, SceneManager* manager)
+    : m_Manager(manager),
+      m_Config(config),
+      m_Board(config.rows, config.cols, config.startX, config.startY) {
+}
+
+void NormalLevelScene::on_enter() {
+    LOG_DEBUG("Enter NormalLevelScene => Level {}", m_Config.levelId);
+
+    m_SunPoints = m_Config.initialSun;
+
+    CreateBackground();
+    CreateSunText();
+    CreateSeedCardsFromConfig();
+    UpdateSunText();
+}
+
+void NormalLevelScene::on_update() {
+    // 第一版先不做戰鬥邏輯
+    // 之後再加 HandleInput / Wave / Zombie / Sun
+}
+
+void NormalLevelScene::on_render() {
+    m_Root.Update();
+}
+
+void NormalLevelScene::on_exit() {
+    LOG_DEBUG("Exit NormalLevelScene => Level {}", m_Config.levelId);
+}
+
+void NormalLevelScene::CreateBackground() {
+    auto backgroundImage = std::make_shared<Util::Image>(
+        m_Config.backgroundPath
+    );
+
+    m_Background = std::make_shared<Util::GameObject>(backgroundImage, 0.0f);
+    m_Background->m_Transform.translation = {0.0f, 0.0f};
+
+    m_Objects.push_back(m_Background);
+    m_Root.AddChild(m_Background);
+}
+
+void NormalLevelScene::CreateSunText() {
+    m_SunText = std::make_shared<Util::Text>(
+        fontDir,
+        32,
+        "Sun: 0",
+        Util::Color(255, 200, 0)
+    );
+
+    m_SunTextObject = std::make_shared<Util::GameObject>(m_SunText, 50.0f);
+    m_SunTextObject->m_Transform.translation = {-510.0f, 230.0f};
+
+    m_Objects.push_back(m_SunTextObject);
+    m_Root.AddChild(m_SunTextObject);
+}
+
+void NormalLevelScene::CreateSeedCardsFromConfig() {
+    float startX = 20.0f;
+    float y = 90.0f;
+    float spacing = 110.0f;
+
+    for (int i = 0; i < static_cast<int>(m_Config.allowedPlants.size()); ++i) {
+        PlantType type = m_Config.allowedPlants[i];
+
+        std::shared_ptr<SeedCard> card = nullptr;
+
+        if (type == PlantType::PEASHOOTER) {
+            card = std::make_shared<SeedCard>(
+                RESOURCE_DIR "/graphics/Cards/card_peashooter.png",
+                CardPlantType::PEASHOOTER,
+                100,
+                5.0f,
+                glm::vec2(startX + i * spacing, y)
+            );
+        }
+        else if (type == PlantType::SUNFLOWER) {
+            card = std::make_shared<SeedCard>(
+                RESOURCE_DIR "/card_sunflower.png",
+                CardPlantType::SUNFLOWER,
+                50,
+                5.0f,
+                glm::vec2(startX + i * spacing, y)
+            );
+        }
+
+        if (card != nullptr) {
+            m_SeedCards.push_back(card);
+            m_Root.AddChild(card);
+        }
+    }
+
+    if (!m_SeedCards.empty()) {
+        m_SeedCards[0]->SetSelected(true);
+    }
+}
+
+void NormalLevelScene::UpdateSunText() {
+    if (m_SunText != nullptr) {
+        m_SunText->SetText("Sun: " + std::to_string(m_SunPoints));
+    }
+}

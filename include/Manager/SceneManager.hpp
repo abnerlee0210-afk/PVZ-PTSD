@@ -18,7 +18,7 @@ public:
     enum class SceneType {
         MENU,
         SELECT,
-        GAME,
+        NORMALGAME,
         // 未來可以在這裡輕鬆新增：SETTINGS, CREDITS...
     };
 
@@ -43,7 +43,7 @@ public:
      * @brief 切換目前執行的場景
      * @param type 要切換到的目標場景標籤
      */
-    void switch_to(SceneType type);
+    void switch_to(SceneType type, int LevelId = 1);
 
     /**
      * @brief 每一幀更新目前場景的邏輯

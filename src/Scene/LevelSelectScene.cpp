@@ -2,7 +2,7 @@
 // Created by 李政翰 on 2026/4/1.
 //
 #include "Scene/LevelSelectScene.hpp"
-#include "../../include/Manager/SceneManager.hpp"
+#include "Manager/SceneManager.hpp"
 
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
@@ -22,15 +22,14 @@ void LevelSelectScene::on_enter() {
     m_Background = std::make_shared<BackgroundImage>();
     m_Background->Set_Background(BackgroundImagePath);
 
-    m_PlayButton = std::make_shared<Button>(PlayButtonImage,glm::vec2(0.0f, 0.0f));
-    m_BackButton = std::make_shared<Button>(BackButtonImage, glm::vec2(-600,-300));
+    m_PlayButton = std::make_shared<Button>(PlayButtonImage,PlayButtonPos);
+    m_BackButton = std::make_shared<Button>(BackButtonImage, BackButtonPos);
 
     for (int i = 0; i < 10; ++i) {
         auto card = std::make_shared<LevelCard>(
             i + 1,
             LevelCardImage + std::to_string(i+1) + ".png",
-            glm::vec2(0.0f, m_CardY),
-            true
+            glm::vec2(0.0f, m_CardY)
         );
 
         m_LevelCards.push_back(card);
@@ -40,11 +39,11 @@ void LevelSelectScene::on_enter() {
 
     // 問題：Update 每秒執行 60 次，你就設定了 60 次 Callback。這會造成不必要的記憶體分配。
     // 修正：把 SetCallback 移到 on_enter()。
-    m_PlayButton->SetCallback([]() {
-        LOG_DEBUG("PlayButton pressed, switching to SelectScene");
-        // if (m_Manager) {
-        //     m_Manager->switch_to(SceneManager::SceneType::MENU);
-        // }
+    m_PlayButton->SetCallback([this]() {
+        LOG_DEBUG("PlayButton pressed, switching to Game{}", m_SelectedIndex + 1);
+        if (m_Manager) {
+            m_Manager->switch_to(SceneManager::SceneType::NORMALGAME,m_SelectedIndex + 1);
+        }
     });
     m_BackButton->SetCallback([this]() {
         LOG_DEBUG("BackButton pressed, switching to MenuScene");

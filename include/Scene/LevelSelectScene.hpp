@@ -56,6 +56,10 @@ private:
     std::string PlayButtonFeedback = RESOURCE_DIR "/graphics/Screen/play_button_2.png";
     std::string LevelCardImage = RESOURCE_DIR "/graphics/Screen/LevelCard/level_";
 
+    // 場景物件位置
+    glm::vec2 PlayButtonPos = glm::vec2(0.0f, 0.0f);
+    glm::vec2 BackButtonPos = glm::vec2(-600,-300);
+
     // 屬性
     int m_SelectedIndex = 0;
     // bool m_WasMousePressed = false;
