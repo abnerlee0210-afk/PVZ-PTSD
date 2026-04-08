@@ -90,6 +90,8 @@ add_executable(${PROJECT_NAME}
         src/UI/SeedChooser.cpp
         include/Factory/PlantFactory.hpp
         src/Factory/PlantFactory.cpp
+        include/Factory/ZombieFactory.hpp
+        src/Factory/ZombieFactory.cpp
 )
 
 if(MSVC)

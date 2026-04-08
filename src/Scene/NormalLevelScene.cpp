@@ -4,6 +4,7 @@
 #include "Scene/NormalLevelScene.hpp"
 #include "Manager/SceneManager.hpp"
 #include "Factory/PlantFactory.hpp"
+#include "Factory/ZombieFactory.hpp"
 
 #include "Level/LevelTypes.hpp"
 #include "Util/Logger.hpp"
@@ -24,10 +25,16 @@ void NormalLevelScene::on_enter() {
     CreateBackground();
     CreateSeedChooserFromConfig();
     UpdateSunText();
+
+    SpawnTestZombie();
 }
 
 void NormalLevelScene::on_update() {
     HandleInput();
+
+    for (auto& zombie : m_Zombies) {
+        zombie->Update();
+    }
 }
 
 void NormalLevelScene::on_render() {
@@ -153,4 +160,17 @@ void NormalLevelScene::PlacePlantAt(int row, int col, PlantType type) {
     LOG_DEBUG("Placed plant at row={}, col={}", row, col);
 }
 
+void  NormalLevelScene::SpawnTestZombie() {
+    int row = 0;
+    float y = m_Board.GetCellCenter(row, 0).y;
 
+    glm::vec2 spawnPos = {600.0f,y};
+
+    auto zombie = ZombieFactory::CreateZombie(ZombieType::BASIC, row, spawnPos);
+    if (!zombie) {
+        return;
+    }
+
+    m_Zombies.push_back(zombie);
+    m_Root.AddChild(zombie);
+}
