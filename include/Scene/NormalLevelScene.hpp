@@ -8,10 +8,11 @@
 #include "Scene/Scene.hpp"
 #include "Screen/BackgroundImage.hpp"
 #include "Screen/Text.hpp"
-
 #include "Level/LevelConfig.hpp"
 #include "Board/GameBoard.hpp"
+
 #include "UI/SeedCard.hpp"
+#include "UI/SeedChooser.hpp"
 
 #include "Factory/SeedCardFactory.hpp"
 
@@ -32,8 +33,7 @@ public:
 
 private:
     void CreateBackground();
-    void CreateSunText();
-    void CreateSeedCardsFromConfig();
+    void CreateSeedChooserFromConfig();
     void UpdateSunText();
 
 private:
@@ -45,12 +45,13 @@ private:
     std::shared_ptr<BackgroundImage> m_Background;
     std::shared_ptr<Text> m_SunText;
 
-    std::vector<std::shared_ptr<SeedCard>> m_SeedCards;
+    std::shared_ptr<SeedChooser> m_SeedChooser;
 
     int m_SunPoints = 0;
 
 
     std::string fontDir = RESOURCE_DIR "/font.ttf";
+    glm::vec2 SeedChooserPos = glm::vec2(-300.0f, 260.0f);
 };
 
 #endif //NORMALLEVELSCENE_HPP

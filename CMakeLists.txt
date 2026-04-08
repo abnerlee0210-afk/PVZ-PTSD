@@ -86,6 +86,8 @@ add_executable(${PROJECT_NAME}
         src/Screen/Text.cpp
         include/Factory/SeedCardFactory.hpp
         src/Factory/SeedCardFactory.cpp
+        include/UI/SeedChooser.hpp
+        src/UI/SeedChooser.cpp
 )
 
 if(MSVC)
