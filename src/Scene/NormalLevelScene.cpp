@@ -3,6 +3,7 @@
 //
 #include "Scene/NormalLevelScene.hpp"
 #include "Manager/SceneManager.hpp"
+#include "Factory/PlantFactory.hpp"
 
 #include "Level/LevelTypes.hpp"
 #include "Util/Logger.hpp"
@@ -26,6 +27,7 @@ void NormalLevelScene::on_enter() {
 }
 
 void NormalLevelScene::on_update() {
+    HandleInput();
 }
 
 void NormalLevelScene::on_render() {
@@ -67,3 +69,88 @@ void NormalLevelScene::CreateSeedChooserFromConfig() {
 void NormalLevelScene::UpdateSunText() {
     m_SeedChooser->UpdateSun(m_SunPoints);
 }
+
+
+void NormalLevelScene::HandleInput() {
+    bool isMousePressed = Util::Input::IsKeyDown(Util::Keycode::MOUSE_LB);
+
+    if (!isMousePressed && m_WasMousePressed) {
+        ProcessMouseClick();
+    }
+
+    m_WasMousePressed = isMousePressed;
+}
+
+void NormalLevelScene::ProcessMouseClick() {
+    glm::vec2 mousePos = Util::Input::GetCursorPosition();
+
+    if (TrySelectSeedCard(mousePos)) {
+        return;
+    }
+
+    if (!m_SeedChooser || !m_SeedChooser->HasSelection()) {
+        return;
+    }
+
+    int row = 0;
+    int col = 0;
+    if (!m_Board.ScreenToGrid(mousePos.x, mousePos.y, row, col)) {
+        return;
+    }
+
+    PlantType selectedType = m_SeedChooser->GetSelectedPlantType();
+
+    if (!CanPlantAt(row, col, selectedType)) {
+        return;
+    }
+
+    PlacePlantAt(row, col, selectedType);
+}
+
+bool NormalLevelScene::TrySelectSeedCard(const glm::vec2& mousePos) {
+    if (!m_SeedChooser) {
+        return false;
+    }
+
+    bool selected = m_SeedChooser->TrySelectCard(mousePos);
+    if (selected) {
+        LOG_DEBUG("Seed card selected");
+    }
+    return selected;
+}
+
+bool NormalLevelScene::CanPlantAt(int row, int col, PlantType type) const {
+    if (!m_Board.IsCellEmpty(row, col)) {
+        LOG_DEBUG("Cell already occupied: row={}, col={}", row, col);
+        return false;
+    }
+
+    int cost = PlantFactory::GetCost(type);
+    if (m_SunPoints < cost) {
+        LOG_DEBUG("Not enough sun");
+        return false;
+    }
+
+    return true;
+}
+
+void NormalLevelScene::PlacePlantAt(int row, int col, PlantType type) {
+    glm::vec2 plantPos = m_Board.GetCellCenter(row, col);
+
+    auto plant = PlantFactory::CreatePlant(type, row, col, plantPos);
+    if (!plant) {
+        LOG_DEBUG("Failed to create plant");
+        return;
+    }
+
+    m_Plants.push_back(plant);
+    m_Board.PlacePlant(plant.get(), row, col);
+    m_Root.AddChild(plant);
+
+    m_SunPoints -= PlantFactory::GetCost(type);
+    UpdateSunText();
+
+    LOG_DEBUG("Placed plant at row={}, col={}", row, col);
+}
+
+

@@ -79,3 +79,4 @@ LevelConfig LevelRepository::CreateLevel2() {
     LevelConfig level;
     return level;
 }
+

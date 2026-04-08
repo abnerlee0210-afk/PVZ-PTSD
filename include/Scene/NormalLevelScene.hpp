@@ -16,9 +16,11 @@
 
 #include "Factory/SeedCardFactory.hpp"
 
-#include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
 #include "Util/Text.hpp"
+
+#include "Entity/Plant.hpp"
+#include "Entity/Peashooter.hpp"
 
 class SceneManager;
 
@@ -35,6 +37,14 @@ private:
     void CreateBackground();
     void CreateSeedChooserFromConfig();
     void UpdateSunText();
+    //
+    void HandleInput();  // 只管輸入邊界
+    void ProcessMouseClick(); // 管流程
+    bool TrySelectSeedCard(const glm::vec2& mousePos); // 管UI選卡
+    bool CanPlantAt(int row,int col, PlantType type) const; // 驗證是否可種植
+    void PlacePlantAt(int row,int col, PlantType type); // 執行種植
+
+    //
 
 private:
     SceneManager* m_Manager;
@@ -44,14 +54,18 @@ private:
 
     std::shared_ptr<BackgroundImage> m_Background;
     std::shared_ptr<Text> m_SunText;
-
     std::shared_ptr<SeedChooser> m_SeedChooser;
 
     int m_SunPoints = 0;
+    glm::vec2 SeedChooserPos = glm::vec2(-300.0f, 260.0f);
 
+    //
+    std::vector<std::shared_ptr<Plant>> m_Plants;
+    bool m_WasMousePressed = false;
+    //
 
     std::string fontDir = RESOURCE_DIR "/font.ttf";
-    glm::vec2 SeedChooserPos = glm::vec2(-300.0f, 260.0f);
+
 };
 
 #endif //NORMALLEVELSCENE_HPP
