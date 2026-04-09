@@ -61,8 +61,7 @@ private:
     void UpdateWaveSpawning();
     void SpawnZombieByType(ZombieType type, int row);
     void SpawnZombiesFromEvent(const SpawnEvent& event);
-
-
+    void SpawnProjectile(const std::shared_ptr<Projectile>& projectile);
 
     // ============================
     // 更新
@@ -73,31 +72,49 @@ private:
     void UpdateSinglePlant(const std::shared_ptr<Plant>& plant);
     void TryHandlePlantShooting(const std::shared_ptr<Plant>& plant);
 
-    void SpawnProjectile(const std::shared_ptr<Projectile>& projectile);
+    // ============================
+    // 清理(死亡物件)
+    // ============================
     void RemoveDeadProjectiles();
 
 
 
 private:
+    // ============================
+    // 基本資料
+    // ============================
     SceneManager* m_Manager;
-
     LevelConfig m_Config;
-    GameBoard m_Board;
 
+    // ============================
+    // 地圖/UI
+    // ============================
+    GameBoard m_Board;
     std::shared_ptr<BackgroundImage> m_Background;
-    std::shared_ptr<Text> m_SunText;
     std::shared_ptr<SeedChooser> m_SeedChooser;
+
+    // ============================
+    // 遊戲狀態
+    // ============================
+    int m_SunPoints = 0;
+    float m_LevelTimer = 0.0f;
+
+    // ============================
+    // Entities
+    // ============================
+    std::vector<std::shared_ptr<Zombie>> m_Zombies;
     std::vector<std::shared_ptr<Plant>> m_Plants;
     std::vector<std::shared_ptr<Projectile>> m_Projectiles;
 
-    int m_SunPoints = 0;
-    glm::vec2 SeedChooserPos = glm::vec2(-300.0f, 260.0f);
+    // ============================
+    // Input狀態
+    // ============================
     bool m_WasMousePressed = false;
-
-    //
-    float m_LevelTimer = 0.0f;
-    std::vector<std::shared_ptr<Zombie>> m_Zombies;
-
+    
+    // ============================
+    // Pos / Dir
+    // ============================
+    glm::vec2 SeedChooserPos = glm::vec2(-300.0f, 260.0f);
     std::string fontDir = RESOURCE_DIR "/font.ttf";
 
 };
