@@ -13,6 +13,7 @@ struct SpawnEvent {
     ZombieType type;
     int row;
     float spawnTime;
+    bool spawned = false;
 };
 
 struct Wave {

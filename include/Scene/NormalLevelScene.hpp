@@ -37,17 +37,31 @@ public:
     void on_exit() override;
 
 private:
+    // ============================
+    // 初始化
+    // ============================
     void CreateBackground();
     void CreateSeedChooserFromConfig();
     void UpdateSunText();
 
+    // ============================
+    // Input
+    // ============================
     void HandleInput();  // 只管輸入邊界
     void ProcessMouseClick(); // 管流程
+
     bool TrySelectSeedCard(const glm::vec2& mousePos); // 管UI選卡
     bool CanPlantAt(int row,int col, PlantType type) const; // 驗證是否可種植
     void PlacePlantAt(int row,int col, PlantType type); // 執行種植
 
-    void SpawnTestZombie();
+    // ============================
+    // Wave / Spawning (Zombie)
+    // ============================
+    void UpdateWaveSpawning();
+    void SpawnZombieByType(ZombieType type, int row);
+    void SpawnZombiesFromEvent(const SpawnEvent& event);
+    void UpdateZombies();
+
 
 
 private:
@@ -67,6 +81,7 @@ private:
     bool m_WasMousePressed = false;
 
     //
+    float m_LevelTimer = 0.0f;
     std::vector<std::shared_ptr<Zombie>> m_Zombies;
     //
 

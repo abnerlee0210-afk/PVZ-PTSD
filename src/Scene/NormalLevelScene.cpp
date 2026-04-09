@@ -10,6 +10,7 @@
 #include "Util/Logger.hpp"
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
+#include "Util/Time.hpp"
 
 NormalLevelScene::NormalLevelScene(const LevelConfig& config, SceneManager* manager)
     : m_Manager(manager),
@@ -20,21 +21,23 @@ NormalLevelScene::NormalLevelScene(const LevelConfig& config, SceneManager* mana
 void NormalLevelScene::on_enter() {
     LOG_DEBUG("Enter NormalLevelScene => Level {}", m_Config.levelId);
 
+    m_LevelTimer = 0.0f;
     m_SunPoints = m_Config.initialSun;
 
     CreateBackground();
     CreateSeedChooserFromConfig();
     UpdateSunText();
 
-    SpawnTestZombie();
+
 }
 
 void NormalLevelScene::on_update() {
     HandleInput();
 
-    for (auto& zombie : m_Zombies) {
-        zombie->Update();
-    }
+    m_LevelTimer += Util::Time::GetDeltaTimeMs() / 1000.0f;
+
+    UpdateWaveSpawning();
+    UpdateZombies();
 }
 
 void NormalLevelScene::on_render() {
@@ -160,17 +163,43 @@ void NormalLevelScene::PlacePlantAt(int row, int col, PlantType type) {
     LOG_DEBUG("Placed plant at row={}, col={}", row, col);
 }
 
-void  NormalLevelScene::SpawnTestZombie() {
-    int row = 0;
-    float y = m_Board.GetCellCenter(row, 0).y;
+void NormalLevelScene::UpdateZombies() {
+    for (auto& zombie : m_Zombies) {
+        if (zombie && zombie->IsAlive()) {
+            zombie->Update();
+        }
+    }
+}
 
-    glm::vec2 spawnPos = {600.0f,y};
+void NormalLevelScene::SpawnZombieByType(ZombieType type, int row) {
+    glm::vec2 spawnPos = m_Board.GetCellCenter(row, m_Config.cols-1);
+    spawnPos.x += 380.0f;
 
-    auto zombie = ZombieFactory::CreateZombie(ZombieType::BASIC, row, spawnPos);
+    auto zombie = ZombieFactory::CreateZombie(type,row, spawnPos);
     if (!zombie) {
+        LOG_DEBUG("Failed to create zombie");
         return;
     }
 
     m_Zombies.push_back(zombie);
     m_Root.AddChild(zombie);
+
+    LOG_DEBUG("Spawned zombie => row={}, x={}, y={}", row, spawnPos.x, spawnPos.y);
 }
+
+void NormalLevelScene::SpawnZombiesFromEvent(const SpawnEvent &event) {
+    SpawnZombieByType(event.type, event.row);
+}
+
+void NormalLevelScene::UpdateWaveSpawning() {
+    for (auto& wave : m_Config.waves) {
+        for (auto& event : wave.events) {
+            if (!event.spawned && m_LevelTimer >= event.spawnTime) {
+                SpawnZombiesFromEvent(event);
+                event.spawned = true;
+            }
+        }
+    }
+}
+
+
