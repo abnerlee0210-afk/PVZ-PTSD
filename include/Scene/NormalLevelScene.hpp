@@ -24,6 +24,7 @@
 #include "Entity/Zombie.hpp"
 #include "Entity/BasicZombie.hpp"
 #include "Entity/Projectile.hpp"
+#include "Entity/Pea.hpp"
 
 class SceneManager;
 
@@ -60,7 +61,20 @@ private:
     void UpdateWaveSpawning();
     void SpawnZombieByType(ZombieType type, int row);
     void SpawnZombiesFromEvent(const SpawnEvent& event);
+
+
+
+    // ============================
+    // 更新
+    // ============================
+    void UpdateProjectiles();
     void UpdateZombies();
+    void UpdatePlants();
+    void UpdateSinglePlant(const std::shared_ptr<Plant>& plant);
+    void TryHandlePlantShooting(const std::shared_ptr<Plant>& plant);
+
+    void SpawnProjectile(const std::shared_ptr<Projectile>& projectile);
+    void RemoveDeadProjectiles();
 
 
 
@@ -73,17 +87,16 @@ private:
     std::shared_ptr<BackgroundImage> m_Background;
     std::shared_ptr<Text> m_SunText;
     std::shared_ptr<SeedChooser> m_SeedChooser;
+    std::vector<std::shared_ptr<Plant>> m_Plants;
+    std::vector<std::shared_ptr<Projectile>> m_Projectiles;
 
     int m_SunPoints = 0;
     glm::vec2 SeedChooserPos = glm::vec2(-300.0f, 260.0f);
-
-    std::vector<std::shared_ptr<Plant>> m_Plants;
     bool m_WasMousePressed = false;
 
     //
     float m_LevelTimer = 0.0f;
     std::vector<std::shared_ptr<Zombie>> m_Zombies;
-    //
 
     std::string fontDir = RESOURCE_DIR "/font.ttf";
 

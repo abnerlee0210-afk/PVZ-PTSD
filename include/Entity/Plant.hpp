@@ -7,6 +7,7 @@
 
 #include "pch.hpp"
 
+
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
 
@@ -28,6 +29,14 @@ public:
     int GetHP() const { return m_HP; }
     int GetCost() const { return m_Cost; }
     bool IsAlive() const { return m_Alive; }
+
+    virtual bool CanShoot() const { return false; }
+    virtual glm::vec2 GetProjectileSpawnPosition() const { return {0.0f, 0.0f}; }
+    virtual void ResetShootTimer() {}
+
+    virtual bool CanGenerateSun() const { return false; }
+    virtual glm::vec2 GetSunSpawnPosition() const { return {0.0f, 0.0f}; }
+    virtual void ResetSunTimer() {}
 
 protected:
     int m_Row;

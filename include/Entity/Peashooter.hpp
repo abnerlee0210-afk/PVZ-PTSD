@@ -13,12 +13,14 @@ public:
 
     void Update() override;
 
-    bool CanShoot(float currentTime) const;
-    void RecordShootTime(float currentTime);
+    bool CanShoot() const override;
+    glm::vec2 GetProjectileSpawnPosition() const override;
+    void ResetShootTimer() override;
+
 
 private:
     float m_ShootInterval;
-    float m_LastShootTime;
+    float m_ShootTimer;
 };
 
 #endif //PEASHOOTER_HPP

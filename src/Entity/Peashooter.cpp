@@ -3,19 +3,39 @@
 //
 #include "Entity/Peashooter.hpp"
 
+#include "Util/Time.hpp"
+
 Peashooter::Peashooter(int row, int col, const glm::vec2& position)
-    : Plant(RESOURCE_DIR "/graphics/Plants/Peashooter/Peashooter_0.png", row, col, position, 100, 100),
-      m_ShootInterval(1.4f),
-      m_LastShootTime(-999.0f) {
+    : Plant(
+        RESOURCE_DIR "/graphics/Plants/Peashooter/Peashooter_0.png",
+        row,
+        col,
+        position,
+        100,
+        100
+    ),
+      m_ShootTimer(0.0f),
+      m_ShootInterval(1.5f) {
 }
 
 void Peashooter::Update() {
+    if (!m_Alive) {
+        return;
+    }
+
+    m_ShootTimer += Util::Time::GetDeltaTimeMs() / 1000.0f;
 }
 
-bool Peashooter::CanShoot(float currentTime) const {
-    return currentTime - m_LastShootTime >= m_ShootInterval;
+bool Peashooter::CanShoot() const {
+    return m_ShootTimer >= m_ShootInterval;
 }
 
-void Peashooter::RecordShootTime(float currentTime) {
-    m_LastShootTime = currentTime;
+glm::vec2 Peashooter::GetProjectileSpawnPosition() const {
+    glm::vec2 pos = m_Transform.translation;
+    pos.x += 35.0f;
+    return pos;
+}
+
+void Peashooter::ResetShootTimer() {
+    m_ShootTimer = 0.0f;
 }

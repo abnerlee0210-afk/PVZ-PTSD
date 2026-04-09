@@ -37,7 +37,11 @@ void NormalLevelScene::on_update() {
     m_LevelTimer += Util::Time::GetDeltaTimeMs() / 1000.0f;
 
     UpdateWaveSpawning();
+    UpdatePlants();
     UpdateZombies();
+    UpdateProjectiles();
+
+    RemoveDeadProjectiles();
 }
 
 void NormalLevelScene::on_render() {
@@ -163,14 +167,24 @@ void NormalLevelScene::PlacePlantAt(int row, int col, PlantType type) {
     LOG_DEBUG("Placed plant at row={}, col={}", row, col);
 }
 
-void NormalLevelScene::UpdateZombies() {
-    for (auto& zombie : m_Zombies) {
-        if (zombie && zombie->IsAlive()) {
-            zombie->Update();
+
+
+// ==================================================
+// Zombie生成及Update
+// ==================================================
+void NormalLevelScene::UpdateWaveSpawning() {
+    for (auto& wave : m_Config.waves) {
+        for (auto& event : wave.events) {
+            if (!event.spawned && m_LevelTimer >= event.spawnTime) {
+                SpawnZombiesFromEvent(event);
+                event.spawned = true;
+            }
         }
     }
 }
-
+void NormalLevelScene::SpawnZombiesFromEvent(const SpawnEvent &event) {
+    SpawnZombieByType(event.type, event.row);
+}
 void NormalLevelScene::SpawnZombieByType(ZombieType type, int row) {
     glm::vec2 spawnPos = m_Board.GetCellCenter(row, m_Config.cols-1);
     spawnPos.x += 380.0f;
@@ -186,20 +200,79 @@ void NormalLevelScene::SpawnZombieByType(ZombieType type, int row) {
 
     LOG_DEBUG("Spawned zombie => row={}, x={}, y={}", row, spawnPos.x, spawnPos.y);
 }
-
-void NormalLevelScene::SpawnZombiesFromEvent(const SpawnEvent &event) {
-    SpawnZombieByType(event.type, event.row);
-}
-
-void NormalLevelScene::UpdateWaveSpawning() {
-    for (auto& wave : m_Config.waves) {
-        for (auto& event : wave.events) {
-            if (!event.spawned && m_LevelTimer >= event.spawnTime) {
-                SpawnZombiesFromEvent(event);
-                event.spawned = true;
-            }
+void NormalLevelScene::UpdateZombies() {
+    for (auto& zombie : m_Zombies) {
+        if (zombie && zombie->IsAlive()) {
+            zombie->Update();
         }
     }
+}
+
+
+
+// ==================================================
+// 更新植物 UpdatePlants、UpdateSinglePlant
+// ==================================================
+void NormalLevelScene::UpdatePlants() {
+    for (auto& plant : m_Plants) {
+        if (!plant || !plant->IsAlive()) {
+            continue;
+        }
+
+        UpdateSinglePlant(plant); // 個別處裡
+    }
+}
+void NormalLevelScene::UpdateSinglePlant(const std::shared_ptr<Plant>& plant) {
+    plant->Update();
+
+    TryHandlePlantShooting(plant); // 射擊處理
+}
+void NormalLevelScene::TryHandlePlantShooting(const std::shared_ptr<Plant>& plant) {
+    if (!plant->CanShoot()) {
+        return;
+    }
+
+    auto pea = std::make_shared<Pea>(
+        plant->GetRow(),
+        plant->GetProjectileSpawnPosition()
+    );
+
+    SpawnProjectile(pea);
+    plant->ResetShootTimer();
+
+    LOG_DEBUG("Plant fired projectile");
+}
+
+
+// ==================================================
+// 處理子彈部分
+// ==================================================
+void NormalLevelScene::SpawnProjectile(const std::shared_ptr<Projectile> &projectile) {
+    if (!projectile) {return;}
+
+    m_Projectiles.push_back(projectile);
+    m_Root.AddChild(projectile);
+}
+void NormalLevelScene::UpdateProjectiles() {
+    for (auto& projectile : m_Projectiles) {
+        if (!projectile || !projectile->IsAlive()) {
+            continue;
+        }
+
+        projectile->Update();
+    }
+}
+void NormalLevelScene::RemoveDeadProjectiles() {
+    m_Projectiles.erase(
+        std::remove_if(
+            m_Projectiles.begin(),
+            m_Projectiles.end(),
+            [](const std::shared_ptr<Projectile>& projectile) {
+                return !projectile || !projectile->IsAlive();
+            }
+        ),
+        m_Projectiles.end()
+    );
 }
 
 
