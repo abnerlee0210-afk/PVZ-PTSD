@@ -18,6 +18,7 @@
 
 #include "Util/Image.hpp"
 #include "Util/Text.hpp"
+#include "random"
 
 #include "Entity/Plant.hpp"
 #include "Entity/Peashooter.hpp"
@@ -25,8 +26,15 @@
 #include "Entity/BasicZombie.hpp"
 #include "Entity/Projectile.hpp"
 #include "Entity/Pea.hpp"
+#include "Entity/Sun.hpp"
 
 class SceneManager;
+
+enum class GameState {
+    PLAYING,
+    VICTORY,
+    GAME_OVER
+};
 
 class NormalLevelScene : public Scene {
 public:
@@ -55,6 +63,8 @@ private:
     bool CanPlantAt(int row,int col, PlantType type) const; // 驗證是否可種植
     void PlacePlantAt(int row,int col, PlantType type); // 執行種植
 
+    bool TryCollectSun(const glm::vec2& mousePos);
+
     // ============================
     // Wave / Spawning (Zombie)
     // ============================
@@ -62,6 +72,8 @@ private:
     void SpawnZombieByType(ZombieType type, int row);
     void SpawnZombiesFromEvent(const SpawnEvent& event);
     void SpawnProjectile(const std::shared_ptr<Projectile>& projectile);
+    void SpawnSkySun();
+    void SpawnSun(const std::shared_ptr<Sun>& sun);
 
     // ============================
     // 更新
@@ -69,6 +81,7 @@ private:
     void UpdateProjectiles();
     void UpdateZombies();
     void UpdatePlants();
+    void UpdateSuns();
     void UpdateSinglePlant(const std::shared_ptr<Plant>& plant);
     void TryHandlePlantShooting(const std::shared_ptr<Plant>& plant);
 
@@ -81,13 +94,23 @@ private:
     bool IsZombieInRow(const std::shared_ptr<Plant>& plant) const;
 
     // ============================
+    // 勝敗相關函式
+    // ============================
+    bool AreAllWavesFinished() const;
+    bool AreAllZombiesCleared() const;
+    void CheckVictory();
+    void CheckGameOver();
+    void EnterVictory();
+    void EnterGameOver();
+
+    // ============================
     // 清理(死亡物件)
     // ============================
     void RemoveDeadProjectiles();
     void RemoveDeadZombies();
     void RemoveDeadPlants();
-
-
+    void RemoveDeadSuns();
+    void RemoveAllEntity();
 
 
 private:
@@ -109,6 +132,11 @@ private:
     // ============================
     int m_SunPoints = 0;
     float m_LevelTimer = 0.0f;
+    GameState m_GameState = GameState::PLAYING;
+
+    // 這邊應該要移出NormalLevelScene，放進Sun中嗎？
+    float m_SkySunTimer = 0.0f;
+    float m_NextSkySunInterval = 5.0f;
 
     // ============================
     // Entities
@@ -116,17 +144,17 @@ private:
     std::vector<std::shared_ptr<Zombie>> m_Zombies;
     std::vector<std::shared_ptr<Plant>> m_Plants;
     std::vector<std::shared_ptr<Projectile>> m_Projectiles;
+    std::vector<std::shared_ptr<Sun>> m_Suns;
 
     // ============================
     // Input狀態
     // ============================
     bool m_WasMousePressed = false;
     
-    // ============================
-    // Pos / Dir
-    // ============================
-    glm::vec2 SeedChooserPos = glm::vec2(-300.0f, 260.0f);
-    std::string fontDir = RESOURCE_DIR "/font.ttf";
+
+    //
+    std::mt19937 m_Rng{std::random_device{}()};
+    // std::uniform_int_distribution<float> m_Dist{0.0f,1.0f};
 
 };
 

@@ -21,26 +21,45 @@ NormalLevelScene::NormalLevelScene(const LevelConfig& config, SceneManager* mana
 void NormalLevelScene::on_enter() {
     LOG_DEBUG("Enter NormalLevelScene => Level {}", m_Config.levelId);
 
+    m_GameState = GameState::PLAYING;
     m_LevelTimer = 0.0f;
+    m_SkySunTimer = 0.0f;
+
+    m_NextSkySunInterval = m_Config.skySunMinInterval;
     m_SunPoints = m_Config.initialSun;
 
     CreateBackground();
     CreateSeedChooserFromConfig();
     UpdateSunText();
-
-
 }
 
 void NormalLevelScene::on_update() {
+    if (m_GameState!=GameState::PLAYING) {return;}
+
     HandleInput();
 
-    m_LevelTimer += Util::Time::GetDeltaTimeMs() / 1000.0f;
+    float deltaTime = Util::Time::GetDeltaTimeMs() / 1000.0f;
+    m_LevelTimer += deltaTime;
+
+    //
+    if (m_Config.hasSkySun) {
+        m_SkySunTimer += deltaTime;
+        if (m_SkySunTimer >= m_NextSkySunInterval) {
+            SpawnSkySun();
+            m_SkySunTimer = 0.0f;
+
+            std::uniform_real_distribution<float> distInterval(m_Config.skySunMinInterval, m_Config.skySunMaxInterval);
+            m_NextSkySunInterval = distInterval(m_Rng);
+        }
+    }
+    //
 
     // Update
     UpdateWaveSpawning();
     UpdatePlants();
     UpdateZombies();
     UpdateProjectiles();
+    UpdateSuns();
 
     // 偵測碰撞
     CheckProjectileZombieCollisions();
@@ -50,6 +69,10 @@ void NormalLevelScene::on_update() {
     RemoveDeadProjectiles();
     RemoveDeadZombies();
     RemoveDeadPlants();
+    RemoveDeadSuns();
+
+    CheckGameOver();
+    CheckVictory();
 }
 
 void NormalLevelScene::on_render() {
@@ -58,6 +81,8 @@ void NormalLevelScene::on_render() {
 
 void NormalLevelScene::on_exit() {
     LOG_DEBUG("Exit NormalLevelScene => Level {}", m_Config.levelId);
+    RemoveAllEntity();
+    // 還需移除背景、SeedChooser 等物件
 }
 
 void NormalLevelScene::CreateBackground() {
@@ -68,7 +93,7 @@ void NormalLevelScene::CreateBackground() {
 }
 
 void NormalLevelScene::CreateSeedChooserFromConfig() {
-    m_SeedChooser = std::make_shared<SeedChooser>(SeedChooserPos);
+    m_SeedChooser = std::make_shared<SeedChooser>(m_Config.SeedChooserPos);
 
     m_Objects.push_back(m_SeedChooser->GetBackgroundObject());
     m_Root.AddChild(m_SeedChooser->GetBackgroundObject());
@@ -109,6 +134,12 @@ void NormalLevelScene::ProcessMouseClick() {
     if (TrySelectSeedCard(mousePos)) {
         return;
     }
+
+    //
+    if (TryCollectSun(mousePos)) {
+        return;
+    }
+    //
 
     if (!m_SeedChooser || !m_SeedChooser->HasSelection()) {
         return;
@@ -195,7 +226,7 @@ void NormalLevelScene::SpawnZombiesFromEvent(const SpawnEvent &event) {
 }
 void NormalLevelScene::SpawnZombieByType(ZombieType type, int row) {
     glm::vec2 spawnPos = m_Board.GetCellCenter(row, m_Config.cols-1);
-    spawnPos.x += 380.0f;
+    spawnPos.x += m_Config.SpawnZombiePosXBias;
 
     auto zombie = ZombieFactory::CreateZombie(type,row, spawnPos);
     if (!zombie) {
@@ -413,4 +444,178 @@ void NormalLevelScene::RemoveDeadPlants() {
     }
 }
 
+// ==================================================
+// 處理Sun
+// ==================================================
+void NormalLevelScene::SpawnSun(const std::shared_ptr<Sun>& sun) {
+    if (!sun) {
+        return;
+    }
 
+    m_Suns.push_back(sun);
+    m_Root.AddChild(sun);
+}
+
+void NormalLevelScene::SpawnSkySun() {
+    float minX = static_cast<float>(m_Config.startX + 40.0f);
+    float maxX = static_cast<float>(m_Config.startX + m_Config.cols * 80.0f);
+    float minY = -250.0f;
+    float maxY = 150.0f;
+
+    // 建立分布器 (直接指定範圍)
+    std::uniform_real_distribution<float> distX(minX, maxX);
+    std::uniform_real_distribution<float> distY(minY, maxY);
+
+    // 直接生成隨機座標
+    float x = distX(m_Rng);
+    float y = distY(m_Rng);
+
+    glm::vec2 startPos = {x, 250};
+    glm::vec2 targetPos = {x, y};
+
+    auto sun = std::make_shared<Sun>(
+        startPos,
+        targetPos,
+        25,
+        m_Config.sunLifeTime
+    );
+
+    SpawnSun(sun);
+
+    LOG_DEBUG("Spawned sky sun");
+}
+
+void NormalLevelScene::UpdateSuns() {
+    for (auto& sun : m_Suns) {
+        if (sun && sun->IsAlive()) {
+            sun->Update();
+        }
+    }
+}
+bool NormalLevelScene::TryCollectSun(const glm::vec2& mousePos) {
+    for (auto& sun : m_Suns) {
+        if (!sun || !sun->IsAlive()) {
+            continue;
+        }
+
+        if (sun->ContainsPoint(mousePos)) {
+            m_SunPoints += sun->GetValue();
+            sun->Collect();
+            UpdateSunText();
+
+            LOG_DEBUG("Collected sun, sun points = {}", m_SunPoints);
+            return true;
+        }
+    }
+
+    return false;
+}
+void NormalLevelScene::RemoveDeadSuns() {
+    for (auto it = m_Suns.begin(); it != m_Suns.end(); ) {
+        if (!(*it) || !(*it)->IsAlive()) {
+            if (*it) {
+                m_Root.RemoveChild(*it);
+            }
+            it = m_Suns.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
+
+// ==================================================
+// 勝敗相關函式
+// ==================================================
+bool NormalLevelScene::AreAllWavesFinished() const {
+    for (const auto& wave : m_Config.waves) {
+        for (const auto& event : wave.events) {
+            if (!event.spawned) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+bool NormalLevelScene::AreAllZombiesCleared() const {
+    for (const auto& zombie : m_Zombies) {
+        if (zombie && zombie->IsAlive()) {
+            return false;
+        }
+    }
+    return true;
+}
+void NormalLevelScene::CheckVictory() {
+    if (m_GameState != GameState::PLAYING) {
+        return;
+    }
+
+    if (AreAllWavesFinished() && AreAllZombiesCleared()) {
+        EnterVictory();
+    }
+}
+void NormalLevelScene::CheckGameOver() {
+    if (m_GameState != GameState::PLAYING) {
+        return;
+    }
+
+    for (const auto& zombie : m_Zombies) {
+        if (!zombie || !zombie->IsAlive()) {
+            continue;
+        }
+
+        if (zombie->m_Transform.translation.x < m_Config.m_HomeLineX) {
+            EnterGameOver();
+            return;
+        }
+    }
+}
+void NormalLevelScene::EnterVictory() {
+    if (m_GameState != GameState::PLAYING) {
+        return;
+    }
+
+    m_GameState = GameState::VICTORY;
+    LOG_DEBUG("VICTORY!");
+}
+void NormalLevelScene::EnterGameOver() {
+    if (m_GameState != GameState::PLAYING) {
+        return;
+    }
+
+    m_GameState = GameState::GAME_OVER;
+    LOG_DEBUG("GAME OVER!");
+}
+
+void NormalLevelScene::RemoveAllEntity() {
+    // 移除 Plants
+    for (auto& plant : m_Plants) {
+        if (plant) {
+            m_Root.RemoveChild(plant);
+        }
+    }
+    m_Plants.clear();
+
+    // 移除 Zombies
+    for (auto& zombie : m_Zombies) {
+        if (zombie) {
+            m_Root.RemoveChild(zombie);
+        }
+    }
+    m_Zombies.clear();
+
+    // 移除 Projectiles
+    for (auto& projectile : m_Projectiles) {
+        if (projectile) {
+            m_Root.RemoveChild(projectile);
+        }
+    }
+    m_Projectiles.clear();
+
+    // 移除 Suns
+    for (auto& sun : m_Suns) {
+        if (sun) {
+            m_Root.RemoveChild(sun);
+        }
+    }
+    m_Suns.clear();
+}

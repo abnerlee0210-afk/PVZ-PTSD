@@ -30,6 +30,12 @@ struct LevelConfig {
 
     float startX = -460.0f;
     float startY = -270.0f;
+    float m_HomeLineX = startX - 10.0f; // 用於判定殭屍是否走進家裡
+
+    float SpawnZombiePosXBias = 380.0f;
+
+    glm::vec2 SeedChooserPos = glm::vec2(-300.0f, 260.0f);
+    std::string fontDir = RESOURCE_DIR "/font.ttf";
 
     std::string backgroundPath;
 
@@ -43,9 +49,9 @@ struct LevelConfig {
     float readySetPlantDuration = 2.0f;
     float firstZombieDelay = 18.0f;
 
-    float skySunMinInterval = 5.0f;
-    float skySunMaxInterval = 7.0f;
-    float sunLifeTime = 8.0f;
+    float skySunMinInterval = 4.0f;
+    float skySunMaxInterval = 8.0f;
+    float sunLifeTime = 12.0f;
 
     std::vector<int> lawnMowerRows;
     std::vector<PlantType> allowedPlants;
