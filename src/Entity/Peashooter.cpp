@@ -32,7 +32,7 @@ bool Peashooter::CanShoot() const {
 
 glm::vec2 Peashooter::GetProjectileSpawnPosition() const {
     glm::vec2 pos = m_Transform.translation;
-    pos.x += 35.0f;
+    pos.x += 10.0f;
     return pos;
 }
 

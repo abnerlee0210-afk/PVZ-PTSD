@@ -72,10 +72,21 @@ private:
     void UpdateSinglePlant(const std::shared_ptr<Plant>& plant);
     void TryHandlePlantShooting(const std::shared_ptr<Plant>& plant);
 
+
+    // ============================
+    // 處理碰撞 / 偵測殭屍是否出現與植物同列
+    // ============================
+    void CheckProjectileZombieCollisions();
+    void CheckZombiePlantCollisions();
+    bool IsZombieInRow(const std::shared_ptr<Plant>& plant) const;
+
     // ============================
     // 清理(死亡物件)
     // ============================
     void RemoveDeadProjectiles();
+    void RemoveDeadZombies();
+    void RemoveDeadPlants();
+
 
 
 

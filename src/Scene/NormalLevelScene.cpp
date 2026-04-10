@@ -36,12 +36,20 @@ void NormalLevelScene::on_update() {
 
     m_LevelTimer += Util::Time::GetDeltaTimeMs() / 1000.0f;
 
+    // Update
     UpdateWaveSpawning();
     UpdatePlants();
     UpdateZombies();
     UpdateProjectiles();
 
+    // 偵測碰撞
+    CheckProjectileZombieCollisions();
+    CheckZombiePlantCollisions();
+
+    // 移除死亡物件
     RemoveDeadProjectiles();
+    RemoveDeadZombies();
+    RemoveDeadPlants();
 }
 
 void NormalLevelScene::on_render() {
@@ -228,21 +236,38 @@ void NormalLevelScene::UpdateSinglePlant(const std::shared_ptr<Plant>& plant) {
     TryHandlePlantShooting(plant); // 射擊處理
 }
 void NormalLevelScene::TryHandlePlantShooting(const std::shared_ptr<Plant>& plant) {
-    if (!plant->CanShoot()) {
-        return;
+    if (IsZombieInRow(plant) && plant->CanShoot()) {
+        auto pea = std::make_shared<Pea>(
+            plant->GetRow(),
+            plant->GetProjectileSpawnPosition()
+        );
+        SpawnProjectile(pea);
+        plant->ResetShootTimer();
+
+        LOG_DEBUG("Plant fired projectile");
+    }
+}
+bool NormalLevelScene::IsZombieInRow(const std::shared_ptr<Plant>& plant) const {
+    if (!plant || !plant->IsAlive()) {
+        return false;
     }
 
-    auto pea = std::make_shared<Pea>(
-        plant->GetRow(),
-        plant->GetProjectileSpawnPosition()
-    );
+    for (const auto& zombie : m_Zombies) {
+        if (!zombie || !zombie->IsAlive()) {
+            continue;
+        }
 
-    SpawnProjectile(pea);
-    plant->ResetShootTimer();
+        if (zombie->GetRow() != plant->GetRow()) {
+            continue;
+        }
 
-    LOG_DEBUG("Plant fired projectile");
+        if (zombie->m_Transform.translation.x > plant->m_Transform.translation.x) {
+            return true;
+        }
+    }
+
+    return false;
 }
-
 
 // ==================================================
 // 處理子彈部分
@@ -262,17 +287,130 @@ void NormalLevelScene::UpdateProjectiles() {
         projectile->Update();
     }
 }
-void NormalLevelScene::RemoveDeadProjectiles() {
-    m_Projectiles.erase(
-        std::remove_if(
-            m_Projectiles.begin(),
-            m_Projectiles.end(),
-            [](const std::shared_ptr<Projectile>& projectile) {
-                return !projectile || !projectile->IsAlive();
+
+// ==================================================
+// 處理子彈和僵屍的碰撞(碰撞後移除子彈，殭屍扣血)
+// ==================================================
+
+void NormalLevelScene::CheckProjectileZombieCollisions() {
+    for (auto& projectile : m_Projectiles) {
+        if (!projectile || !projectile->IsAlive()) {
+            continue;
+        }
+
+        for (auto& zombie : m_Zombies) {
+            if (!zombie || !zombie->IsAlive()) {
+                continue;
             }
-        ),
-        m_Projectiles.end()
-    );
+
+            if (projectile->GetRow() != zombie->GetRow()) {
+                continue;
+            }
+
+            float dx = std::abs(
+                projectile->m_Transform.translation.x -
+                zombie->m_Transform.translation.x
+            );
+
+            if (dx < 30.0f) {
+                zombie->TakeDamage(projectile->GetDamage());
+                projectile->Destroy();
+
+                LOG_DEBUG(
+                    "Projectile hit zombie => damage={}, zombieHP={}",
+                    projectile->GetDamage(),
+                    zombie->GetHP()
+                );
+
+                break;
+            }
+        }
+    }
+}
+
+void NormalLevelScene::RemoveDeadZombies() {
+    for (auto it = m_Zombies.begin(); it != m_Zombies.end(); ) {
+        if (!(*it) || !(*it)->IsAlive()) {
+            m_Root.RemoveChild(*it); // 1️⃣ 從 Renderer 移除
+            it = m_Zombies.erase(it); // 2️⃣ 從 vector 移除
+        } else {
+            ++it;
+        }
+    }
+}
+
+void NormalLevelScene::RemoveDeadProjectiles() {
+    for (auto it = m_Projectiles.begin(); it != m_Projectiles.end(); ) {
+        if (!(*it) || !(*it)->IsAlive()) {
+            m_Root.RemoveChild(*it);
+            it = m_Projectiles.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
+
+
+// ==================================================
+// 處理植物和僵屍的碰撞(殭屍攻擊、植物扣血)
+// ==================================================
+void NormalLevelScene::CheckZombiePlantCollisions() {
+    for (auto& zombie : m_Zombies) {
+        if (!zombie || !zombie->IsAlive()) {
+            continue;
+        }
+
+        bool foundPlantToAttack = false;
+
+        for (auto& plant : m_Plants) {
+            if (!plant || !plant->IsAlive()) {
+                continue;
+            }
+
+            if (plant->GetRow() != zombie->GetRow()) {
+                continue;
+            }
+
+            float dx = std::abs(
+                zombie->m_Transform.translation.x -
+                plant->m_Transform.translation.x
+            );
+
+            if (dx > 0 && dx < 45.0f) {
+                foundPlantToAttack = true;
+                zombie->SetAttacking(true);
+
+                if (zombie->CanAttack()) {
+                    plant->TakeDamage(20);
+                    zombie->ResetAttackTimer();
+
+                    LOG_DEBUG(
+                        "Zombie attacked plant => plantHP={}",
+                        plant->GetHP()
+                    );
+                }
+
+                break;
+            }
+        }
+
+        if (!foundPlantToAttack) {
+            zombie->SetAttacking(false);
+        }
+    }
+}
+void NormalLevelScene::RemoveDeadPlants() {
+    for (auto it = m_Plants.begin(); it != m_Plants.end(); ) {
+        if (!(*it) || !(*it)->IsAlive()) {
+            if (*it) {
+                m_Board.RemovePlant((*it)->GetRow(), (*it)->GetCol());
+                m_Root.RemoveChild(*it);
+            }
+            it = m_Plants.erase(it);
+        } else {
+            ++it;
+        }
+    }
 }
 
 

@@ -28,11 +28,21 @@ public:
     float GetSpeed() const { return m_Speed; }
     bool IsAlive() const { return m_Alive; }
 
+    bool CanAttack() const;
+    void ResetAttackTimer();
+    void SetAttacking(bool attacking) {m_IsAttacking = attacking;}
+    bool IsAttacking() const {return m_IsAttacking;}
+
+
 protected:
     int m_Row;
     int m_HP;
     float m_Speed;
     bool m_Alive;
+
+    float m_AttackTimer;
+    float m_AttackInterval;
+    bool m_IsAttacking;
 };
 
 #endif //ZOMBIE_HPP

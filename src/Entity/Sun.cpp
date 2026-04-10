@@ -7,7 +7,7 @@
 
 // 固定位置生成
 Sun::Sun(const glm::vec2& position, int value)
-    : Util::GameObject(std::make_shared<Util::Image>(RESOURCE_DIR "/sun.png"), 12.0f),
+    : Util::GameObject(std::make_shared<Util::Image>(RESOURCE_DIR "/graphics/Plants/Sun/Sun_0.png"), 12.0f),
       m_Value(value),
       m_Alive(true),
       m_HalfWidth(40.0f),
@@ -19,33 +19,42 @@ Sun::Sun(const glm::vec2& position, int value)
 }
 
 // 掉落式生成
-Sun::Sun(const glm::vec2& startPosition, const glm::vec2& targetPosition, int value)
-    : Util::GameObject(std::make_shared<Util::Image>(RESOURCE_DIR "/sun.png"), 12.0f),
+Sun::Sun(const glm::vec2& startPosition, const glm::vec2& targetPosition, int value, float lifetime)
+    : Util::GameObject(std::make_shared<Util::Image>(RESOURCE_DIR "/graphics/Plants/Sun/Sun_0.png"), 12.0f),
       m_Value(value),
       m_Alive(true),
       m_HalfWidth(40.0f),
       m_HalfHeight(40.0f),
       m_IsFalling(true),
       m_TargetPosition(targetPosition),
-      m_FallSpeed(120.0f) {
+      m_FallSpeed(100.0f),
+      m_LifeTimer(0.0f),
+      m_LifeTime(lifetime) {
     m_Transform.translation = startPosition;
 }
 
 
 
 void Sun::Update() {
-    if (!m_Alive || !m_IsFalling) {
+    if (!m_Alive) {
         return;
     }
     const float deltaTime = Util::Time::GetDeltaTimeMs() / 1000.0f;
     // 往下掉，所以 Y 要減掉速度
-    m_Transform.translation.y -= m_FallSpeed * deltaTime;
+    if (m_IsFalling) {
+        m_Transform.translation.y -= m_FallSpeed * deltaTime;
+    }
 
     // 當目前的 Y 比目標還要「低」時，停止掉落
     // 在中心 (0,0) 的坐標系，越下面數字越小 (例如 -100 比 200 小)
     if (m_Transform.translation.y <= m_TargetPosition.y) {
         m_Transform.translation.y = m_TargetPosition.y;
         m_IsFalling = false;
+    }
+
+    m_LifeTimer += deltaTime;
+    if (m_LifeTimer >= m_LifeTime) {
+        m_Alive = false;
     }
 }
 

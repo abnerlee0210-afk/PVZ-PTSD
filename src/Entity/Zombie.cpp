@@ -14,7 +14,10 @@ Zombie::Zombie(const std::string& imagePath,
       m_Row(row),
       m_HP(hp),
       m_Speed(speed),
-      m_Alive(true) {
+      m_Alive(true),
+      m_AttackTimer(0.0f),
+      m_AttackInterval(1.0f),
+      m_IsAttacking(false) {
     m_Transform.translation = position;
 }
 
@@ -24,7 +27,14 @@ void Zombie::Update() {
     }
 
     const float deltaTime = Util::Time::GetDeltaTimeMs() / 1000.0f;
+
+    if (m_IsAttacking) {
+        m_AttackTimer += deltaTime;
+        return;
+    }
+
     m_Transform.translation.x -= m_Speed * deltaTime;
+
 }
 
 void Zombie::TakeDamage(int damage) {
@@ -38,3 +48,12 @@ void Zombie::TakeDamage(int damage) {
         m_Alive = false;
     }
 }
+
+bool Zombie::CanAttack() const {
+    return m_AttackTimer >= m_AttackInterval;
+}
+
+void Zombie::ResetAttackTimer() {
+    m_AttackTimer = 0.0f;
+}
+
