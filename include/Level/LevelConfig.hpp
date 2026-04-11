@@ -28,13 +28,21 @@ struct LevelConfig {
     int rows = 5;
     int cols = 9;
 
-    float startX = -460.0f;
+    float boundariesX = 512.0f;
+    float CameraOffset = 190.0f;
+    float WorldPos = 190.0f;
+
+    float startX = -270;
     float startY = -270.0f;
     float m_HomeLineX = startX - 10.0f; // 用於判定殭屍是否走進家裡
 
-    float SpawnZombiePosXBias = 380.0f;
+    float SpawnZombiePosXBias = 80.0f ;
 
-    glm::vec2 SeedChooserPos = glm::vec2(-300.0f, 260.0f);
+    glm::vec2 BackgroundPos = glm::vec2(190.0f,0.0f);
+    glm::vec2 SeedChooserPos = glm::vec2(-170.0f, 260.0f);
+    glm::vec2 PauseBtnPos = glm::vec2(200.0f,200.0f);
+
+    std::string PauseBtnDir = RESOURCE_DIR "/graphics/Screen/pause_button.jpg";
     std::string fontDir = RESOURCE_DIR "/font.ttf";
 
     std::string backgroundPath;
@@ -52,6 +60,8 @@ struct LevelConfig {
     float skySunMinInterval = 4.0f;
     float skySunMaxInterval = 8.0f;
     float sunLifeTime = 12.0f;
+
+
 
     std::vector<int> lawnMowerRows;
     std::vector<PlantType> allowedPlants;

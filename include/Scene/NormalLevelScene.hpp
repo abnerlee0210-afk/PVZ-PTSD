@@ -7,25 +7,22 @@
 
 #include "Scene/Scene.hpp"
 #include "Screen/BackgroundImage.hpp"
-#include "Screen/Text.hpp"
 #include "Level/LevelConfig.hpp"
 #include "Board/GameBoard.hpp"
 
 #include "UI/SeedCard.hpp"
 #include "UI/SeedChooser.hpp"
+#include "UI/Base/Button.hpp"
 
 #include "Factory/SeedCardFactory.hpp"
 
 #include "Util/Image.hpp"
 #include "Util/Text.hpp"
-#include "random"
+#include <random>
 
 #include "Entity/Plant.hpp"
-#include "Entity/Peashooter.hpp"
 #include "Entity/Zombie.hpp"
-#include "Entity/BasicZombie.hpp"
 #include "Entity/Projectile.hpp"
-#include "Entity/Pea.hpp"
 #include "Entity/Sun.hpp"
 
 class SceneManager;
@@ -47,10 +44,11 @@ public:
 
 private:
     // ============================
-    // 初始化
+    // Init
     // ============================
     void CreateBackground();
     void CreateSeedChooserFromConfig();
+    void CreateButton();
     void UpdateSunText();
 
     // ============================
@@ -58,15 +56,14 @@ private:
     // ============================
     void HandleInput();  // 只管輸入邊界
     void ProcessMouseClick(); // 管流程
-
     bool TrySelectSeedCard(const glm::vec2& mousePos); // 管UI選卡
+    bool TryCollectSun(const glm::vec2& mousePos);
     bool CanPlantAt(int row,int col, PlantType type) const; // 驗證是否可種植
     void PlacePlantAt(int row,int col, PlantType type); // 執行種植
 
-    bool TryCollectSun(const glm::vec2& mousePos);
 
     // ============================
-    // Wave / Spawning (Zombie)
+    // Wave / Spawning
     // ============================
     void UpdateWaveSpawning();
     void SpawnZombieByType(ZombieType type, int row);
@@ -76,8 +73,9 @@ private:
     void SpawnSun(const std::shared_ptr<Sun>& sun);
 
     // ============================
-    // 更新
+    // Update
     // ============================
+    void UpdateSkySunSystem(float deltaTime);
     void UpdateProjectiles();
     void UpdateZombies();
     void UpdatePlants();
@@ -94,7 +92,7 @@ private:
     bool IsZombieInRow(const std::shared_ptr<Plant>& plant) const;
 
     // ============================
-    // 勝敗相關函式
+    // Win / Lose
     // ============================
     bool AreAllWavesFinished() const;
     bool AreAllZombiesCleared() const;
@@ -104,13 +102,12 @@ private:
     void EnterGameOver();
 
     // ============================
-    // 清理(死亡物件)
+    // Cleanup
     // ============================
-    void RemoveDeadProjectiles();
-    void RemoveDeadZombies();
-    void RemoveDeadPlants();
-    void RemoveDeadSuns();
+    void RemoveDeadEntities();
     void RemoveAllEntity();
+
+
 
 
 private:
@@ -154,7 +151,7 @@ private:
 
     //
     std::mt19937 m_Rng{std::random_device{}()};
-    // std::uniform_int_distribution<float> m_Dist{0.0f,1.0f};
+    glm::vec2 m_CameraOffect = {0.0f,0.0f};
 
 };
 

@@ -12,6 +12,10 @@
 #include "Util/Keycode.hpp"
 #include "Util/Time.hpp"
 
+#include "Entity/Peashooter.hpp"
+#include "Entity/BasicZombie.hpp"
+#include "Entity/Pea.hpp"
+
 NormalLevelScene::NormalLevelScene(const LevelConfig& config, SceneManager* manager)
     : m_Manager(manager),
       m_Config(config),
@@ -41,18 +45,7 @@ void NormalLevelScene::on_update() {
     float deltaTime = Util::Time::GetDeltaTimeMs() / 1000.0f;
     m_LevelTimer += deltaTime;
 
-    //
-    if (m_Config.hasSkySun) {
-        m_SkySunTimer += deltaTime;
-        if (m_SkySunTimer >= m_NextSkySunInterval) {
-            SpawnSkySun();
-            m_SkySunTimer = 0.0f;
-
-            std::uniform_real_distribution<float> distInterval(m_Config.skySunMinInterval, m_Config.skySunMaxInterval);
-            m_NextSkySunInterval = distInterval(m_Rng);
-        }
-    }
-    //
+    UpdateSkySunSystem(deltaTime);
 
     // Update
     UpdateWaveSpawning();
@@ -66,10 +59,7 @@ void NormalLevelScene::on_update() {
     CheckZombiePlantCollisions();
 
     // 移除死亡物件
-    RemoveDeadProjectiles();
-    RemoveDeadZombies();
-    RemoveDeadPlants();
-    RemoveDeadSuns();
+    RemoveDeadEntities();
 
     CheckGameOver();
     CheckVictory();
@@ -82,16 +72,18 @@ void NormalLevelScene::on_render() {
 void NormalLevelScene::on_exit() {
     LOG_DEBUG("Exit NormalLevelScene => Level {}", m_Config.levelId);
     RemoveAllEntity();
-    // 還需移除背景、SeedChooser 等物件
 }
 
+// ==================================================
+// Create / 初始化
+// ==================================================
 void NormalLevelScene::CreateBackground() {
     m_Background = std::make_shared<BackgroundImage>(m_Config.backgroundPath);
+    m_Background->m_Transform.translation = m_Config.BackgroundPos;
 
     m_Objects.push_back(m_Background);
     m_Root.AddChild(m_Background);
 }
-
 void NormalLevelScene::CreateSeedChooserFromConfig() {
     m_SeedChooser = std::make_shared<SeedChooser>(m_Config.SeedChooserPos);
 
@@ -117,7 +109,9 @@ void NormalLevelScene::UpdateSunText() {
     m_SeedChooser->UpdateSun(m_SunPoints);
 }
 
-
+// ==================================================
+// 處理iuput
+// ==================================================
 void NormalLevelScene::HandleInput() {
     bool isMousePressed = Util::Input::IsKeyDown(Util::Keycode::MOUSE_LB);
 
@@ -127,9 +121,9 @@ void NormalLevelScene::HandleInput() {
 
     m_WasMousePressed = isMousePressed;
 }
-
 void NormalLevelScene::ProcessMouseClick() {
     glm::vec2 mousePos = Util::Input::GetCursorPosition();
+    LOG_DEBUG("X:{},Y:{}",mousePos.x, mousePos.y);
 
     if (TrySelectSeedCard(mousePos)) {
         return;
@@ -160,6 +154,9 @@ void NormalLevelScene::ProcessMouseClick() {
     PlacePlantAt(row, col, selectedType);
 }
 
+// ==================================================
+// 選卡 / 種植
+// ==================================================
 bool NormalLevelScene::TrySelectSeedCard(const glm::vec2& mousePos) {
     if (!m_SeedChooser) {
         return false;
@@ -171,7 +168,6 @@ bool NormalLevelScene::TrySelectSeedCard(const glm::vec2& mousePos) {
     }
     return selected;
 }
-
 bool NormalLevelScene::CanPlantAt(int row, int col, PlantType type) const {
     if (!m_Board.IsCellEmpty(row, col)) {
         LOG_DEBUG("Cell already occupied: row={}, col={}", row, col);
@@ -186,7 +182,6 @@ bool NormalLevelScene::CanPlantAt(int row, int col, PlantType type) const {
 
     return true;
 }
-
 void NormalLevelScene::PlacePlantAt(int row, int col, PlantType type) {
     glm::vec2 plantPos = m_Board.GetCellCenter(row, col);
 
@@ -248,7 +243,6 @@ void NormalLevelScene::UpdateZombies() {
 }
 
 
-
 // ==================================================
 // 更新植物 UpdatePlants、UpdateSinglePlant
 // ==================================================
@@ -292,7 +286,8 @@ bool NormalLevelScene::IsZombieInRow(const std::shared_ptr<Plant>& plant) const 
             continue;
         }
 
-        if (zombie->m_Transform.translation.x > plant->m_Transform.translation.x) {
+        if (zombie->m_Transform.translation.x > plant->m_Transform.translation.x ||
+            zombie->m_Transform.translation.x < m_Config.boundariesX) {
             return true;
         }
     }
@@ -322,7 +317,6 @@ void NormalLevelScene::UpdateProjectiles() {
 // ==================================================
 // 處理子彈和僵屍的碰撞(碰撞後移除子彈，殭屍扣血)
 // ==================================================
-
 void NormalLevelScene::CheckProjectileZombieCollisions() {
     for (auto& projectile : m_Projectiles) {
         if (!projectile || !projectile->IsAlive()) {
@@ -355,28 +349,6 @@ void NormalLevelScene::CheckProjectileZombieCollisions() {
 
                 break;
             }
-        }
-    }
-}
-
-void NormalLevelScene::RemoveDeadZombies() {
-    for (auto it = m_Zombies.begin(); it != m_Zombies.end(); ) {
-        if (!(*it) || !(*it)->IsAlive()) {
-            m_Root.RemoveChild(*it); // 1️⃣ 從 Renderer 移除
-            it = m_Zombies.erase(it); // 2️⃣ 從 vector 移除
-        } else {
-            ++it;
-        }
-    }
-}
-
-void NormalLevelScene::RemoveDeadProjectiles() {
-    for (auto it = m_Projectiles.begin(); it != m_Projectiles.end(); ) {
-        if (!(*it) || !(*it)->IsAlive()) {
-            m_Root.RemoveChild(*it);
-            it = m_Projectiles.erase(it);
-        } else {
-            ++it;
         }
     }
 }
@@ -430,19 +402,7 @@ void NormalLevelScene::CheckZombiePlantCollisions() {
         }
     }
 }
-void NormalLevelScene::RemoveDeadPlants() {
-    for (auto it = m_Plants.begin(); it != m_Plants.end(); ) {
-        if (!(*it) || !(*it)->IsAlive()) {
-            if (*it) {
-                m_Board.RemovePlant((*it)->GetRow(), (*it)->GetCol());
-                m_Root.RemoveChild(*it);
-            }
-            it = m_Plants.erase(it);
-        } else {
-            ++it;
-        }
-    }
-}
+
 
 // ==================================================
 // 處理Sun
@@ -455,7 +415,6 @@ void NormalLevelScene::SpawnSun(const std::shared_ptr<Sun>& sun) {
     m_Suns.push_back(sun);
     m_Root.AddChild(sun);
 }
-
 void NormalLevelScene::SpawnSkySun() {
     float minX = static_cast<float>(m_Config.startX + 40.0f);
     float maxX = static_cast<float>(m_Config.startX + m_Config.cols * 80.0f);
@@ -510,18 +469,19 @@ bool NormalLevelScene::TryCollectSun(const glm::vec2& mousePos) {
 
     return false;
 }
-void NormalLevelScene::RemoveDeadSuns() {
-    for (auto it = m_Suns.begin(); it != m_Suns.end(); ) {
-        if (!(*it) || !(*it)->IsAlive()) {
-            if (*it) {
-                m_Root.RemoveChild(*it);
-            }
-            it = m_Suns.erase(it);
-        } else {
-            ++it;
-        }
+void NormalLevelScene::UpdateSkySunSystem(float deltaTime) {
+    if (!m_Config.hasSkySun) return;
+
+    m_SkySunTimer += deltaTime;
+    if (m_SkySunTimer >= m_NextSkySunInterval) {
+        SpawnSkySun();
+        m_SkySunTimer = 0.0f;
+
+        std::uniform_real_distribution<float> dist(m_Config.skySunMinInterval, m_Config.skySunMaxInterval);
+        m_NextSkySunInterval = dist(m_Rng);
     }
 }
+
 
 // ==================================================
 // 勝敗相關函式
@@ -586,6 +546,10 @@ void NormalLevelScene::EnterGameOver() {
     LOG_DEBUG("GAME OVER!");
 }
 
+
+// ==================================================
+// Remove
+// ==================================================
 void NormalLevelScene::RemoveAllEntity() {
     // 移除 Plants
     for (auto& plant : m_Plants) {
@@ -618,4 +582,57 @@ void NormalLevelScene::RemoveAllEntity() {
         }
     }
     m_Suns.clear();
+
+    m_Root.RemoveChild(m_SeedChooser->GetBackgroundObject());
+    m_Root.RemoveChild(m_SeedChooser->GetSunText());
+    for (auto& card : m_SeedChooser->GetCards()) {
+        if (card) m_Root.RemoveChild(card);
+    }
+    m_Root.RemoveChild(m_Background);
+}
+void NormalLevelScene::RemoveDeadEntities() {
+    // 移除子彈
+    for (auto it = m_Projectiles.begin(); it != m_Projectiles.end(); ) {
+        if (!(*it) || !(*it)->IsAlive()) {
+            m_Root.RemoveChild(*it);
+            it = m_Projectiles.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
+    // 移除死亡的殭屍
+    for (auto it = m_Zombies.begin(); it != m_Zombies.end(); ) {
+        if (!(*it) || !(*it)->IsAlive()) {
+            m_Root.RemoveChild(*it); // 1️⃣ 從 Renderer 移除
+            it = m_Zombies.erase(it); // 2️⃣ 從 vector 移除
+        } else {
+            ++it;
+        }
+    }
+
+    // 移除死亡的植物
+    for (auto it = m_Plants.begin(); it != m_Plants.end(); ) {
+        if (!(*it) || !(*it)->IsAlive()) {
+            if (*it) {
+                m_Board.RemovePlant((*it)->GetRow(), (*it)->GetCol());
+                m_Root.RemoveChild(*it);
+            }
+            it = m_Plants.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
+    // 移除陽光
+    for (auto it = m_Suns.begin(); it != m_Suns.end(); ) {
+        if (!(*it) || !(*it)->IsAlive()) {
+            if (*it) {
+                m_Root.RemoveChild(*it);
+            }
+            it = m_Suns.erase(it);
+        } else {
+            ++it;
+        }
+    }
 }

@@ -33,6 +33,9 @@ private:
     float m_CellWidth;      // 每一格的寬度
     float m_CellHeight;     // 每一格的高度
 
+    std::vector<float> m_ColCenters;
+    std::vector<float> m_RowCenters;
+
     std::vector<std::vector<Plant*>> m_Grid;
 };
 
