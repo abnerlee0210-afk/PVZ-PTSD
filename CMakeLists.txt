@@ -92,6 +92,9 @@ add_executable(${PROJECT_NAME}
         src/Factory/PlantFactory.cpp
         include/Factory/ZombieFactory.hpp
         src/Factory/ZombieFactory.cpp
+        include/Board/BoardLayout.hpp
+        include/Board/BoardPresets.hpp
+        src/Board/BoardPresets.cpp
 )
 
 if(MSVC)

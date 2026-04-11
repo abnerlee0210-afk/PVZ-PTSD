@@ -20,6 +20,8 @@ LevelConfig LevelRepository::CreateLevel1() {
     level.levelId = 1;
     level.mode = LevelMode::NORMAL;
 
+    level.boardTypes = BoardTypes::DAY_SINGLE_ROW;
+
     level.rows = 1;
     level.cols = 9;
 

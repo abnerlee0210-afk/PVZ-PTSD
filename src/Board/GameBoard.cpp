@@ -1,88 +1,98 @@
-//
-// Created by hankl on 2026/3/10.
-//
 #include "Board/GameBoard.hpp"
 
-//#include "Entity/Plant.hpp"
+#include <limits>
+#include <cmath>
 
-// 建構子與初始化 (Constructor)
-GameBoard::GameBoard(int rows, int cols, float startX, float startY)
+#include "Entity/Plant.hpp"
+
+GameBoard::GameBoard(
+    int rows,
+    int cols,
+    const BoardLayout& layout
+)
     : m_Rows(rows),
       m_Cols(cols),
-      m_GridStartX(startX), // 參數設定：定義了棋盤在螢幕上的起點 (460,-270)(左下角) 以及每一格的寬度與高度。
-      m_GridStartY(startY),
-      m_CellWidth(85.0f),
-      m_CellHeight(100.0f),
-      m_Grid(rows, std::vector<Plant*>(cols, nullptr)){
+      m_RowCenters(layout.rowCenters),
+      m_ColCenters(layout.colCenters),
+      m_Grid(rows, std::vector<Plant*>(cols, nullptr)) {
 }
 
-// 用於判斷玩家點擊了哪一格
-bool GameBoard::ScreenToGrid(float x, float y, int& row, int& col) const {
-    // 1. 如果點擊位置在棋盤起點的左邊或下方，直接判定無效
-    if (x < m_GridStartX || y < m_GridStartY) {
-        return false;
-    }
-
-    // 2. 計算公式：(點擊點 - 起點) / 格子大小 = 索引值
-    // 使用 static_cast<int> 是為了無條件捨去小數點，得到正確的陣列 index
-    col = static_cast<int>((x - m_GridStartX) / m_CellWidth);
-    row = static_cast<int>((y - m_GridStartY) / m_CellHeight);
-
-    // 3. 邊界檢查：確保算出來的 row 和 col 不會超出陣列範圍 (0~4, 0~8)
-    if (row < 0 || row >= m_Rows || col < 0 || col >= m_Cols) {
-        return false;
-    }
-
-    return true;    // 點擊在有效範圍內
-}
-
-// GridToScreen：回傳格子的 左下角 座標。
-glm::vec2 GameBoard::GridToScreen(int row, int col) const {
-    return {
-        m_GridStartX + col * m_CellWidth,
-        m_GridStartY + row * m_CellHeight
-    };
-}
-
-// 取得格子的「正中心」
-// 這在放置子彈發射點或計算植物對齊時非常實用
 glm::vec2 GameBoard::GetCellCenter(int row, int col) const {
-    return {
-        m_GridStartX + col * m_CellWidth + m_CellWidth * 0.5f,
-        m_GridStartY + row * m_CellHeight + m_CellHeight * 0.5f
-    };
+    if (row < 0 || row >= m_Rows || col < 0 || col >= m_Cols) {
+        return {0.0f, 0.0f};
+    }
+
+    return {m_ColCenters[col], m_RowCenters[row]};
 }
 
-// IsCellEmpty：檢查 m_Grid[row][col] 是否為空指標。
-// 如果玩家想在已經有植物的地方再種一顆，這個函式就能用來擋掉。
+bool GameBoard::ScreenToGrid(float x, float y, int& row, int& col) const {
+    if (m_RowCenters.empty() || m_ColCenters.empty()) {
+        return false;
+    }
+
+    int bestRow = -1;
+    int bestCol = -1;
+    float bestRowDist = std::numeric_limits<float>::max();
+    float bestColDist = std::numeric_limits<float>::max();
+
+    for (int r = 0; r < m_Rows; ++r) {
+        float dist = std::abs(y - m_RowCenters[r]);
+        if (dist < bestRowDist) {
+            bestRowDist = dist;
+            bestRow = r;
+        }
+    }
+
+    for (int c = 0; c < m_Cols; ++c) {
+        float dist = std::abs(x - m_ColCenters[c]);
+        if (dist < bestColDist) {
+            bestColDist = dist;
+            bestCol = c;
+        }
+    }
+
+    if (bestRow == -1 || bestCol == -1) {
+        return false;
+    }
+
+    // 容許範圍：避免點太遠也被吸進格子
+    if (bestRowDist > 60.0f || bestColDist > 60.0f) {
+        return false;
+    }
+
+    row = bestRow;
+    col = bestCol;
+    return true;
+}
+
 bool GameBoard::IsCellEmpty(int row, int col) const {
     if (row < 0 || row >= m_Rows || col < 0 || col >= m_Cols) {
         return false;
     }
+
     return m_Grid[row][col] == nullptr;
 }
 
-// PlacePlant：將植物物件的指標存入陣列中。
 void GameBoard::PlacePlant(Plant* plant, int row, int col) {
     if (row < 0 || row >= m_Rows || col < 0 || col >= m_Cols) {
         return;
     }
+
     m_Grid[row][col] = plant;
 }
 
-// GetPlant：取得特定位置的植物指標（例如用於判斷殭屍是否正在啃食該格的植物）。
-Plant* GameBoard::GetPlant(int row, int col) const {
-    if (row < 0 || row >= m_Rows || col < 0 || col >= m_Cols) {
-        return nullptr;
-    }
-    return m_Grid[row][col];
-}
-
-// 讓 GameBoard 能移除植物
-// 移除植物：當植物被打死或玩家用鏟子移除時調用
 void GameBoard::RemovePlant(int row, int col) {
     if (row < 0 || row >= m_Rows || col < 0 || col >= m_Cols) {
         return;
     }
+
     m_Grid[row][col] = nullptr;
+}
+
+Plant* GameBoard::GetPlant(int row, int col) const {
+    if (row < 0 || row >= m_Rows || col < 0 || col >= m_Cols) {
+        return nullptr;
+    }
+
+    return m_Grid[row][col];
 }

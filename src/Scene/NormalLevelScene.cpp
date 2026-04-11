@@ -3,6 +3,7 @@
 //
 #include "Scene/NormalLevelScene.hpp"
 #include "Manager/SceneManager.hpp"
+#include "Board/BoardPresets.hpp"
 #include "Factory/PlantFactory.hpp"
 #include "Factory/ZombieFactory.hpp"
 
@@ -19,7 +20,7 @@
 NormalLevelScene::NormalLevelScene(const LevelConfig& config, SceneManager* manager)
     : m_Manager(manager),
       m_Config(config),
-      m_Board(config.rows, config.cols, config.startX, config.startY) {
+      m_Board(config.rows, config.cols, BoardPresets::GetLayout(config.boardTypes)) {
 }
 
 void NormalLevelScene::on_enter() {

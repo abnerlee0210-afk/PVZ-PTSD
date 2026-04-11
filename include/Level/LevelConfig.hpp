@@ -28,6 +28,8 @@ struct LevelConfig {
     int rows = 5;
     int cols = 9;
 
+    BoardTypes boardTypes = BoardTypes::DAY_FULL_5_ROW;
+
     float boundariesX = 512.0f;
     float CameraOffset = 190.0f;
     float WorldPos = 190.0f;
@@ -40,9 +42,7 @@ struct LevelConfig {
 
     glm::vec2 BackgroundPos = glm::vec2(190.0f,0.0f);
     glm::vec2 SeedChooserPos = glm::vec2(-170.0f, 260.0f);
-    glm::vec2 PauseBtnPos = glm::vec2(200.0f,200.0f);
 
-    std::string PauseBtnDir = RESOURCE_DIR "/graphics/Screen/pause_button.jpg";
     std::string fontDir = RESOURCE_DIR "/font.ttf";
 
     std::string backgroundPath;
