@@ -28,7 +28,6 @@ public:
 
     void UpdateSun(int sunCount);
 
-
     std::shared_ptr<BackgroundImage> GetBackgroundObject() const { return m_BackgroundObject; }
     const std::vector<std::shared_ptr<SeedCard>>& GetCards() const { return m_Cards; }
     std::shared_ptr<Text> GetSunText() const { return m_SunText; }
@@ -38,6 +37,7 @@ private:
     std::shared_ptr<BackgroundImage> m_BackgroundObject;
     std::shared_ptr<Text> m_SunText;
     std::vector<std::shared_ptr<SeedCard>> m_Cards;
+
 
     std::string bgPath = RESOURCE_DIR "/graphics/Screen/ChooserBackground.png";
 

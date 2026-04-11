@@ -44,6 +44,9 @@ public:
     // 將卡片顯示縮放乘上一個因子（例如 0.9 / 1.1）
     void SetVisualScaleFactor(float factor);
 
+
+    std::shared_ptr<Util::GameObject> GetOuterFrame() const {return m_OuterFrame;}
+
 private:
     PlantType m_PlantType;
     int m_Cost;
@@ -54,6 +57,9 @@ private:
 
     float m_Width;
     float m_Height;
+
+    std::shared_ptr<Util::GameObject> m_OuterFrame;
+
 
     glm::vec2 m_BaseScale {1.0f, 1.0f};
 };

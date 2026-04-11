@@ -99,6 +99,9 @@ void NormalLevelScene::CreateSeedChooserFromConfig() {
         if (card != nullptr) {
             m_SeedChooser->AddCard(card);
             m_Root.AddChild(card);
+            if (card->GetOuterFrame()) {
+                m_Root.AddChild(card->GetOuterFrame());
+            }
         }
     }
 

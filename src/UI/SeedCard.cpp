@@ -24,6 +24,11 @@ SeedCard::SeedCard(const std::string& imagePath,
     const float sy = (drawableSize.y != 0.0f) ? (m_Height / drawableSize.y) : 1.0f;
     m_BaseScale = {sx, sy};
     m_Transform.scale = m_BaseScale;
+
+    auto frameImage = std::make_shared<Util::Image>(RESOURCE_DIR "/graphics/Cards/OuterFrame.png");
+    m_OuterFrame = std::make_shared<Util::GameObject>(frameImage,100.0f);
+    m_OuterFrame->m_Transform.translation = {0.0f,0.0f};
+    m_OuterFrame->SetVisible(false);
 }
 
 
@@ -46,6 +51,11 @@ bool SeedCard::ContainsPoint(const glm::vec2& point) const {
 // 設為選擇/未選擇
 void SeedCard::SetSelected(bool selected) {
     m_Selected = selected;
+
+    if (m_OuterFrame) {
+        m_OuterFrame->SetVisible(selected);
+    }
+    m_OuterFrame->m_Transform.translation = m_Transform.translation;
 }
 
 // 回傳是否在冷卻中

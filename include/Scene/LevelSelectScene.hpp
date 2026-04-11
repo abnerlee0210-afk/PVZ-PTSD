@@ -58,7 +58,7 @@ private:
 
     // 場景物件位置
     glm::vec2 PlayButtonPos = glm::vec2(0.0f, 0.0f);
-    glm::vec2 BackButtonPos = glm::vec2(-600,-300);
+    glm::vec2 BackButtonPos = glm::vec2(-480,-280);
 
     // 屬性
     int m_SelectedIndex = 0;

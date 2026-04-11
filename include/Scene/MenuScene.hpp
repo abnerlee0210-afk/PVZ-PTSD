@@ -45,7 +45,7 @@ private:
     std::string PlayButtonFeedback = RESOURCE_DIR "/graphics/Screen/Adventure_1.png";
 
     // 場景物件位置
-    glm::vec2 PlayButtonPos = glm::vec2(270, 180);
+    glm::vec2 PlayButtonPos = glm::vec2(220, 150);
 };
 
 #endif //MENUSCENE_HPP
