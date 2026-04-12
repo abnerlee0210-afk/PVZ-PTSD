@@ -37,9 +37,14 @@ void NormalLevelScene::on_enter() {
     CreateLawnMowersFromConfig();
     CreateSeedChooserFromConfig();
     UpdateSunText();
+
 }
 
 void NormalLevelScene::on_update() {
+    if (m_GameState == GameState::VICTORY || m_GameState == GameState::GAME_OVER) {
+        HanldeEndScreenInput();
+        return;
+    }
     if (m_GameState!=GameState::PLAYING) {return;}
 
     HandleInput();
@@ -77,7 +82,39 @@ void NormalLevelScene::on_render() {
 
 void NormalLevelScene::on_exit() {
     LOG_DEBUG("Exit NormalLevelScene => Level {}", m_Config.levelId);
+
     RemoveAllEntity();
+
+    if (m_VictoryScreen) {
+        m_Root.RemoveChild(m_VictoryScreen);
+        m_VictoryScreen = nullptr;
+    }
+
+    if (m_Background) {
+        m_Root.RemoveChild(m_Background);
+        m_Background = nullptr;
+    }
+
+    if (m_SeedChooser) {
+        if (m_SeedChooser->GetBackgroundObject()) {
+            m_Root.RemoveChild(m_SeedChooser->GetBackgroundObject());
+        }
+        if (m_SeedChooser->GetSunText()) {
+            m_Root.RemoveChild(m_SeedChooser->GetSunText());
+        }
+        for (auto& card : m_SeedChooser->GetCards()) {
+            if (card) {
+                m_Root.RemoveChild(card);
+                if (card->GetCooldownOverlay()) {
+                    m_Root.RemoveChild(card->GetCooldownOverlay());
+                }
+                if (card->GetOuterFrame()) {
+                    m_Root.RemoveChild(card->GetOuterFrame());
+                }
+            }
+        }
+        m_SeedChooser = nullptr;
+    }
 }
 
 // ==================================================
@@ -99,7 +136,7 @@ void NormalLevelScene::CreateLawnMowersFromConfig() {
         glm::vec2 pos = m_Board.GetCellCenter(row, 0);
 
         // 放在第 0 欄再往左一點
-        pos.x = m_Config.m_HomeLineX + 10.0f;
+        pos.x = m_Config.m_HomeLineX + 1.0f;
 
         auto mower = std::make_shared<LawnMower>(row, pos);
         m_LawnMowers.push_back(mower);
@@ -582,6 +619,8 @@ void NormalLevelScene::EnterVictory() {
     }
 
     m_GameState = GameState::VICTORY;
+    RemoveAllEntity();
+    ShowVictoryScreen();
     LOG_DEBUG("VICTORY!");
 }
 void NormalLevelScene::EnterGameOver() {
@@ -590,7 +629,55 @@ void NormalLevelScene::EnterGameOver() {
     }
 
     m_GameState = GameState::GAME_OVER;
+    RemoveAllEntity();
+    ShowGameOverScreen();
     LOG_DEBUG("GAME OVER!");
+}
+void NormalLevelScene::ShowVictoryScreen() {
+    if (m_VictoryScreen) {
+        return;
+    }
+
+    LOG_DEBUG("Victory screen path = {}", m_Config.VictoryScreenPath);
+
+    auto image = std::make_shared<Util::Image>(m_Config.VictoryScreenPath);
+    m_VictoryScreen = std::make_shared<Util::GameObject>(
+        image,
+        1.0f
+    );
+
+    m_VictoryScreen->m_Transform.translation = {0.0f, 0.0f};
+
+    m_Root.AddChild(m_VictoryScreen);
+
+    LOG_DEBUG("Victory screen created");
+}
+
+void NormalLevelScene::ShowGameOverScreen() {
+    if (m_GameOverScreen) {
+        return;
+    }
+
+    m_GameOverScreen = std::make_shared<Util::GameObject>(
+        std::make_shared<Util::Image>(
+            m_Config.LooseScreenPath
+        ),
+        1.0f
+    );
+
+    m_GameOverScreen->m_Transform.translation = {0.0f, 0.0f};
+
+    m_Root.AddChild(m_GameOverScreen);
+}
+void NormalLevelScene::HanldeEndScreenInput() {
+    if (!m_Manager) {
+        return;
+    }
+
+    if (Util::Input::IsKeyUp(Util::Keycode::RETURN) ||
+        Util::Input::IsKeyUp(Util::Keycode::MOUSE_LB)) {
+        m_Manager->switch_to(SceneManager::SceneType::MENU);
+        }
 }
 
 
@@ -673,12 +760,13 @@ void NormalLevelScene::RemoveAllEntity() {
     }
     m_Suns.clear();
 
-    m_Root.RemoveChild(m_SeedChooser->GetBackgroundObject());
-    m_Root.RemoveChild(m_SeedChooser->GetSunText());
-    for (auto& card : m_SeedChooser->GetCards()) {
-        if (card) m_Root.RemoveChild(card);
+    // 移除 除草機
+    for (auto& LawnMower : m_LawnMowers) {
+        if (LawnMower) {
+            m_Root.RemoveChild(LawnMower);
+        }
     }
-    m_Root.RemoveChild(m_Background);
+    m_LawnMowers.clear();
 }
 void NormalLevelScene::RemoveDeadEntities() {
     // 移除子彈

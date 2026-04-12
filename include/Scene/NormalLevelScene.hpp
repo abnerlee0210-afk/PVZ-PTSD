@@ -61,6 +61,7 @@ private:
     bool TryCollectSun(const glm::vec2& mousePos);
     bool CanPlantAt(int row,int col, PlantType type) const; // 驗證是否可種植
     void PlacePlantAt(int row,int col, PlantType type); // 執行種植
+    void HanldeEndScreenInput();
 
 
     // ============================
@@ -104,6 +105,8 @@ private:
     void CheckGameOver();
     void EnterVictory();
     void EnterGameOver();
+    void ShowVictoryScreen();
+    void ShowGameOverScreen();
 
     // ============================
     // Cleanup
@@ -127,6 +130,8 @@ private:
     GameBoard m_Board;
     std::shared_ptr<BackgroundImage> m_Background;
     std::shared_ptr<SeedChooser> m_SeedChooser;
+    std::shared_ptr<Util::GameObject> m_VictoryScreen;
+    std::shared_ptr<Util::GameObject> m_GameOverScreen;
 
     // ============================
     // 遊戲狀態
