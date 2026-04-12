@@ -33,7 +33,8 @@ void SeedChooser::LayoutCards() {
 
 bool SeedChooser::TrySelectCard(const glm::vec2& mousePos, int currentSunPoints, float currentTime ){
     for (int i = 0; i < static_cast<int>(m_Cards.size()); ++i) {
-        if (m_Cards[i]->ContainsPoint(mousePos) && m_Cards[i]->IsUsable(currentSunPoints, currentTime)) {
+        if (m_Cards[i]->ContainsPoint(mousePos) &&
+            m_Cards[i]->IsUsable(currentSunPoints, currentTime)) {
             LOG_DEBUG("CHOOSE {} CARD", i + 1);
             m_SelectedIndex = i;
 

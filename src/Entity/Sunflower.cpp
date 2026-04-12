@@ -4,7 +4,12 @@
 #include "Entity/Sunflower.hpp"
 
 Sunflower::Sunflower(int row, int col, const glm::vec2& position)
-    : Plant(RESOURCE_DIR "/sunflower.png", row, col, position, 80, 50),
+    : Plant(RESOURCE_DIR "/graphics/Plants/SunFlower/SunFlower_0.png",
+        row,
+        col,
+        position,
+        80,
+        50),
       m_GenerateInterval(6.0f),
       m_LastGenerateTime(-999.0f) {
 }

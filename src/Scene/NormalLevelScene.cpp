@@ -14,6 +14,7 @@
 #include "Util/Time.hpp"
 
 #include "Entity/Peashooter.hpp"
+#include "Entity/Sunflower.hpp"
 #include "Entity/BasicZombie.hpp"
 #include "Entity/Pea.hpp"
 
@@ -111,6 +112,9 @@ void NormalLevelScene::on_exit() {
                 if (card->GetOuterFrame()) {
                     m_Root.RemoveChild(card->GetOuterFrame());
                 }
+                if (card->GetCooldownText()) {
+                    m_Root.RemoveChild(card->GetCooldownText());
+                }
             }
         }
         m_SeedChooser = nullptr;
@@ -161,10 +165,12 @@ void NormalLevelScene::CreateSeedChooserFromConfig() {
             if (card->GetCooldownOverlay()) {
                 m_Root.AddChild(card->GetCooldownOverlay());
             }
+            if (card->GetCooldownText()) {
+                m_Root.AddChild(card->GetCooldownText());
+            }
             if (card->GetOuterFrame()) {
                 m_Root.AddChild(card->GetOuterFrame());
             }
-
         }
     }
 

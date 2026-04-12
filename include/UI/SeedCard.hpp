@@ -10,6 +10,7 @@
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
 
+#include "Screen/Text.hpp"
 #include "Level/LevelTypes.hpp"
 
 class SeedCard : public Util::GameObject {
@@ -43,6 +44,7 @@ public:
 
     std::shared_ptr<Util::GameObject> GetOuterFrame() const {return m_OuterFrame;}
     std::shared_ptr<Util::GameObject> GetCooldownOverlay() const {return  m_CooldownOverlay;}
+    std::shared_ptr<Util::GameObject> GetCooldownText() const {return m_CooldownText;}
 
 private:
     PlantType m_PlantType;
@@ -57,8 +59,7 @@ private:
 
     std::shared_ptr<Util::GameObject> m_OuterFrame; // 被選擇時的外框特效
     std::shared_ptr<Util::GameObject> m_CooldownOverlay; // 冷卻時的遮罩
-
-
+    std::shared_ptr<Text> m_CooldownText;
 
     glm::vec2 m_BaseScale {1.0f, 1.0f};
 };

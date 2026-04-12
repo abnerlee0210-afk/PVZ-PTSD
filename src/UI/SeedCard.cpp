@@ -3,6 +3,8 @@
 //
 #include "UI/SeedCard.hpp"
 
+#include "Util/Logger.hpp"
+
 SeedCard::SeedCard(const std::string& imagePath,
                    PlantType plantType,
                    int cost,
@@ -34,6 +36,11 @@ SeedCard::SeedCard(const std::string& imagePath,
     m_CooldownOverlay = std::make_shared<Util::GameObject>(overlayImage,90.0f);
     m_CooldownOverlay->m_Transform.translation = {0.0f,0.0f};
     m_CooldownOverlay->SetVisible(false);
+
+    m_CooldownText = std::make_shared<Text>("0",20);
+    m_CooldownText->m_Transform.translation = {0.0f,0.0f};
+    m_CooldownText->SetZIndex(99.0f);
+    m_CooldownText->SetVisible(false);
 }
 
 
@@ -117,6 +124,13 @@ void SeedCard::UpdateVisualState(int currentSunPoints, float currentTime) {
     if (m_CooldownOverlay) {
         m_CooldownOverlay->SetVisible(shouldShowOverlay);
         m_CooldownOverlay->m_Transform.translation = m_Transform.translation;
+    }
+
+    if (m_CooldownText) {
+        int CooldownTime = m_Cooldown - (currentTime - m_LastUsedTime);
+        m_CooldownText->SetText(std::to_string(CooldownTime));
+        m_CooldownText->SetVisible(shouldShowOverlay && CooldownTime > 0.0f);
+        m_CooldownText->m_Transform.translation = m_Transform.translation + glm::vec2{7,0};
     }
 
     if (m_OuterFrame) {
