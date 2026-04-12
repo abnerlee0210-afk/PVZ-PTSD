@@ -24,6 +24,7 @@
 #include "Entity/Zombie.hpp"
 #include "Entity/Projectile.hpp"
 #include "Entity/Sun.hpp"
+#include "Entity/LawnMower.hpp"
 
 class SceneManager;
 
@@ -48,6 +49,7 @@ private:
     // ============================
     void CreateBackground();
     void CreateSeedChooserFromConfig();
+    void CreateLawnMowersFromConfig();
     void UpdateSunText();
 
     // ============================
@@ -75,6 +77,7 @@ private:
     // Update
     // ============================
     void UpdateSkySunSystem(float deltaTime);
+    void UpdateLawnMowers();
     void UpdateProjectiles();
     void UpdateZombies();
     void UpdatePlants();
@@ -88,6 +91,7 @@ private:
     // 處理碰撞 / 偵測殭屍是否出現與植物同列
     // ============================
     void CheckProjectileZombieCollisions();
+    void CheckZombieLawnMowerCollisions();
     void CheckZombiePlantCollisions();
     bool IsZombieInRow(const std::shared_ptr<Plant>& plant) const;
 
@@ -142,6 +146,7 @@ private:
     std::vector<std::shared_ptr<Plant>> m_Plants;
     std::vector<std::shared_ptr<Projectile>> m_Projectiles;
     std::vector<std::shared_ptr<Sun>> m_Suns;
+    std::vector<std::shared_ptr<LawnMower>> m_LawnMowers;
 
     // ============================
     // Input狀態

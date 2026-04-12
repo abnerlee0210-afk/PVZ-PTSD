@@ -34,6 +34,7 @@ void NormalLevelScene::on_enter() {
     m_SunPoints = m_Config.initialSun;
 
     CreateBackground();
+    CreateLawnMowersFromConfig();
     CreateSeedChooserFromConfig();
     UpdateSunText();
 }
@@ -53,11 +54,13 @@ void NormalLevelScene::on_update() {
     UpdateWaveSpawning();
     UpdatePlants();
     UpdateZombies();
+    UpdateLawnMowers();
     UpdateProjectiles();
     UpdateSuns();
 
 
     // 偵測碰撞
+    CheckZombieLawnMowerCollisions();
     CheckProjectileZombieCollisions();
     CheckZombiePlantCollisions();
 
@@ -86,6 +89,22 @@ void NormalLevelScene::CreateBackground() {
 
     m_Objects.push_back(m_Background);
     m_Root.AddChild(m_Background);
+}
+void NormalLevelScene::CreateLawnMowersFromConfig() {
+    if (!m_Config.hasLawnMowers) {
+        return;
+    }
+
+    for (int row : m_Config.lawnMowerRows) {
+        glm::vec2 pos = m_Board.GetCellCenter(row, 0);
+
+        // 放在第 0 欄再往左一點
+        pos.x = m_Config.m_HomeLineX + 10.0f;
+
+        auto mower = std::make_shared<LawnMower>(row, pos);
+        m_LawnMowers.push_back(mower);
+        m_Root.AddChild(mower);
+    }
 }
 void NormalLevelScene::CreateSeedChooserFromConfig() {
     m_SeedChooser = std::make_shared<SeedChooser>(m_Config.SeedChooserPos);
@@ -576,6 +595,49 @@ void NormalLevelScene::EnterGameOver() {
 
 
 // ==================================================
+// 除草機
+// ==================================================
+void NormalLevelScene::UpdateLawnMowers() {
+    for (auto& mower : m_LawnMowers) {
+        if (mower && mower->IsAlive()) {
+            mower->Update();
+        }
+    }
+}
+void NormalLevelScene::CheckZombieLawnMowerCollisions() {
+    for (auto& mower : m_LawnMowers) {
+        if (!mower || !mower->IsAlive()) {
+            continue;
+        }
+
+        for (auto& zombie : m_Zombies) {
+            if (!zombie || !zombie->IsAlive()) {
+                continue;
+            }
+
+            if (mower->GetRow() != zombie->GetRow()) {
+                continue;
+            }
+
+            float dx = std::abs(
+                mower->m_Transform.translation.x -
+                zombie->m_Transform.translation.x
+            );
+
+            // 先用一個簡單啟動距離
+            if (!mower->IsActive() && dx < 40.0f) {
+                mower->Activate();
+            }
+
+            // 啟動後持續撞死同列殭屍
+            if (mower->IsActive() && dx < 45.0f) {
+                zombie->TakeDamage(99999);
+            }
+        }
+    }
+}
+
+// ==================================================
 // Remove
 // ==================================================
 void NormalLevelScene::RemoveAllEntity() {
@@ -663,4 +725,17 @@ void NormalLevelScene::RemoveDeadEntities() {
             ++it;
         }
     }
+
+    // 移除除草機
+    for (auto it = m_LawnMowers.begin(); it != m_LawnMowers.end(); ) {
+        if (!(*it) || !(*it)->IsAlive()) {
+            if (*it) {
+                m_Root.RemoveChild(*it);
+            }
+            it = m_LawnMowers.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
 }

@@ -16,17 +16,18 @@ public:
 
     void Update();
 
+    void Activate();
+
     int GetRow() const { return m_Row; }
 
-    bool IsActivated() const { return m_Activated; }
+    bool IsActive() const { return m_IsActive; }
     bool IsAlive() const { return m_Alive; }
 
-    void Activate();
     void Destroy();
 
 private:
     int m_Row;
-    bool m_Activated;
+    bool m_IsActive;
     bool m_Alive;
     float m_Speed;
 };
