@@ -48,7 +48,6 @@ private:
     // ============================
     void CreateBackground();
     void CreateSeedChooserFromConfig();
-    void CreateButton();
     void UpdateSunText();
 
     // ============================
@@ -82,6 +81,7 @@ private:
     void UpdateSuns();
     void UpdateSinglePlant(const std::shared_ptr<Plant>& plant);
     void TryHandlePlantShooting(const std::shared_ptr<Plant>& plant);
+    void UpdateSeedCards();
 
 
     // ============================

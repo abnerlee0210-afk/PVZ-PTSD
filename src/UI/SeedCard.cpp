@@ -29,6 +29,11 @@ SeedCard::SeedCard(const std::string& imagePath,
     m_OuterFrame = std::make_shared<Util::GameObject>(frameImage,100.0f);
     m_OuterFrame->m_Transform.translation = {0.0f,0.0f};
     m_OuterFrame->SetVisible(false);
+
+    auto overlayImage = std::make_shared<Util::Image>(RESOURCE_DIR "/graphics/Cards/CardCooldownOverlay.png");
+    m_CooldownOverlay = std::make_shared<Util::GameObject>(overlayImage,90.0f);
+    m_CooldownOverlay->m_Transform.translation = {0.0f,0.0f};
+    m_CooldownOverlay->SetVisible(false);
 }
 
 
@@ -60,7 +65,7 @@ void SeedCard::SetSelected(bool selected) {
 
 // 回傳是否在冷卻中
 bool SeedCard::IsCoolingDown(float currentTime) const {
-    return currentTime - m_LastUsedTime < m_Cooldown;
+    return (currentTime - m_LastUsedTime) < m_Cooldown;
 }
 
 // 回傳是否可種植此植物
@@ -87,4 +92,34 @@ float SeedCard::GetRemainingCooldown(float currentTime) const {
 
 void SeedCard::SetVisualScaleFactor(float factor) {
     m_Transform.scale = m_BaseScale * factor;
+    SyncDecorationsPosition();
+}
+
+void SeedCard::SyncDecorationsPosition() {
+    if (m_OuterFrame) {
+        m_OuterFrame->m_Transform.translation = m_Transform.translation;
+    }
+    if (m_CooldownOverlay) {
+        m_CooldownOverlay->m_Transform.translation = m_Transform.translation;
+    }
+}
+
+void SeedCard::UpdateVisualState(int currentSunPoints, float currentTime) {
+    bool shouldShowOverlay = false;
+
+    if (IsCoolingDown(currentTime)) {
+        shouldShowOverlay = true;
+    }
+    else if (currentSunPoints < m_Cost) {
+        shouldShowOverlay = true;
+    }
+
+    if (m_CooldownOverlay) {
+        m_CooldownOverlay->SetVisible(shouldShowOverlay);
+        m_CooldownOverlay->m_Transform.translation = m_Transform.translation;
+    }
+
+    if (m_OuterFrame) {
+        m_OuterFrame->m_Transform.translation = m_Transform.translation;
+    }
 }

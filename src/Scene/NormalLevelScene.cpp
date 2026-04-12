@@ -49,11 +49,13 @@ void NormalLevelScene::on_update() {
     UpdateSkySunSystem(deltaTime);
 
     // Update
+    UpdateSeedCards();
     UpdateWaveSpawning();
     UpdatePlants();
     UpdateZombies();
     UpdateProjectiles();
     UpdateSuns();
+
 
     // 偵測碰撞
     CheckProjectileZombieCollisions();
@@ -100,9 +102,13 @@ void NormalLevelScene::CreateSeedChooserFromConfig() {
         if (card != nullptr) {
             m_SeedChooser->AddCard(card);
             m_Root.AddChild(card);
+            if (card->GetCooldownOverlay()) {
+                m_Root.AddChild(card->GetCooldownOverlay());
+            }
             if (card->GetOuterFrame()) {
                 m_Root.AddChild(card->GetOuterFrame());
             }
+
         }
     }
 
@@ -143,6 +149,10 @@ void NormalLevelScene::ProcessMouseClick() {
         return;
     }
 
+    auto selectedCard = m_SeedChooser->GetSelectedCard();
+    if (!selectedCard) { return;}
+    if (!selectedCard->IsUsable(m_SunPoints,m_LevelTimer)) {return;}
+
     int row = 0;
     int col = 0;
     if (!m_Board.ScreenToGrid(mousePos.x, mousePos.y, row, col)) {
@@ -166,7 +176,7 @@ bool NormalLevelScene::TrySelectSeedCard(const glm::vec2& mousePos) {
         return false;
     }
 
-    bool selected = m_SeedChooser->TrySelectCard(mousePos);
+    bool selected = m_SeedChooser->TrySelectCard(mousePos, m_SunPoints, m_LevelTimer);
     if (selected) {
         LOG_DEBUG("Seed card selected");
     }
@@ -195,6 +205,11 @@ void NormalLevelScene::PlacePlantAt(int row, int col, PlantType type) {
         return;
     }
 
+    auto selectedCard = m_SeedChooser->GetSelectedCard();
+    if (selectedCard) {
+        selectedCard->TriggerCooldown(m_LevelTimer);
+    }
+
     m_Plants.push_back(plant);
     m_Board.PlacePlant(plant.get(), row, col);
     m_Root.AddChild(plant);
@@ -204,6 +219,15 @@ void NormalLevelScene::PlacePlantAt(int row, int col, PlantType type) {
 
     LOG_DEBUG("Placed plant at row={}, col={}", row, col);
 }
+void NormalLevelScene::UpdateSeedCards() {
+    if (!m_SeedChooser) { return; }
+    for (auto& card: m_SeedChooser->GetCards()) {
+        if (card) {
+            card->UpdateVisualState(m_SunPoints, m_LevelTimer);
+        }
+    }
+}
+
 
 
 

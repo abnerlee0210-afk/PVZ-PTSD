@@ -22,7 +22,8 @@ public:
     void AddCard(const std::shared_ptr<SeedCard>& card);
     void LayoutCards();
 
-    bool TrySelectCard(const glm::vec2& mousePos);
+    bool TrySelectCard(const glm::vec2& mousePos, int currentSunPoints, float currentTime);
+    std::shared_ptr<SeedCard> GetSelectedCard() const ;
     PlantType GetSelectedPlantType() const;
     bool HasSelection() const;
 

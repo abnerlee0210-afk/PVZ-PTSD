@@ -27,12 +27,13 @@ void SeedChooser::LayoutCards() {
             startX + i * spacing,
             y
         };
+        m_Cards[i]->SyncDecorationsPosition();
     }
 }
 
-bool SeedChooser::TrySelectCard(const glm::vec2& mousePos) {
+bool SeedChooser::TrySelectCard(const glm::vec2& mousePos, int currentSunPoints, float currentTime ){
     for (int i = 0; i < static_cast<int>(m_Cards.size()); ++i) {
-        if (m_Cards[i]->ContainsPoint(mousePos)) {
+        if (m_Cards[i]->ContainsPoint(mousePos) && m_Cards[i]->IsUsable(currentSunPoints, currentTime)) {
             LOG_DEBUG("CHOOSE {} CARD", i + 1);
             m_SelectedIndex = i;
 
@@ -43,6 +44,13 @@ bool SeedChooser::TrySelectCard(const glm::vec2& mousePos) {
         }
     }
     return false;
+}
+
+std::shared_ptr<SeedCard> SeedChooser::GetSelectedCard() const {
+    if (m_SelectedIndex < 0 || m_SelectedIndex >= static_cast<int>(m_Cards.size())) {
+        return nullptr;
+    }
+    return m_Cards[m_SelectedIndex];
 }
 
 PlantType SeedChooser::GetSelectedPlantType() const {

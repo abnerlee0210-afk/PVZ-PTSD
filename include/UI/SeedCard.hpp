@@ -12,13 +12,6 @@
 
 #include "Level/LevelTypes.hpp"
 
-// // 植物種類
-// enum class CardPlantType {
-//     PEASHOOTER,
-//     SUNFLOWER,
-//     CHERRYBOMB
-// };
-
 class SeedCard : public Util::GameObject {
 public:
     SeedCard(const std::string& imagePath,
@@ -44,8 +37,12 @@ public:
     // 將卡片顯示縮放乘上一個因子（例如 0.9 / 1.1）
     void SetVisualScaleFactor(float factor);
 
+    void SyncDecorationsPosition();
+    void UpdateVisualState(int currentSunPoints, float currentTime);
+
 
     std::shared_ptr<Util::GameObject> GetOuterFrame() const {return m_OuterFrame;}
+    std::shared_ptr<Util::GameObject> GetCooldownOverlay() const {return  m_CooldownOverlay;}
 
 private:
     PlantType m_PlantType;
@@ -58,7 +55,9 @@ private:
     float m_Width;
     float m_Height;
 
-    std::shared_ptr<Util::GameObject> m_OuterFrame;
+    std::shared_ptr<Util::GameObject> m_OuterFrame; // 被選擇時的外框特效
+    std::shared_ptr<Util::GameObject> m_CooldownOverlay; // 冷卻時的遮罩
+
 
 
     glm::vec2 m_BaseScale {1.0f, 1.0f};
