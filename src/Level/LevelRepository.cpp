@@ -124,23 +124,40 @@ LevelConfig LevelRepository::CreateLevel2() {
     Wave wave2;
     wave2.isFinalWave = false;
     wave2.events = {
-        {ZombieType::BASIC, -1, 30.0f}
+        {ZombieType::BASIC, -1, 38.0f}
     };
 
     Wave wave3;
     wave3.isFinalWave = false;
     wave3.events = {
-        {ZombieType::BASIC, -1, 42.0f}
+        {ZombieType::BASIC, -1, 45.0f}
+    };
+
+    Wave wave4;
+    wave4.isFinalWave = false;
+    wave4.events = {
+        {ZombieType::BASIC, -1, 60.0f},
+        {ZombieType::BASIC, -1, 61.0f}
+    };
+
+    Wave wave5;
+    wave5.isFinalWave = false;
+    wave5.events = {
+        {ZombieType::BASIC, -1, 75.0f},
+        {ZombieType::BASIC, -1, 76.0f}
     };
 
     Wave finalWave;
     finalWave.isFinalWave = true;
     finalWave.events = {
-        {ZombieType::BASIC, -1, 54.0f},
-        {ZombieType::BASIC, -1, 55.0f}
+        {ZombieType::BASIC, -1, 95.0f},
+        {ZombieType::BASIC, -1, 98.0f},
+        {ZombieType::BASIC, -1, 98.0f},
+        {ZombieType::BASIC, -1, 100.0f},
+        {ZombieType::BASIC, -1, 100.0f}
     };
 
-    level.waves = {wave1, wave2, wave3, finalWave};
+    level.waves = {wave1, wave2, wave3, wave4, wave5, finalWave};
 
     return level;
 }

@@ -352,6 +352,7 @@ void NormalLevelScene::UpdateSinglePlant(const std::shared_ptr<Plant>& plant) {
     plant->Update();
 
     TryHandlePlantShooting(plant); // 射擊處理
+    TryHandlePlantSunGeneration(plant);
 }
 void NormalLevelScene::TryHandlePlantShooting(const std::shared_ptr<Plant>& plant) {
     if (!plant || !plant->IsAlive()) {
@@ -375,6 +376,26 @@ void NormalLevelScene::TryHandlePlantShooting(const std::shared_ptr<Plant>& plan
     SpawnProjectile(projectile);
     plant->ResetShootTimer();
     LOG_DEBUG("Plant fired projectile");
+}
+void NormalLevelScene::TryHandlePlantSunGeneration(const std::shared_ptr<Plant>& plant) {
+    if (!plant || !plant->IsAlive()) {
+        return;
+    }
+
+    if (!plant->CanGenerateSun()) {
+        return;
+    }
+
+    auto sun = std::make_shared<Sun>(
+        plant->GetSunSpawnPosition(),
+        25,
+        m_Config.sunLifeTime
+    );
+
+    SpawnSun(sun);
+    plant->ResetSunTimer();
+
+    LOG_DEBUG("Plant generated sun");
 }
 bool NormalLevelScene::IsZombieInRow(const std::shared_ptr<Plant>& plant) const {
     if (!plant || !plant->IsAlive()) {

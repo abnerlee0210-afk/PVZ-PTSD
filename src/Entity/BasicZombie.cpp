@@ -8,8 +8,8 @@ BasicZombie::BasicZombie(int row, const glm::vec2& position)
         RESOURCE_DIR "/graphics/Zombies/NormalZombie/Zombie/Zombie_0.png",
         row,
         position,
-        10,
-        15.0f) {
+        12,
+        18.0f) {
 }
 
 void BasicZombie::Update() {

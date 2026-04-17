@@ -12,7 +12,7 @@
 
 class Sun : public Util::GameObject {
 public:
-    Sun(const glm::vec2& position, int value = 25);
+    Sun(const glm::vec2& position, int value = 25, float lifetime = 8.0f);
     Sun(const glm::vec2& startPosition, const glm::vec2& targetPosition,
         int value = 25, float lifetime = 8.0f);
 

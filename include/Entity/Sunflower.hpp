@@ -5,7 +5,7 @@
 #ifndef SUNFLOWER_HPP
 #define SUNFLOWER_HPP
 
-#include "Plant.hpp"
+#include "Entity/Plant.hpp"
 
 class Sunflower : public Plant {
 public:
@@ -13,12 +13,13 @@ public:
 
     void Update() override;
 
-    bool CanGenerateSun(float currentTime) const;
-    void RecordGenerateTime(float currentTime);
+    bool CanGenerateSun() const override;
+    glm::vec2 GetSunSpawnPosition() const override;
+    void ResetSunTimer() override;
 
 private:
-    float m_GenerateInterval;
-    float m_LastGenerateTime;
+    float m_GenerateSunTimer;
+    float m_GenerateSunInterval;
 };
 
-#endif //SUNFLOWER_HPP
+#endif // SUNFLOWER_HPP

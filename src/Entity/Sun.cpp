@@ -6,7 +6,7 @@
 #include "Util/Time.hpp"
 
 // 固定位置生成
-Sun::Sun(const glm::vec2& position, int value)
+Sun::Sun(const glm::vec2& position, int value, float lifetime)
     : Util::GameObject(std::make_shared<Util::Image>(RESOURCE_DIR "/graphics/Plants/Sun/Sun_0.png"), 12.0f),
       m_Value(value),
       m_Alive(true),
@@ -14,7 +14,9 @@ Sun::Sun(const glm::vec2& position, int value)
       m_HalfHeight(40.0f),
       m_IsFalling(false),
       m_TargetPosition(position),
-      m_FallSpeed(120.0f) {
+      m_FallSpeed(120.0f),
+      m_LifeTimer(0.0f),
+      m_LifeTime(lifetime) {
     m_Transform.translation = position;
 }
 
