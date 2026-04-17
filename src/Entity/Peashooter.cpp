@@ -3,6 +3,7 @@
 //
 #include "Entity/Peashooter.hpp"
 
+#include "Level/LevelTypes.hpp"
 #include "Util/Time.hpp"
 
 Peashooter::Peashooter(int row, int col, const glm::vec2& position)
@@ -28,6 +29,10 @@ void Peashooter::Update() {
 
 bool Peashooter::CanShoot() const {
     return m_ShootTimer >= m_ShootInterval;
+}
+
+ProjectileType Peashooter::GetProjectileType() const {
+    return ProjectileType::PEA;
 }
 
 glm::vec2 Peashooter::GetProjectileSpawnPosition() const {

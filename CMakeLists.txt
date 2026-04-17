@@ -95,6 +95,8 @@ add_executable(${PROJECT_NAME}
         include/Board/BoardLayout.hpp
         include/Board/BoardPresets.hpp
         src/Board/BoardPresets.cpp
+        include/Factory/ProjectileFactory.hpp
+        src/Factory/ProjectileFactory.cpp
 )
 
 if(MSVC)

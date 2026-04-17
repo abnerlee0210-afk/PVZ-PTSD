@@ -6,6 +6,7 @@
 #include "Board/BoardPresets.hpp"
 #include "Factory/PlantFactory.hpp"
 #include "Factory/ZombieFactory.hpp"
+#include "Factory/ProjectileFactory.hpp"
 
 #include "Level/LevelTypes.hpp"
 #include "Util/Logger.hpp"
@@ -139,7 +140,7 @@ void NormalLevelScene::CreateLawnMowersFromConfig() {
     for (int row : m_Config.lawnMowerRows) {
         glm::vec2 pos = m_Board.GetCellCenter(row, 0);
 
-        // 放在第 0 欄再往左一點
+        // 放在終點在往右一點
         pos.x = m_Config.m_HomeLineX + 1.0f;
 
         auto mower = std::make_shared<LawnMower>(row, pos);
@@ -201,11 +202,9 @@ void NormalLevelScene::ProcessMouseClick() {
         return;
     }
 
-    //
     if (TryCollectSun(mousePos)) {
         return;
     }
-    //
 
     if (!m_SeedChooser || !m_SeedChooser->HasSelection()) {
         return;
@@ -291,8 +290,6 @@ void NormalLevelScene::UpdateSeedCards() {
 }
 
 
-
-
 // ==================================================
 // Zombie生成及Update
 // ==================================================
@@ -307,7 +304,13 @@ void NormalLevelScene::UpdateWaveSpawning() {
     }
 }
 void NormalLevelScene::SpawnZombiesFromEvent(const SpawnEvent &event) {
-    SpawnZombieByType(event.type, event.row);
+    int row = event.row;
+    if (row < 0) {
+        std::uniform_int_distribution<int> dist(0,m_Config.rows -1);
+             row = dist(m_Rng);
+    }
+
+    SpawnZombieByType(event.type, row);
 }
 void NormalLevelScene::SpawnZombieByType(ZombieType type, int row) {
     glm::vec2 spawnPos = m_Board.GetCellCenter(row, m_Config.cols-1);
@@ -351,16 +354,27 @@ void NormalLevelScene::UpdateSinglePlant(const std::shared_ptr<Plant>& plant) {
     TryHandlePlantShooting(plant); // 射擊處理
 }
 void NormalLevelScene::TryHandlePlantShooting(const std::shared_ptr<Plant>& plant) {
-    if (IsZombieInRow(plant) && plant->CanShoot()) {
-        auto pea = std::make_shared<Pea>(
-            plant->GetRow(),
-            plant->GetProjectileSpawnPosition()
-        );
-        SpawnProjectile(pea);
-        plant->ResetShootTimer();
-
-        LOG_DEBUG("Plant fired projectile");
+    if (!plant || !plant->IsAlive()) {
+        return;
     }
+    if (!IsZombieInRow(plant)) {
+        return;
+    }
+    if (!plant->CanShoot()) {
+        return;
+    }
+    auto projectile = ProjectileFactory::CreateProjectile(
+        plant->GetProjectileType(),
+        plant->GetRow(),
+        plant->GetProjectileSpawnPosition()
+    );
+    if (!projectile) {
+        LOG_DEBUG("Failed to create projectile");
+        return;
+    }
+    SpawnProjectile(projectile);
+    plant->ResetShootTimer();
+    LOG_DEBUG("Plant fired projectile");
 }
 bool NormalLevelScene::IsZombieInRow(const std::shared_ptr<Plant>& plant) const {
     if (!plant || !plant->IsAlive()) {
@@ -381,7 +395,6 @@ bool NormalLevelScene::IsZombieInRow(const std::shared_ptr<Plant>& plant) const 
             return true;
         }
     }
-
     return false;
 }
 
@@ -399,7 +412,6 @@ void NormalLevelScene::UpdateProjectiles() {
         if (!projectile || !projectile->IsAlive()) {
             continue;
         }
-
         projectile->Update();
     }
 }

@@ -14,6 +14,7 @@ public:
     void Update() override;
 
     bool CanShoot() const override;
+    ProjectileType GetProjectileType() const override;
     glm::vec2 GetProjectileSpawnPosition() const override;
     void ResetShootTimer() override;
 

@@ -28,6 +28,11 @@ enum class PlantType {
     REPEATER_PEA
 };
 
+enum class ProjectileType {
+    PEA,
+    SNOW_PEA
+};
+
 enum class BoardTypes {
     DAY_SINGLE_ROW,
     DAY_MIDDLE_3_ROW,
