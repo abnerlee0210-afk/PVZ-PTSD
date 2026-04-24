@@ -11,7 +11,7 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreateBasicZombieWalk() {
         paths.push_back(RESOURCE_DIR "/graphics/Zombies/NormalZombie/Zombie/Zombie_" + std::to_string(i) + ".png");
     }
 
-    return std::make_shared<Util::Animation>(paths, true, 100, true, 1000);
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
 }
 
 std::shared_ptr<Util::Animation> AnimationFactory::CreatePeashooterIdle() {
@@ -22,7 +22,7 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreatePeashooterIdle() {
         paths.push_back(RESOURCE_DIR "/graphics/Plants/Peashooter/Peashooter_" + std::to_string(i) + ".png");
     }
 
-    return std::make_shared<Util::Animation>(paths, true, 100, true, 1000);
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
 }
 
 std::shared_ptr<Util::Animation> AnimationFactory::CreateSunflowerIdle() {
@@ -33,5 +33,5 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreateSunflowerIdle() {
         paths.push_back(RESOURCE_DIR "/graphics/Plants/SunFlower/SunFlower_" + std::to_string(i) + ".png");
     }
 
-    return std::make_shared<Util::Animation>(paths, true, 100, true, 1000);
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
 }
