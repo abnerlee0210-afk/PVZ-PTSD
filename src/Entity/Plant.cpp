@@ -29,3 +29,20 @@ void Plant::TakeDamage(int damage) {
         m_Alive = false;
     }
 }
+
+void Plant::UpdateAnimationState() {
+    if (!m_Alive) {
+        m_AnimController.SetState(PlantAnimState::DIE);
+    }
+    // else if (m_IsAttacking) {
+    //     m_AnimController.SetState(PlantAnimState::ATTACK);
+    // }
+    else {
+        m_AnimController.SetState(PlantAnimState::IDLE);
+    }
+
+    auto anim = m_AnimController.GetCurrentAnimation();
+    if (anim) {
+        SetDrawable(anim);
+    }
+}

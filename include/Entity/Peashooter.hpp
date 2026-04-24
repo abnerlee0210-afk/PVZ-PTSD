@@ -18,6 +18,8 @@ public:
     glm::vec2 GetProjectileSpawnPosition() const override;
     void ResetShootTimer() override;
 
+protected:
+    void InitAnimations() override;
 
 private:
     float m_ShootInterval;

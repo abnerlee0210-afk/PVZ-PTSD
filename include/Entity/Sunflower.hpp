@@ -17,6 +17,9 @@ public:
     glm::vec2 GetSunSpawnPosition() const override;
     void ResetSunTimer() override;
 
+protected:
+    void InitAnimations() override;
+
 private:
     float m_GenerateSunTimer;
     float m_GenerateSunInterval;

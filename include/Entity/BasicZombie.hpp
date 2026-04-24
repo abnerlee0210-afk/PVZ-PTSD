@@ -12,6 +12,9 @@ public:
     BasicZombie(int row, const glm::vec2& position);
 
     void Update() override;
+
+protected:
+    void InitAnimations() override;
 };
 
 

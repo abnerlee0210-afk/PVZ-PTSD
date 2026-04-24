@@ -23,6 +23,7 @@ Zombie::Zombie(const std::string& imagePath,
 
 void Zombie::Update() {
     if (!m_Alive) {
+        UpdateAnimationState();
         return;
     }
 
@@ -32,9 +33,11 @@ void Zombie::Update() {
         m_AttackTimer += deltaTime;
         return;
     }
+    else {
+        m_Transform.translation.x -= m_Speed * deltaTime;
+    }
 
-    m_Transform.translation.x -= m_Speed * deltaTime;
-
+    UpdateAnimationState();
 }
 
 void Zombie::TakeDamage(int damage) {
@@ -57,3 +60,19 @@ void Zombie::ResetAttackTimer() {
     m_AttackTimer = 0.0f;
 }
 
+void Zombie::UpdateAnimationState() {
+    if (!m_Alive) {
+        m_AnimController.SetState(ZombieAnimState::DIE);
+    }
+    else if (m_IsAttacking) {
+        m_AnimController.SetState(ZombieAnimState::ATTACK);
+    }
+    else {
+        m_AnimController.SetState(ZombieAnimState::WALK);
+    }
+
+    auto anim = m_AnimController.GetCurrentAnimation();
+    if (anim) {
+        SetDrawable(anim);
+    }
+}

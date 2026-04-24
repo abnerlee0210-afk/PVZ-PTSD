@@ -9,6 +9,13 @@
 
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
+#include "Animation/AnimationStateController.hpp"
+
+enum class ZombieAnimState {
+    WALK,
+    ATTACK,
+    DIE
+};
 
 class Zombie : public Util::GameObject {
 public:
@@ -33,6 +40,8 @@ public:
     void SetAttacking(bool attacking) {m_IsAttacking = attacking;}
     bool IsAttacking() const {return m_IsAttacking;}
 
+    virtual void InitAnimations(){}
+    void UpdateAnimationState();
 
 protected:
     int m_Row;
@@ -43,6 +52,8 @@ protected:
     float m_AttackTimer;
     float m_AttackInterval;
     bool m_IsAttacking;
+
+    AnimationStateController<ZombieAnimState> m_AnimController;
 };
 
 #endif //ZOMBIE_HPP

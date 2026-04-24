@@ -12,6 +12,13 @@
 #include "Util/Image.hpp"
 
 #include "Level/LevelTypes.hpp"
+#include "Animation/AnimationStateController.hpp"
+
+enum class PlantAnimState {
+    IDLE,
+    ATTACK,
+    DIE
+};
 
 class Plant : public Util::GameObject {
 public:
@@ -37,10 +44,12 @@ public:
     virtual glm::vec2 GetProjectileSpawnPosition() const { return {0.0f, 0.0f}; }
     virtual void ResetShootTimer() {}
 
-
     virtual bool CanGenerateSun() const { return false; }
     virtual glm::vec2 GetSunSpawnPosition() const { return {0.0f, 0.0f}; }
     virtual void ResetSunTimer() {}
+
+    virtual void InitAnimations(){}
+    void UpdateAnimationState();
 
 protected:
     int m_Row;
@@ -48,6 +57,8 @@ protected:
     int m_HP;
     int m_Cost;
     bool m_Alive;
+
+    AnimationStateController<PlantAnimState> m_AnimController;
 };
 
 #endif //PLANT_HPP
