@@ -9,6 +9,11 @@
 
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
+#include "Animation/AnimationStateController.hpp"
+
+enum class SunAnimState {
+    IDLE,
+};
 
 class Sun : public Util::GameObject {
 public:
@@ -24,6 +29,8 @@ public:
     void Collect();
     bool ContainsPoint(const glm::vec2& point) const;
 
+    void InitAnimations();
+    void UpdateAnimationState();
 
 private:
     int m_Value;
@@ -37,6 +44,9 @@ private:
 
     float m_LifeTimer;
     float m_LifeTime;
+
+
+    AnimationStateController<SunAnimState> m_AnimController;
 };
 
 #endif //SUN_HPP

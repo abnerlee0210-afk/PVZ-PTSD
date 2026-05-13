@@ -16,6 +16,7 @@ public:
     static std::shared_ptr<Util::Animation> CreateBasicZombieWalk();
     static std::shared_ptr<Util::Animation> CreateConeheadZombieWalk();
 
+    static std::shared_ptr<Util::Animation> CreateSunIdle();
     static std::shared_ptr<Util::Animation> CreateSunflowerIdle();
     static std::shared_ptr<Util::Animation> CreatePeashooterIdle();
 

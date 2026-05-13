@@ -4,6 +4,8 @@
 #include "Entity/Sun.hpp"
 
 #include "Util/Time.hpp"
+#include "Factory/AnimationFactory.hpp"
+
 
 // 固定位置生成
 Sun::Sun(const glm::vec2& position, int value, float lifetime)
@@ -18,6 +20,9 @@ Sun::Sun(const glm::vec2& position, int value, float lifetime)
       m_LifeTimer(0.0f),
       m_LifeTime(lifetime) {
     m_Transform.translation = position;
+    InitAnimations();
+    m_AnimController.SetState(SunAnimState::IDLE);
+    SetDrawable(m_AnimController.GetCurrentAnimation());
 }
 
 // 掉落式生成
@@ -33,6 +38,9 @@ Sun::Sun(const glm::vec2& startPosition, const glm::vec2& targetPosition, int va
       m_LifeTimer(0.0f),
       m_LifeTime(lifetime) {
     m_Transform.translation = startPosition;
+    InitAnimations();
+    m_AnimController.SetState(SunAnimState::IDLE);
+    SetDrawable(m_AnimController.GetCurrentAnimation());
 }
 
 
@@ -41,6 +49,7 @@ void Sun::Update() {
     if (!m_Alive) {
         return;
     }
+    UpdateAnimationState();
     const float deltaTime = Util::Time::GetDeltaTimeMs() / 1000.0f;
     // 往下掉，所以 Y 要減掉速度
     if (m_IsFalling) {
@@ -72,4 +81,24 @@ bool Sun::ContainsPoint(const glm::vec2& point) const {
 
     return point.x >= left && point.x <= right &&
            point.y >= top && point.y <= bottom;
+}
+
+void Sun::InitAnimations() {
+    auto idle = AnimationFactory::CreateSunIdle();
+
+    m_AnimController.AddAnimation(SunAnimState::IDLE, idle);
+}
+
+void Sun::UpdateAnimationState() {
+    if (!m_Alive) {
+        return;
+    }
+    else {
+        m_AnimController.SetState(SunAnimState::IDLE);
+    }
+
+    auto anim = m_AnimController.GetCurrentAnimation();
+    if (anim) {
+        SetDrawable(anim);
+    }
 }

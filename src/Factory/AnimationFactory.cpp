@@ -25,6 +25,17 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreateConeheadZombieWalk() {
     return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
 }
 
+std::shared_ptr<Util::Animation> AnimationFactory::CreateSunIdle() {
+    std::vector<std::string> paths;
+    paths.reserve(22);
+
+    for (int i = 0; i <= 21; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Plants/Sun/Sun_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+
 std::shared_ptr<Util::Animation> AnimationFactory::CreatePeashooterIdle() {
     std::vector<std::string> paths;
     paths.reserve(13);
