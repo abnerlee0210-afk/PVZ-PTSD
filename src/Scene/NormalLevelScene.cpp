@@ -537,6 +537,18 @@ void NormalLevelScene::CheckZombiePlantCollisions() {
             );
 
             if (dx > 0 && dx < 45.0f) {
+                if (zombie->CanJumpOverPlant()) {
+                    zombie->StartJumpOverPlant(plant->m_Transform.translation);
+                    foundPlantToAttack = true;
+                    zombie->SetAttacking(false);
+                    break;
+                }
+                if (zombie->IsJumping()) {
+                    foundPlantToAttack = true;
+                    zombie->SetAttacking(false);
+                    break;
+                }
+
                 foundPlantToAttack = true;
                 zombie->SetAttacking(true);
 

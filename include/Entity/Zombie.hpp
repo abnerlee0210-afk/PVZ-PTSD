@@ -40,6 +40,10 @@ public:
     void SetAttacking(bool attacking) {m_IsAttacking = attacking;}
     bool IsAttacking() const {return m_IsAttacking;}
 
+    virtual bool CanJumpOverPlant() const { return false; }
+    virtual void StartJumpOverPlant(const glm::vec2& plantPos) {}
+    virtual bool IsJumping() const { return false; }
+
     virtual void InitAnimations(){}
     void UpdateAnimationState();
 

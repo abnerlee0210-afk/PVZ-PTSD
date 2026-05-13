@@ -14,7 +14,8 @@ enum class LevelMode {
 
 enum class ZombieType {
     BASIC,
-    CONEHEAD
+    CONEHEAD,
+    POLE_VAULTING
 };
 
 enum class PlantType {

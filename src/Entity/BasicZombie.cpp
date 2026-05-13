@@ -24,8 +24,9 @@ void BasicZombie::Update() {
 
 void BasicZombie::InitAnimations() {
     auto walk = AnimationFactory::CreateBasicZombieWalk();
+    auto attack = AnimationFactory::CreateBasicZombieAttack();
 
     m_AnimController.AddAnimation(ZombieAnimState::WALK, walk);
-    m_AnimController.AddAnimation(ZombieAnimState::ATTACK, walk);
+    m_AnimController.AddAnimation(ZombieAnimState::ATTACK, attack);
     m_AnimController.AddAnimation(ZombieAnimState::DIE, walk);
 }

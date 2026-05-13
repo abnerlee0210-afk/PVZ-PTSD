@@ -102,6 +102,8 @@ add_executable(${PROJECT_NAME}
         src/Factory/AnimationFactory.cpp
         include/Entity/CherryBomb.hpp
         src/Entity/CherryBomb.cpp
+        include/Entity/PoleVaultingZombie.hpp
+        src/Entity/PoleVaultingZombie.cpp
 )
 
 if(MSVC)

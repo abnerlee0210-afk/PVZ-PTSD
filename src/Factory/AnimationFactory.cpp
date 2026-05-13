@@ -14,9 +14,20 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreateBasicZombieWalk() {
     return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
 }
 
+std::shared_ptr<Util::Animation> AnimationFactory::CreateConeheadZombieWalk() {
+    std::vector<std::string> paths;
+    paths.reserve(21);
+
+    for (int i = 0; i <= 20; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Zombies/ConeheadZombie/coneheadZombie/ConeheadZombie_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+
 std::shared_ptr<Util::Animation> AnimationFactory::CreatePeashooterIdle() {
     std::vector<std::string> paths;
-    paths.reserve(13); // 預分配記憶體提升效能
+    paths.reserve(13);
 
     for (int i = 0; i <= 12; ++i) {
         paths.push_back(RESOURCE_DIR "/graphics/Plants/Peashooter/Peashooter_" + std::to_string(i) + ".png");
@@ -27,7 +38,7 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreatePeashooterIdle() {
 
 std::shared_ptr<Util::Animation> AnimationFactory::CreateSunflowerIdle() {
     std::vector<std::string> paths;
-    paths.reserve(18); // 預分配記憶體提升效能
+    paths.reserve(18);
 
     for (int i = 0; i <= 17; ++i) {
         paths.push_back(RESOURCE_DIR "/graphics/Plants/SunFlower/SunFlower_" + std::to_string(i) + ".png");
@@ -35,3 +46,26 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreateSunflowerIdle() {
 
     return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
 }
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreateBasicZombieAttack() {
+    std::vector<std::string> paths;
+    paths.reserve(21);
+
+    for (int i = 0; i <= 20; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Zombies/NormalZombie/ZombieAttack/ZombieAttack_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreateConeheadZombieAttack() {
+    std::vector<std::string> paths;
+    paths.reserve(11);
+
+    for (int i = 0; i <= 10; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Zombies/ConeheadZombie/ConeheadZombieAttack/ConeheadZombieAttack_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+

@@ -24,6 +24,7 @@ public:
     void Collect();
     bool ContainsPoint(const glm::vec2& point) const;
 
+
 private:
     int m_Value;
     bool m_Alive;

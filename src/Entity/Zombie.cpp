@@ -31,6 +31,7 @@ void Zombie::Update() {
 
     if (m_IsAttacking) {
         m_AttackTimer += deltaTime;
+        UpdateAnimationState();
         return;
     }
     else {
