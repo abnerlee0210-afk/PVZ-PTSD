@@ -13,6 +13,7 @@
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
 #include "Util/Time.hpp"
+#include <cmath>
 
 #include "Entity/Peashooter.hpp"
 #include "Entity/Sunflower.hpp"
@@ -353,6 +354,7 @@ void NormalLevelScene::UpdateSinglePlant(const std::shared_ptr<Plant>& plant) {
 
     TryHandlePlantShooting(plant); // 射擊處理
     TryHandlePlantSunGeneration(plant);
+    TryHandlePlantExplosion(plant);
 }
 void NormalLevelScene::TryHandlePlantShooting(const std::shared_ptr<Plant>& plant) {
     if (!plant || !plant->IsAlive()) {
@@ -396,6 +398,38 @@ void NormalLevelScene::TryHandlePlantSunGeneration(const std::shared_ptr<Plant>&
     plant->ResetSunTimer();
 
     LOG_DEBUG("Plant generated sun");
+}
+void NormalLevelScene::TryHandlePlantExplosion(const std::shared_ptr<Plant>& plant) {
+    if (!plant || !plant->IsAlive()) {
+        return;
+    }
+
+    if (!plant->CanExplode()) {
+        return;
+    }
+
+    glm::vec2 center = plant->GetExplosionCenter();
+    float radius = plant->GetExplosionRadius();
+    int damage = plant->GetExplosionDamage();
+
+    for (auto& zombie : m_Zombies) {
+        if (!zombie || !zombie->IsAlive()) {
+            continue;
+        }
+
+        float dx = zombie->m_Transform.translation.x - center.x;
+        float dy = zombie->m_Transform.translation.y - center.y;
+        float distance = std::sqrt(dx * dx + dy * dy);
+
+        if (distance <= radius) {
+            zombie->TakeDamage(damage);
+            plant->MarkExploded();
+        }
+    }
+
+
+
+    LOG_DEBUG("CherryBomb exploded at row={}, col={}", plant->GetRow(), plant->GetCol());
 }
 bool NormalLevelScene::IsZombieInRow(const std::shared_ptr<Plant>& plant) const {
     if (!plant || !plant->IsAlive()) {

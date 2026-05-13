@@ -48,6 +48,12 @@ public:
     virtual glm::vec2 GetSunSpawnPosition() const { return {0.0f, 0.0f}; }
     virtual void ResetSunTimer() {}
 
+    virtual bool CanExplode() const { return false; }
+    virtual glm::vec2 GetExplosionCenter() const { return {0.0f, 0.0f}; }
+    virtual float GetExplosionRadius() const { return 0.0f; }
+    virtual int GetExplosionDamage() const { return 0; }
+    virtual void MarkExploded() {}
+
     virtual void InitAnimations(){}
     void UpdateAnimationState();
 

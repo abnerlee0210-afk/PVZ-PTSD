@@ -28,7 +28,7 @@ std::shared_ptr<SeedCard> SeedCardFactory::CreateSeedCard(PlantType type, const 
             RESOURCE_DIR "/graphics/Cards/card_cherrybomb.png",
             PlantType::CHERRY_BOMB,
             150,
-            8.0f,
+            20.0f,
             position
         );
 

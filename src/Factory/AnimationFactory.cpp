@@ -27,9 +27,9 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreatePeashooterIdle() {
 
 std::shared_ptr<Util::Animation> AnimationFactory::CreateSunflowerIdle() {
     std::vector<std::string> paths;
-    paths.reserve(17); // 預分配記憶體提升效能
+    paths.reserve(18); // 預分配記憶體提升效能
 
-    for (int i = 0; i <= 18; ++i) {
+    for (int i = 0; i <= 17; ++i) {
         paths.push_back(RESOURCE_DIR "/graphics/Plants/SunFlower/SunFlower_" + std::to_string(i) + ".png");
     }
 

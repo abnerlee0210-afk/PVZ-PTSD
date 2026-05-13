@@ -86,6 +86,7 @@ private:
     void UpdateSinglePlant(const std::shared_ptr<Plant>& plant);
     void TryHandlePlantShooting(const std::shared_ptr<Plant>& plant);
     void TryHandlePlantSunGeneration(const std::shared_ptr<Plant>& plant);
+    void TryHandlePlantExplosion(const std::shared_ptr<Plant>& plant);
     void UpdateSeedCards();
 
 
