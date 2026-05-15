@@ -34,6 +34,16 @@ enum class GameState {
     GAME_OVER
 };
 
+enum class IntroState {
+    PAN_RIGHT,
+    WAIT,
+    PAN_LEFT,
+    READY,
+    SET,
+    PLANT,
+    DONE
+};
+
 class NormalLevelScene : public Scene {
 public:
     explicit NormalLevelScene(const LevelConfig& config, SceneManager* manager);
@@ -111,6 +121,14 @@ private:
     void ShowGameOverScreen();
 
     // ============================
+    // Intro/開場掃視
+    // ============================
+    void UpdateIntro(float deltaTime);
+    void ApplyWorldOffset();
+    void CreatePreviewZombies();
+    void RemovePreviewZombies();
+
+    // ============================
     // Cleanup
     // ============================
     void RemoveDeadEntities();
@@ -138,6 +156,8 @@ private:
     // ============================
     // 遊戲狀態
     // ============================
+    IntroState m_IntroState = IntroState::PAN_RIGHT;
+    float m_IntroTimer = 0.0f;
     int m_SunPoints = 0;
     float m_LevelTimer = 0.0f;
     GameState m_GameState = GameState::PLAYING;
@@ -145,6 +165,13 @@ private:
     // 這邊應該要移出NormalLevelScene，放進Sun中嗎？
     float m_SkySunTimer = 0.0f;
     float m_NextSkySunInterval = 5.0f;
+
+    // ============================
+    // Intro/開場掃視
+    // ============================
+    float m_WorldOffsetX = 0.0f;
+    float m_PreviousWorldOffsetX = 0.0f;
+    std::vector<std::shared_ptr<Zombie>> m_PreviewZombies;
 
     // ============================
     // Entities

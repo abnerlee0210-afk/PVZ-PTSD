@@ -31,14 +31,15 @@ struct LevelConfig {
     BoardTypes boardTypes = BoardTypes::DAY_FULL_5_ROW;
 
     float boundariesX = 512.0f;
-    float CameraOffset = 190.0f;
-    float WorldPos = 190.0f;
 
     float startX = -270;
     float startY = -270.0f;
     float m_HomeLineX = startX - 10.0f; // 用於判定殭屍是否走進家裡
 
     float SpawnZombiePosXBias = 80.0f ;
+
+    float previewZombieStartX = 600.0f;
+    float previewZombieStartY = 160.0f;
 
     glm::vec2 BackgroundPos = glm::vec2(190.0f,0.0f);
     glm::vec2 SeedChooserPos = glm::vec2(-170.0f, 260.0f);

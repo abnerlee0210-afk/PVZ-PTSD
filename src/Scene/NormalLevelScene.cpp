@@ -30,6 +30,10 @@ void NormalLevelScene::on_enter() {
     LOG_DEBUG("Enter NormalLevelScene => Level {}", m_Config.levelId);
 
     m_GameState = GameState::PLAYING;
+    m_IntroState = IntroState::PAN_RIGHT;
+    m_IntroTimer = 0.0f;
+    m_WorldOffsetX = 0.0f;
+    m_PreviousWorldOffsetX = 0.0f;
     m_LevelTimer = 0.0f;
     m_SkySunTimer = 0.0f;
 
@@ -37,9 +41,11 @@ void NormalLevelScene::on_enter() {
     m_SunPoints = m_Config.initialSun;
 
     CreateBackground();
-    CreateLawnMowersFromConfig();
-    CreateSeedChooserFromConfig();
-    UpdateSunText();
+    // CreateLawnMowersFromConfig();
+    // CreateSeedChooserFromConfig();
+    // UpdateSunText();
+
+    CreatePreviewZombies();
 
 }
 
@@ -50,9 +56,17 @@ void NormalLevelScene::on_update() {
     }
     if (m_GameState!=GameState::PLAYING) {return;}
 
-    HandleInput();
+
 
     float deltaTime = Util::Time::GetDeltaTimeMs() / 1000.0f;
+
+    if (m_IntroState != IntroState::DONE) {
+        UpdateIntro(deltaTime);
+        return;
+    }
+
+    HandleInput();
+
     m_LevelTimer += deltaTime;
 
     UpdateSkySunSystem(deltaTime);
@@ -181,6 +195,144 @@ void NormalLevelScene::CreateSeedChooserFromConfig() {
 
 void NormalLevelScene::UpdateSunText() {
     m_SeedChooser->UpdateSun(m_SunPoints);
+}
+
+// ==================================================
+// Intro/開場掃視
+// ==================================================
+void NormalLevelScene::UpdateIntro(float deltaTime) {
+    m_IntroTimer += deltaTime;
+
+    const float panDistance = 280.0f;
+    const float panDuration = 1.5f;
+
+    switch (m_IntroState) {
+        case IntroState::PAN_RIGHT: {
+            float t = m_IntroTimer / panDuration;
+            if (t > 1.0f) t = 1.0f;
+
+            m_WorldOffsetX = -panDistance * t;
+            ApplyWorldOffset();
+
+            if (t >= 1.0f) {
+                m_IntroState = IntroState::WAIT;
+                m_IntroTimer = 0.0f;
+            }
+            break;
+        }
+
+        case IntroState::WAIT:
+            if (m_IntroTimer >= 1.0f) {
+                m_IntroState = IntroState::PAN_LEFT;
+                m_IntroTimer = 0.0f;
+            }
+            break;
+
+        case IntroState::PAN_LEFT: {
+            float t = m_IntroTimer / panDuration;
+            if (t > 1.0f) t = 1.0f;
+
+            m_WorldOffsetX = -panDistance * (1.0f - t);
+            ApplyWorldOffset();
+
+            if (t >= 1.0f) {
+                m_WorldOffsetX = 0.0f;
+                ApplyWorldOffset();
+
+                RemovePreviewZombies();
+
+
+                m_IntroState = IntroState::READY;
+                m_IntroTimer = 0.0f;
+            }
+            break;
+        }
+
+        case IntroState::READY:
+            if (m_IntroTimer >= 0.7f) {
+                LOG_DEBUG("Ready...");
+                m_IntroState = IntroState::SET;
+                m_IntroTimer = 0.0f;
+            }
+            break;
+
+        case IntroState::SET:
+            if (m_IntroTimer >= 0.7f) {
+                LOG_DEBUG("Set...");
+                m_IntroState = IntroState::PLANT;
+                m_IntroTimer = 0.0f;
+            }
+            break;
+
+        case IntroState::PLANT:
+            if (m_IntroTimer >= 0.7f) {
+                LOG_DEBUG("Plant!");
+                m_IntroState = IntroState::DONE;
+                m_IntroTimer = 0.0f;
+
+                CreateLawnMowersFromConfig();
+                CreateSeedChooserFromConfig();
+                UpdateSunText();
+            }
+            break;
+
+        case IntroState::DONE:
+            break;
+    }
+}
+
+void NormalLevelScene::ApplyWorldOffset() {
+    float deltaX = m_WorldOffsetX - m_PreviousWorldOffsetX;
+
+    if (std::abs(deltaX) < 0.001f) {
+        return;
+    }
+
+    if (m_Background) {
+        m_Background->m_Transform.translation.x += deltaX;
+    }
+
+    for (auto& zombie : m_PreviewZombies) {
+        if (zombie) zombie->m_Transform.translation.x += deltaX;
+    }
+
+    m_PreviousWorldOffsetX = m_WorldOffsetX;
+}
+
+void NormalLevelScene::CreatePreviewZombies() {
+    std::set<ZombieType> zombieTypes;
+
+    for (const auto& wave : m_Config.waves) {
+        for (const auto& event : wave.events) {
+            zombieTypes.insert(event.type);
+        }
+    }
+
+    int index = 0;
+    for (ZombieType type : zombieTypes) {
+        glm::vec2 pos = {
+            m_Config.previewZombieStartX,
+            m_Config.previewZombieStartY - index * 80.0f
+        };
+
+        auto zombie = ZombieFactory::CreateZombie(type, index % m_Config.rows, pos);
+        if (zombie) {
+            //zombie->SetPreviewMode(true); // 如果你有做
+            m_PreviewZombies.push_back(zombie);
+            m_Root.AddChild(zombie);
+        }
+
+        ++index;
+    }
+}
+
+void NormalLevelScene::RemovePreviewZombies() {
+    for (auto& zombie : m_PreviewZombies) {
+        if (zombie) {
+            m_Root.RemoveChild(zombie);
+        }
+    }
+    m_PreviewZombies.clear();
 }
 
 // ==================================================
