@@ -1,41 +1,38 @@
-//
-// Created by hankl on 2026/3/10.
-//
-
 #ifndef GAMEBOARD_HPP
 #define GAMEBOARD_HPP
 
-#include "pch.hpp"
-
+#include <vector>
+#include <memory>
+#include <glm/vec2.hpp>
+#include "Entity/Zombie.hpp"
+#include "Entity/ExplosionEffect.hpp" // 必須包含，否則 m_Effects 報錯
 #include "Board/BoardLayout.hpp"
 
-class Plant; // 前向聲明 (Forward Declaration)，告訴編譯器有 Plant 這個類別，減少編譯相依性
+class Plant;
 
 class GameBoard {
 public:
-    GameBoard(int rows, int cols, const BoardLayout& layout); // 建構子
+    GameBoard(int rows, int cols, const BoardLayout& layout);
+    bool ScreenToGrid(float x, float y, int& row, int& col) const;
+    glm::vec2 GetCellCenter(int row, int col) const;
+    bool IsCellEmpty(int row, int col) const;
+    void PlacePlant(Plant* plant, int row, int col);
+    void RemovePlant(int row, int col);
+    Plant* GetPlant(int row, int col) const;
 
-    bool ScreenToGrid(float x, float y, int& row, int& col) const;  // 螢幕座標轉網格索引
-    glm::vec2 GetCellCenter(int row, int col) const;                // 網格索引轉中心點座標
-
-    bool IsCellEmpty(int row, int col) const;                       // 檢查該格是否有植物
-    void PlacePlant(Plant* plant, int row, int col);                // 在指定格放置植物
-    Plant* GetPlant(int row, int col) const;                        // 取得指定格的植物指標
-    void RemovePlant(int row, int col);                             // 移除指定格的植物
-
-    int GetRows() const { return m_Rows; }
-    int GetCols() const { return m_Cols; }
+    // 更新與繪製
+    void Update(const std::vector<std::shared_ptr<Zombie>>& zombies);
+    void Draw();
 
 private:
     int m_Rows;
     int m_Cols;
-
     std::vector<float> m_RowCenters;
     std::vector<float> m_ColCenters;
-
-
     std::vector<std::vector<Plant*>> m_Grid;
+
+    // 管理場上所有爆炸特效
+    std::vector<std::shared_ptr<ExplosionEffect>> m_Effects;
 };
 
-
-#endif //GAMEBOARD_HPP
+#endif

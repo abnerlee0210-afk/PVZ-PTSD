@@ -14,7 +14,8 @@
 enum class ZombieAnimState {
     WALK,
     ATTACK,
-    DIE
+    DIE,
+    BOOM_DIE,
 };
 
 class Zombie : public Util::GameObject {
@@ -28,7 +29,8 @@ public:
     virtual ~Zombie() = default;
 
     virtual void Update();
-    virtual void TakeDamage(int damage);
+
+    virtual void TakeDamage(int damage, bool isExplosion = false);
 
     int GetRow() const { return m_Row; }
     int GetHP() const { return m_HP; }
@@ -37,7 +39,7 @@ public:
 
     bool CanAttack() const;
     void ResetAttackTimer();
-    void SetAttacking(bool attacking) {m_IsAttacking = attacking;}
+    void SetAttacking(bool attacking) {m_IsAttacking = attacking;
     bool IsAttacking() const {return m_IsAttacking;}
 
     virtual void InitAnimations(){}
@@ -52,6 +54,10 @@ protected:
     float m_AttackTimer;
     float m_AttackInterval;
     bool m_IsAttacking;
+
+    void SlowDown(float duration);
+    bool m_IsSlowed = false;
+    float m_SlowTimer = 0.0f;
 
     AnimationStateController<ZombieAnimState> m_AnimController;
 };

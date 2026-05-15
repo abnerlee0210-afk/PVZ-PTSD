@@ -17,6 +17,9 @@ public:
     static std::shared_ptr<Util::Animation> CreateConeheadZombieWalk();
     static std::shared_ptr<Util::Animation> CreateSunflowerIdle();
     static std::shared_ptr<Util::Animation> CreatePeashooterIdle();
+    static std::shared_ptr<Util::Animation> CreateSnowPeaIdle();
+    static std::shared_ptr<Util::Animation> CreateCherryBombExplode();
+    static std::shared_ptr<Util::Animation> CreateZombieBoomDie();
 };
 
 #endif

@@ -10,9 +10,10 @@
 // #include "Entity/CherryBomb.hpp"
 // #include "Entity/WallNut.hpp"
 // #include "Entity/PotatoMine.hpp"
-// #include "Entity/SnowPea.hpp"
+#include "Entity/SnowPea.hpp"
 // #include "Entity/Chomper.hpp"
 // #include "Entity/RepeaterPea.hpp"
+#include "Entity/CherryBomb.hpp"
 
 std::shared_ptr<Plant> PlantFactory::CreatePlant(
     PlantType type,
@@ -26,6 +27,12 @@ std::shared_ptr<Plant> PlantFactory::CreatePlant(
 
         case PlantType::SUNFLOWER:
             return std::make_shared<Sunflower>(row, col, position);
+
+        case PlantType::SNOW_PEA:
+            return std::make_shared<SnowPea>(row, col, position);
+
+        case PlantType::CHERRY_BOMB:
+            return std::make_shared<CherryBomb>(row, col, position);
 
             // 你之後有實作對應類別時再打開
             /*

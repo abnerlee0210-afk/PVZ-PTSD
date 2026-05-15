@@ -100,6 +100,12 @@ add_executable(${PROJECT_NAME}
         include/Animation/AnimationStateController.hpp
         include/Factory/AnimationFactory.hpp
         src/Factory/AnimationFactory.cpp
+        include/Entity/SnowPea.hpp
+        src/Entity/SnowPea.cpp
+        include/Entity/PeaIce.hpp
+        include/Entity/CherryBomb.hpp
+        src/Entity/CherryBomb.cpp
+        include/Entity/ExplosionEffect.hpp
 )
 
 if(MSVC)

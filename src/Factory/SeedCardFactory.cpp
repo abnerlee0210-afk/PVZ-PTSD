@@ -27,8 +27,8 @@ std::shared_ptr<SeedCard> SeedCardFactory::CreateSeedCard(PlantType type, const 
         return std::make_shared<SeedCard>(
             RESOURCE_DIR "/graphics/Cards/card_cherrybomb.png",
             PlantType::CHERRY_BOMB,
-            150,
-            8.0f,
+            150,   // 陽光
+            35.0f, // 櫻桃炸彈冷卻通常很長
             position
         );
 

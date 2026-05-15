@@ -46,13 +46,16 @@ LevelConfig LevelRepository::CreateLevel1() {
     level.lawnMowerRows = {0};
 
     level.allowedPlants = {
-        PlantType::PEASHOOTER
+        PlantType::PEASHOOTER,
+        PlantType::SNOW_PEA,
+        PlantType::SUNFLOWER,
+        PlantType::CHERRY_BOMB,
     };
 
     Wave wave1;
     wave1.isFinalWave = false;
     wave1.events = {
-        {ZombieType::BASIC, 0, 18.0f}
+        {ZombieType::BASIC, 0, 0.0f}
     };
 
     Wave wave2;

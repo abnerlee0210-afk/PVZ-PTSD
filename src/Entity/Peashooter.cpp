@@ -16,8 +16,10 @@ Peashooter::Peashooter(int row, int col, const glm::vec2& position)
         100,
         100
     ),
-      m_ShootTimer(0.0f),
-      m_ShootInterval(1.5f) {
+
+        m_ShootInterval(1.5f),
+        m_ShootTimer(0.0f)
+{
     InitAnimations();
     m_AnimController.SetState(PlantAnimState::IDLE);
     SetDrawable(m_AnimController.GetCurrentAnimation());
