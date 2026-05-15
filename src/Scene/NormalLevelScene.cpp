@@ -249,18 +249,24 @@ void NormalLevelScene::UpdateIntro(float deltaTime) {
         }
 
         case IntroState::READY:
+            if (!m_IntroText) {
+                ShowIntroText("Ready...");
+            }
+
             if (m_IntroTimer >= 0.7f) {
-                LOG_DEBUG("Ready...");
+                //LOG_DEBUG("Ready...");
                 m_IntroState = IntroState::SET;
                 m_IntroTimer = 0.0f;
+                ShowIntroText("Set...");
             }
             break;
 
         case IntroState::SET:
             if (m_IntroTimer >= 0.7f) {
-                LOG_DEBUG("Set...");
+                // LOG_DEBUG("Set...");
                 m_IntroState = IntroState::PLANT;
                 m_IntroTimer = 0.0f;
+                ShowIntroText("Plant!");
             }
             break;
 
@@ -273,6 +279,8 @@ void NormalLevelScene::UpdateIntro(float deltaTime) {
                 CreateLawnMowersFromConfig();
                 CreateSeedChooserFromConfig();
                 UpdateSunText();
+
+                HideIntroText();
             }
             break;
 
@@ -333,6 +341,22 @@ void NormalLevelScene::RemovePreviewZombies() {
         }
     }
     m_PreviewZombies.clear();
+}
+
+void NormalLevelScene::ShowIntroText(const std::string& text) {
+    HideIntroText();
+
+    m_IntroText = std::make_shared<Text>(text,80);
+    m_IntroText->SetColor(Util::Color(255, 0, 0, 255));
+    m_IntroText->m_Transform.translation = {0.0f, 0.0f};
+    m_Root.AddChild(m_IntroText);
+}
+
+void NormalLevelScene::HideIntroText() {
+    if (m_IntroText) {
+        m_Root.RemoveChild(m_IntroText);
+        m_IntroText = nullptr;
+    }
 }
 
 // ==================================================

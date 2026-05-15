@@ -127,6 +127,8 @@ private:
     void ApplyWorldOffset();
     void CreatePreviewZombies();
     void RemovePreviewZombies();
+    void ShowIntroText(const std::string& Text);
+    void HideIntroText();
 
     // ============================
     // Cleanup
@@ -172,6 +174,7 @@ private:
     float m_WorldOffsetX = 0.0f;
     float m_PreviousWorldOffsetX = 0.0f;
     std::vector<std::shared_ptr<Zombie>> m_PreviewZombies;
+    std::shared_ptr<Text> m_IntroText;
 
     // ============================
     // Entities
