@@ -11,6 +11,12 @@
 #include "Util/Image.hpp"
 #include "Animation/AnimationStateController.hpp"
 
+enum class SunState {
+    FALLING,   // 掉落中
+    IDLE,      // 停在地上等待收集
+    FLYING     // 被點擊後飛向 UI
+};
+
 enum class SunAnimState {
     IDLE,
 };
@@ -45,6 +51,8 @@ private:
     float m_LifeTimer;
     float m_LifeTime;
 
+    SunState m_State;
+    glm::vec2 m_UIPosition = glm::vec2(-385.0f, 230.0f);
 
     AnimationStateController<SunAnimState> m_AnimController;
 };
