@@ -22,7 +22,7 @@ enum class PlantType {
     PEASHOOTER,
     SUNFLOWER,
     CHERRY_BOMB,
-    WALLNUT,
+    WALL_NUT,
     POTATO_MINE,
     SNOW_PEA,
     CHOMPER,

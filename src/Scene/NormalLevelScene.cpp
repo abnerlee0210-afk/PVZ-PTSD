@@ -729,7 +729,7 @@ void NormalLevelScene::CheckZombiePlantCollisions() {
                 zombie->SetAttacking(true);
 
                 if (zombie->CanAttack()) {
-                    plant->TakeDamage(20);
+                    plant->TakeDamage(20); // 目前寫死 之後要修改
                     zombie->ResetAttackTimer();
 
                     LOG_DEBUG(

@@ -52,3 +52,17 @@ void Sunflower::InitAnimations() {
     m_AnimController.AddAnimation(PlantAnimState::ATTACK, idle);
     m_AnimController.AddAnimation(PlantAnimState::DIE, idle);
 }
+
+void Sunflower::UpdateAnimationState() {
+    if (!m_Alive) {
+        m_AnimController.SetState(PlantAnimState::DIE);
+    }
+    else {
+        m_AnimController.SetState(PlantAnimState::IDLE);
+    }
+
+    auto anim = m_AnimController.GetCurrentAnimation();
+    if (anim) {
+        SetDrawable(anim);
+    }
+}

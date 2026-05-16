@@ -17,7 +17,11 @@
 enum class PlantAnimState {
     IDLE,
     ATTACK,
-    DIE
+    DIE,
+    // for WallNut
+    COMPLETE,
+    CRACKED1,
+    CRACKED2
 };
 
 class Plant : public Util::GameObject {
@@ -55,7 +59,7 @@ public:
     virtual void MarkExploded() {}
 
     virtual void InitAnimations(){}
-    void UpdateAnimationState();
+    virtual void UpdateAnimationState(){}
 
 protected:
     int m_Row;

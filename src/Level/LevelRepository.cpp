@@ -268,7 +268,7 @@ LevelConfig LevelRepository::CreateLevel4() {
 
     level.backgroundPath = RESOURCE_DIR "/graphics/Items/Background/Background_2.jpg";
 
-    level.levelId = 2;
+    level.levelId = 4;
     level.mode = LevelMode::NORMAL;
 
     level.boardTypes = BoardTypes::DAY_FULL_5_ROW;
@@ -298,12 +298,13 @@ LevelConfig LevelRepository::CreateLevel4() {
         PlantType::PEASHOOTER,
         PlantType::SUNFLOWER,
         PlantType::CHERRY_BOMB,
+        PlantType::WALL_NUT,
     };
 
     Wave wave1;
     wave1.isFinalWave = false;
     wave1.events = {
-        {ZombieType::POLE_VAULTING, -1, 18.0f}
+        {ZombieType::BASIC, -1, 18.0f}
     };
 
     Wave wave2;

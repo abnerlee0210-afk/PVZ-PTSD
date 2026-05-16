@@ -32,10 +32,10 @@ std::shared_ptr<SeedCard> SeedCardFactory::CreateSeedCard(PlantType type, const 
             position
         );
 
-    case PlantType::WALLNUT:
+    case PlantType::WALL_NUT:
         return std::make_shared<SeedCard>(
             RESOURCE_DIR "/graphics/Cards/card_wallnut.png",
-            PlantType::WALLNUT,
+            PlantType::WALL_NUT,
             50,
             10.0f,
             position

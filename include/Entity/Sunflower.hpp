@@ -19,6 +19,7 @@ public:
 
 protected:
     void InitAnimations() override;
+    void UpdateAnimationState() override;
 
 private:
     float m_GenerateSunTimer;
