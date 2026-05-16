@@ -12,6 +12,7 @@ BasicZombie::BasicZombie(int row, const glm::vec2& position)
         row,
         position,
         12,
+        20,
         18.0f) {
     InitAnimations();
     m_AnimController.SetState(ZombieAnimState::WALK);

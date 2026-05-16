@@ -23,6 +23,7 @@ public:
            int row,
            const glm::vec2& position,
            int hp,
+           int ad,
            float speed);
 
     virtual ~Zombie() = default;
@@ -32,6 +33,7 @@ public:
 
     int GetRow() const { return m_Row; }
     int GetHP() const { return m_HP; }
+    int GetAD() const { return m_AD; }
     float GetSpeed() const { return m_Speed; }
     bool IsAlive() const { return m_Alive; }
 
@@ -50,6 +52,7 @@ public:
 protected:
     int m_Row;
     int m_HP;
+    int m_AD;
     float m_Speed;
     bool m_Alive;
 

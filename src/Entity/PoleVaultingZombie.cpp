@@ -11,6 +11,7 @@ PoleVaultingZombie::PoleVaultingZombie(int row, const glm::vec2& position)
         row,
         position,
         100,
+        30,
         70.0f
     ) {
     m_Speed = m_PoleSpeed;
