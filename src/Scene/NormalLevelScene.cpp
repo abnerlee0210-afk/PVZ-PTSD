@@ -41,9 +41,7 @@ void NormalLevelScene::on_enter() {
     m_SunPoints = m_Config.initialSun;
 
     CreateBackground();
-    // CreateLawnMowersFromConfig();
-    // CreateSeedChooserFromConfig();
-    // UpdateSunText();
+
 
     CreatePreviewZombies();
 
@@ -112,6 +110,11 @@ void NormalLevelScene::on_exit() {
         m_Background = nullptr;
     }
 
+    if (m_ShovelButton) {
+        m_Root.RemoveChild(m_ShovelButton);
+        m_ShovelButton = nullptr;
+    }
+
     if (m_SeedChooser) {
         if (m_SeedChooser->GetBackgroundObject()) {
             m_Root.RemoveChild(m_SeedChooser->GetBackgroundObject());
@@ -146,6 +149,18 @@ void NormalLevelScene::CreateBackground() {
 
     m_Objects.push_back(m_Background);
     m_Root.AddChild(m_Background);
+}
+void NormalLevelScene::CreateShovelButtonFromConfig() {
+    if (!m_Config.hasShovel) {
+        return;
+    }
+
+    m_ShovelButton = std::make_shared<ShovelButton>(
+        RESOURCE_DIR "/graphics/Screen/Shovel.png",
+        m_Config.ShovelPos
+    );
+
+    m_Root.AddChild(m_ShovelButton);
 }
 void NormalLevelScene::CreateLawnMowersFromConfig() {
     if (!m_Config.hasLawnMowers) {
@@ -276,6 +291,7 @@ void NormalLevelScene::UpdateIntro(float deltaTime) {
                 m_IntroState = IntroState::DONE;
                 m_IntroTimer = 0.0f;
 
+                CreateShovelButtonFromConfig();
                 CreateLawnMowersFromConfig();
                 CreateSeedChooserFromConfig();
                 UpdateSunText();
@@ -375,6 +391,15 @@ void NormalLevelScene::ProcessMouseClick() {
     glm::vec2 mousePos = Util::Input::GetCursorPosition();
     LOG_DEBUG("X:{},Y:{}",mousePos.x, mousePos.y);
 
+    if (TrySelectShovel(mousePos)) {
+        return;
+    }
+
+    if (m_PlayerMode == PlayerMode::SHOVELING) {
+        TryShovelAtMouse(mousePos);
+        return;
+    }
+
     if (TrySelectSeedCard(mousePos)) {
         return;
     }
@@ -407,7 +432,7 @@ void NormalLevelScene::ProcessMouseClick() {
 }
 
 // ==================================================
-// 選卡 / 種植
+// 選卡 / 種植 / 移除
 // ==================================================
 bool NormalLevelScene::TrySelectSeedCard(const glm::vec2& mousePos) {
     if (!m_SeedChooser) {
@@ -465,7 +490,72 @@ void NormalLevelScene::UpdateSeedCards() {
         }
     }
 }
+bool NormalLevelScene::TrySelectShovel(const glm::vec2& mousePos) {
+    if (!m_ShovelButton) {
+        return false;
+    }
 
+    if (!m_ShovelButton->ContainsPoint(mousePos)) {
+        return false;
+    }
+
+    if (m_PlayerMode == PlayerMode::SHOVELING) {
+        m_PlayerMode = PlayerMode::NORMAL;
+        m_ShovelButton->SetSelected(false);
+        LOG_DEBUG("Shovel mode OFF");
+    } else {
+        m_PlayerMode = PlayerMode::SHOVELING;
+        m_ShovelButton->SetSelected(true);
+
+        // if (m_SeedChooser) {
+        //     m_SeedChooser->ClearSelection();
+        // }
+
+        LOG_DEBUG("Shovel mode ON");
+    }
+
+    return true;
+}
+bool NormalLevelScene::TryShovelAtMouse(const glm::vec2& mousePos) {
+    int row = 0;
+    int col = 0;
+
+    if (!m_Board.ScreenToGrid(mousePos.x, mousePos.y, row, col)) {
+        return false;
+    }
+
+    if (m_Board.IsCellEmpty(row, col)) {
+        LOG_DEBUG("No plant to shovel at row={}, col={}", row, col);
+        return false;
+    }
+
+    RemovePlantAt(row, col);
+
+    m_PlayerMode = PlayerMode::NORMAL;
+
+    if (m_ShovelButton) {
+        m_ShovelButton->SetSelected(false);
+    }
+
+    LOG_DEBUG("Shoveled plant at row={}, col={}", row, col);
+    return true;
+}
+void NormalLevelScene::RemovePlantAt(int row, int col) {
+    for (auto it = m_Plants.begin(); it != m_Plants.end(); ++it) {
+        auto& plant = *it;
+
+        if (!plant) {
+            continue;
+        }
+
+        if (plant->GetRow() == row && plant->GetCol() == col) {
+            m_Root.RemoveChild(plant);
+            m_Board.RemovePlant(row, col);
+            m_Plants.erase(it);
+            return;
+        }
+    }
+}
 
 // ==================================================
 // Zombie生成及Update

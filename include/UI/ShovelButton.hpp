@@ -12,14 +12,21 @@ class ShovelButton : public Button {
 public:
     ShovelButton(const std::string& imagePath, const glm::vec2& position);
 
+
+
     // 覆寫 Update 以加入選取狀態的視覺邏輯
     void Update();
+
+    bool ContainsPoint(const glm::vec2& point) const;
 
     void SetSelected(bool selected);
     bool IsSelected() const { return m_Selected; }
 
 private:
     bool m_Selected = false;
+
+    float m_HalfWidth = 35.0f;
+    float m_HalfHeight = 35.0f;
 };
 
 #endif //SHOVELBUTTON_HPP

@@ -10,6 +10,7 @@
 #include "Level/LevelConfig.hpp"
 #include "Board/GameBoard.hpp"
 
+#include "UI/ShovelButton.hpp"
 #include "UI/SeedCard.hpp"
 #include "UI/SeedChooser.hpp"
 #include "UI/Base/Button.hpp"
@@ -27,6 +28,11 @@
 #include "Entity/LawnMower.hpp"
 
 class SceneManager;
+
+enum class PlayerMode {
+    NORMAL,
+    SHOVELING
+};
 
 enum class GameState {
     PLAYING,
@@ -58,6 +64,7 @@ private:
     // Init
     // ============================
     void CreateBackground();
+    void CreateShovelButtonFromConfig();
     void CreateSeedChooserFromConfig();
     void CreateLawnMowersFromConfig();
     void UpdateSunText();
@@ -69,8 +76,11 @@ private:
     void ProcessMouseClick(); // 管流程
     bool TrySelectSeedCard(const glm::vec2& mousePos); // 管UI選卡
     bool TryCollectSun(const glm::vec2& mousePos);
+    bool TrySelectShovel(const glm::vec2& mousePos);
+    bool TryShovelAtMouse(const glm::vec2& mousePos);
     bool CanPlantAt(int row,int col, PlantType type) const; // 驗證是否可種植
     void PlacePlantAt(int row,int col, PlantType type); // 執行種植
+    void RemovePlantAt(int row, int col);
     void HanldeEndScreenInput();
 
 
@@ -152,6 +162,7 @@ private:
     GameBoard m_Board;
     std::shared_ptr<BackgroundImage> m_Background;
     std::shared_ptr<SeedChooser> m_SeedChooser;
+    std::shared_ptr<ShovelButton> m_ShovelButton;
     std::shared_ptr<Util::GameObject> m_VictoryScreen;
     std::shared_ptr<Util::GameObject> m_GameOverScreen;
 
@@ -163,6 +174,8 @@ private:
     int m_SunPoints = 0;
     float m_LevelTimer = 0.0f;
     GameState m_GameState = GameState::PLAYING;
+
+    PlayerMode m_PlayerMode = PlayerMode::NORMAL;
 
     // 這邊應該要移出NormalLevelScene，放進Sun中嗎？
     float m_SkySunTimer = 0.0f;

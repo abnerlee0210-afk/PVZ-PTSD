@@ -43,6 +43,7 @@ struct LevelConfig {
 
     glm::vec2 BackgroundPos = glm::vec2(190.0f,0.0f);
     glm::vec2 SeedChooserPos = glm::vec2(-170.0f, 260.0f);
+    glm::vec2 ShovelPos = glm::vec2(180.0f, 260.0f);
 
     std::string fontDir = RESOURCE_DIR "/font.ttf";
     std::string VictoryScreenPath = RESOURCE_DIR "/graphics/Screen/GameVictory.png";
