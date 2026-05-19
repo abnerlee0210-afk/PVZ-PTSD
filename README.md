@@ -22,3 +22,16 @@ This is a [PTSD](https://github.com/ntut-open-source-club/practical-tools-for-si
    cmake -DCMAKE_BUILD_TYPE=Debug -B build # -G Ninja
    ```
    better read [PTSD README](https://github.com/ntut-open-source-club/practical-tools-for-simple-design)
+
+
+主畫面：
+![alt text](image.png)
+
+選關畫面：
+![alt text](image-1.png)
+![alt text](image-2.png)
+
+
+遊戲畫面：
+![alt text](image-3.png)
+![alt text](image-4.png)
