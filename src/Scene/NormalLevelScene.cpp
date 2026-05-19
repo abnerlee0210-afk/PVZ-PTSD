@@ -492,6 +492,7 @@ void NormalLevelScene::SpawnZombiesFromEvent(const SpawnEvent &event) {
 void NormalLevelScene::SpawnZombieByType(ZombieType type, int row) {
     glm::vec2 spawnPos = m_Board.GetCellCenter(row, m_Config.cols-1);
     spawnPos.x += m_Config.SpawnZombiePosXBias;
+    spawnPos.y += 8;
 
     auto zombie = ZombieFactory::CreateZombie(type,row, spawnPos);
     if (!zombie) {

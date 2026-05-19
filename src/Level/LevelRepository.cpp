@@ -278,7 +278,7 @@ LevelConfig LevelRepository::CreateLevel4() {
 
     level.startY = -70.0f;
 
-    level.initialSun = 5000;
+    level.initialSun = 50;
 
     level.hasSkySun = true;
     level.hasShovel = false;

@@ -59,8 +59,8 @@ BoardLayout BoardPresets::GetLayout(BoardTypes type) {
                 102.0f,
                 184.0f,
                 263.0f,
-                345.0f,
-                432.0f
+                347.0f,
+                434.0f
             };
             break;
     }
