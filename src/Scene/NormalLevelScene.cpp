@@ -805,8 +805,8 @@ void NormalLevelScene::CheckZombiePlantCollisions() {
 
             if (dx > 0 && dx < 45.0f) {
                 if (plant->CanExplodeOnContact()) {
-                    zombie->TakeDamage(plant->GetContactExplosionDamage());
                     plant->TriggerContactExplosion();
+                    zombie->TakeDamage(plant->GetContactExplosionDamage());
 
                     foundPlantToAttack = true;
                     zombie->SetAttacking(false);
