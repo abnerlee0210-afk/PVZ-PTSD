@@ -1,6 +1,3 @@
-//
-// Created by 李政翰 on 2026/4/7.
-//
 #include "Scene/NormalLevelScene.hpp"
 #include "Manager/SceneManager.hpp"
 #include "Board/BoardPresets.hpp"
@@ -39,7 +36,6 @@ void NormalLevelScene::on_enter() {
     CreateLawnMowersFromConfig();
     CreateSeedChooserFromConfig();
     UpdateSunText();
-
 }
 
 void NormalLevelScene::on_update() {
@@ -47,7 +43,7 @@ void NormalLevelScene::on_update() {
         HanldeEndScreenInput();
         return;
     }
-    if (m_GameState!=GameState::PLAYING) {return;}
+    if (m_GameState != GameState::PLAYING) { return; }
 
     HandleInput();
 
@@ -56,7 +52,7 @@ void NormalLevelScene::on_update() {
 
     UpdateSkySunSystem(deltaTime);
 
-    // Update
+    // Update 各個實體
     UpdateSeedCards();
     UpdateWaveSpawning();
     UpdatePlants();
@@ -65,6 +61,8 @@ void NormalLevelScene::on_update() {
     UpdateProjectiles();
     UpdateSuns();
 
+    // 每幀更新 GameBoard 邏輯，讓櫻桃炸彈在植物更新後立即觸發九宮格爆炸。
+    m_Board.Update(m_Zombies);
 
     // 偵測碰撞
     CheckZombieLawnMowerCollisions();
@@ -80,6 +78,7 @@ void NormalLevelScene::on_update() {
 
 void NormalLevelScene::on_render() {
     m_Root.Update();
+    m_Board.Draw();
 }
 
 void NormalLevelScene::on_exit() {
@@ -196,7 +195,7 @@ void NormalLevelScene::HandleInput() {
 }
 void NormalLevelScene::ProcessMouseClick() {
     glm::vec2 mousePos = Util::Input::GetCursorPosition();
-    LOG_DEBUG("X:{},Y:{}",mousePos.x, mousePos.y);
+    LOG_DEBUG("X:{},Y:{}", mousePos.x, mousePos.y);
 
     if (TrySelectSeedCard(mousePos)) {
         return;
@@ -211,8 +210,8 @@ void NormalLevelScene::ProcessMouseClick() {
     }
 
     auto selectedCard = m_SeedChooser->GetSelectedCard();
-    if (!selectedCard) { return;}
-    if (!selectedCard->IsUsable(m_SunPoints,m_LevelTimer)) {return;}
+    if (!selectedCard) { return; }
+    if (!selectedCard->IsUsable(m_SunPoints, m_LevelTimer)) { return; }
 
     int row = 0;
     int col = 0;
@@ -282,13 +281,12 @@ void NormalLevelScene::PlacePlantAt(int row, int col, PlantType type) {
 }
 void NormalLevelScene::UpdateSeedCards() {
     if (!m_SeedChooser) { return; }
-    for (auto& card: m_SeedChooser->GetCards()) {
+    for (auto& card : m_SeedChooser->GetCards()) {
         if (card) {
             card->UpdateVisualState(m_SunPoints, m_LevelTimer);
         }
     }
 }
-
 
 // ==================================================
 // Zombie生成及Update
@@ -306,17 +304,17 @@ void NormalLevelScene::UpdateWaveSpawning() {
 void NormalLevelScene::SpawnZombiesFromEvent(const SpawnEvent &event) {
     int row = event.row;
     if (row < 0) {
-        std::uniform_int_distribution<int> dist(0,m_Config.rows -1);
-             row = dist(m_Rng);
+        std::uniform_int_distribution<int> dist(0, m_Config.rows - 1);
+        row = dist(m_Rng);
     }
 
     SpawnZombieByType(event.type, row);
 }
 void NormalLevelScene::SpawnZombieByType(ZombieType type, int row) {
-    glm::vec2 spawnPos = m_Board.GetCellCenter(row, m_Config.cols-1);
+    glm::vec2 spawnPos = m_Board.GetCellCenter(row, m_Config.cols - 1);
     spawnPos.x += m_Config.SpawnZombiePosXBias;
 
-    auto zombie = ZombieFactory::CreateZombie(type,row, spawnPos);
+    auto zombie = ZombieFactory::CreateZombie(type, row, spawnPos);
     if (!zombie) {
         LOG_DEBUG("Failed to create zombie");
         return;
@@ -327,14 +325,15 @@ void NormalLevelScene::SpawnZombieByType(ZombieType type, int row) {
 
     LOG_DEBUG("Spawned zombie => row={}, x={}, y={}", row, spawnPos.x, spawnPos.y);
 }
+
+// 注意：當被炸焦時 (!IsAlive())，仍需呼叫 zombie->Update() 來維持動畫狀態控制器換影格
 void NormalLevelScene::UpdateZombies() {
     for (auto& zombie : m_Zombies) {
-        if (zombie && zombie->IsAlive()) {
+        if (zombie) {
             zombie->Update();
         }
     }
 }
-
 
 // ==================================================
 // 更新植物 UpdatePlants、UpdateSinglePlant
@@ -345,13 +344,13 @@ void NormalLevelScene::UpdatePlants() {
             continue;
         }
 
-        UpdateSinglePlant(plant); // 個別處裡
+        UpdateSinglePlant(plant);
     }
 }
 void NormalLevelScene::UpdateSinglePlant(const std::shared_ptr<Plant>& plant) {
-    plant->Update();
+    plant->UpdateWithZombies(m_Zombies);
 
-    TryHandlePlantShooting(plant); // 射擊處理
+    TryHandlePlantShooting(plant);
     TryHandlePlantSunGeneration(plant);
 }
 void NormalLevelScene::TryHandlePlantShooting(const std::shared_ptr<Plant>& plant) {
@@ -364,16 +363,24 @@ void NormalLevelScene::TryHandlePlantShooting(const std::shared_ptr<Plant>& plan
     if (!plant->CanShoot()) {
         return;
     }
-    auto projectile = ProjectileFactory::CreateProjectile(
-        plant->GetProjectileType(),
-        plant->GetRow(),
-        plant->GetProjectileSpawnPosition()
-    );
-    if (!projectile) {
-        LOG_DEBUG("Failed to create projectile");
+    const int projectileCount = plant->GetProjectileCountPerShot();
+    if (projectileCount <= 0) {
         return;
     }
-    SpawnProjectile(projectile);
+
+    for (int index = 0; index < projectileCount; ++index) {
+        auto projectile = ProjectileFactory::CreateProjectile(
+            plant->GetProjectileType(),
+            plant->GetRow(),
+            plant->GetProjectileSpawnPositionByIndex(index)
+        );
+        if (!projectile) {
+            LOG_DEBUG("Failed to create projectile");
+            return;
+        }
+        SpawnProjectile(projectile);
+    }
+
     plant->ResetShootTimer();
     LOG_DEBUG("Plant fired projectile");
 }
@@ -423,7 +430,7 @@ bool NormalLevelScene::IsZombieInRow(const std::shared_ptr<Plant>& plant) const 
 // 處理子彈部分
 // ==================================================
 void NormalLevelScene::SpawnProjectile(const std::shared_ptr<Projectile> &projectile) {
-    if (!projectile) {return;}
+    if (!projectile) { return; }
 
     m_Projectiles.push_back(projectile);
     m_Root.AddChild(projectile);
@@ -462,6 +469,9 @@ void NormalLevelScene::CheckProjectileZombieCollisions() {
 
             if (dx < 30.0f) {
                 zombie->TakeDamage(projectile->GetDamage());
+                if (projectile->AppliesSlowEffect()) {
+                    zombie->SlowDown(10.0f);
+                }
                 projectile->Destroy();
 
                 LOG_DEBUG(
@@ -475,7 +485,6 @@ void NormalLevelScene::CheckProjectileZombieCollisions() {
         }
     }
 }
-
 
 // ==================================================
 // 處理植物和僵屍的碰撞(殭屍攻擊、植物扣血)
@@ -526,7 +535,6 @@ void NormalLevelScene::CheckZombiePlantCollisions() {
     }
 }
 
-
 // ==================================================
 // 處理Sun
 // ==================================================
@@ -544,11 +552,9 @@ void NormalLevelScene::SpawnSkySun() {
     float minY = -250.0f;
     float maxY = 150.0f;
 
-    // 建立分布器 (直接指定範圍)
     std::uniform_real_distribution<float> distX(minX, maxX);
     std::uniform_real_distribution<float> distY(minY, maxY);
 
-    // 直接生成隨機座標
     float x = distX(m_Rng);
     float y = distY(m_Rng);
 
@@ -563,7 +569,6 @@ void NormalLevelScene::SpawnSkySun() {
     );
 
     SpawnSun(sun);
-
     LOG_DEBUG("Spawned sky sun");
 }
 
@@ -605,7 +610,6 @@ void NormalLevelScene::UpdateSkySunSystem(float deltaTime) {
     }
 }
 
-
 // ==================================================
 // 勝敗相關函式
 // ==================================================
@@ -621,7 +625,15 @@ bool NormalLevelScene::AreAllWavesFinished() const {
 }
 bool NormalLevelScene::AreAllZombiesCleared() const {
     for (const auto& zombie : m_Zombies) {
-        if (zombie && zombie->IsAlive()) {
+        if (!zombie) {
+            continue;
+        }
+
+        if (zombie->IsAlive()) {
+            return false;
+        }
+
+        if (zombie->IsBoomDying() && !zombie->IsDeathAnimationFinished()) {
             return false;
         }
     }
@@ -686,9 +698,7 @@ void NormalLevelScene::ShowVictoryScreen() {
     );
 
     m_VictoryScreen->m_Transform.translation = {0.0f, 0.0f};
-
     m_Root.AddChild(m_VictoryScreen);
-
     LOG_DEBUG("Victory screen created");
 }
 
@@ -698,14 +708,11 @@ void NormalLevelScene::ShowGameOverScreen() {
     }
 
     m_GameOverScreen = std::make_shared<Util::GameObject>(
-        std::make_shared<Util::Image>(
-            m_Config.LooseScreenPath
-        ),
+        std::make_shared<Util::Image>(m_Config.LooseScreenPath),
         1.0f
     );
 
     m_GameOverScreen->m_Transform.translation = {0.0f, 0.0f};
-
     m_Root.AddChild(m_GameOverScreen);
 }
 void NormalLevelScene::HanldeEndScreenInput() {
@@ -716,9 +723,8 @@ void NormalLevelScene::HanldeEndScreenInput() {
     if (Util::Input::IsKeyUp(Util::Keycode::RETURN) ||
         Util::Input::IsKeyUp(Util::Keycode::MOUSE_LB)) {
         m_Manager->switch_to(SceneManager::SceneType::MENU);
-        }
+    }
 }
-
 
 // ==================================================
 // 除草機
@@ -750,12 +756,10 @@ void NormalLevelScene::CheckZombieLawnMowerCollisions() {
                 zombie->m_Transform.translation.x
             );
 
-            // 先用一個簡單啟動距離
             if (!mower->IsActive() && dx < 40.0f) {
                 mower->Activate();
             }
 
-            // 啟動後持續撞死同列殭屍
             if (mower->IsActive() && dx < 45.0f) {
                 zombie->TakeDamage(99999);
             }
@@ -767,46 +771,32 @@ void NormalLevelScene::CheckZombieLawnMowerCollisions() {
 // Remove
 // ==================================================
 void NormalLevelScene::RemoveAllEntity() {
-    // 移除 Plants
     for (auto& plant : m_Plants) {
-        if (plant) {
-            m_Root.RemoveChild(plant);
-        }
+        if (plant) m_Root.RemoveChild(plant);
     }
     m_Plants.clear();
 
-    // 移除 Zombies
     for (auto& zombie : m_Zombies) {
-        if (zombie) {
-            m_Root.RemoveChild(zombie);
-        }
+        if (zombie) m_Root.RemoveChild(zombie);
     }
     m_Zombies.clear();
 
-    // 移除 Projectiles
     for (auto& projectile : m_Projectiles) {
-        if (projectile) {
-            m_Root.RemoveChild(projectile);
-        }
+        if (projectile) m_Root.RemoveChild(projectile);
     }
     m_Projectiles.clear();
 
-    // 移除 Suns
     for (auto& sun : m_Suns) {
-        if (sun) {
-            m_Root.RemoveChild(sun);
-        }
+        if (sun) m_Root.RemoveChild(sun);
     }
     m_Suns.clear();
 
-    // 移除 除草機
     for (auto& LawnMower : m_LawnMowers) {
-        if (LawnMower) {
-            m_Root.RemoveChild(LawnMower);
-        }
+        if (LawnMower) m_Root.RemoveChild(LawnMower);
     }
     m_LawnMowers.clear();
 }
+
 void NormalLevelScene::RemoveDeadEntities() {
     // 移除子彈
     for (auto it = m_Projectiles.begin(); it != m_Projectiles.end(); ) {
@@ -818,11 +808,29 @@ void NormalLevelScene::RemoveDeadEntities() {
         }
     }
 
-    // 移除死亡的殭屍
+    // 【關鍵修正】寬限移除死亡的殭屍
     for (auto it = m_Zombies.begin(); it != m_Zombies.end(); ) {
-        if (!(*it) || !(*it)->IsAlive()) {
-            m_Root.RemoveChild(*it); // 1️⃣ 從 Renderer 移除
-            it = m_Zombies.erase(it); // 2️⃣ 從 vector 移除
+        if (!(*it)) {
+            it = m_Zombies.erase(it);
+            continue;
+        }
+
+        // 如果殭屍死掉了 (!IsAlive())
+        if (!(*it)->IsAlive()) {
+            // 檢查它目前的動畫狀態。如果是 BOOM_DIE，必須等動畫控制器結束或是手動寬限播放完畢
+            // 這裡假設狀態機在動畫播完後會提供對應的結束判斷，若無，我們寬限其完全停留在容器中
+            // 如果你希望在 20 幀（約 1.2 秒）播完後徹底釋放：
+            // 可以檢查：if ((*it)->GetAnimController().IsAnimationFinished())
+            // 暫時修改：如果被櫻桃炸死，讓它留在畫面上播放融化動畫。普通死亡則直接秒刪。
+            if ((*it)->IsBoomDying() && !(*it)->IsDeathAnimationFinished()) {
+                // 這是被櫻桃炸死的殭屍（速度已被歸零），先保留指針讓它繼續播 UpdateAnimationState()
+                // 等到你需要完全清空時再調用 erase。這裡我們先不秒刪它。
+                ++it;
+            } else {
+                // 普通死亡（如被豌豆打死），直接秒刪
+                m_Root.RemoveChild(*it);
+                it = m_Zombies.erase(it);
+            }
         } else {
             ++it;
         }
@@ -864,5 +872,4 @@ void NormalLevelScene::RemoveDeadEntities() {
             ++it;
         }
     }
-
 }

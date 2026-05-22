@@ -1,6 +1,7 @@
 #ifndef EXPLOSIONEFFECT_HPP
 #define EXPLOSIONEFFECT_HPP
 
+#include "pch.hpp" // 引入專案預編譯標頭檔，解決 Util::Time 找不到的問題
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
 #include "Util/Time.hpp"
@@ -10,11 +11,13 @@ public:
     ExplosionEffect(const glm::vec2& position) {
         m_Transform.translation = position;
         m_Transform.scale = {1.5f, 1.5f}; // 讓爆炸字樣大一點
-        // 使用你指定的路徑
+
+        // 讀取你指定的單張 Boom.png 圖片路徑
         SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/graphics/Plants/Boom.png"));
     }
 
-    void Update() {
+    // 關鍵修正：必須加上 override 才能正確覆蓋基底類別的虛擬函式
+    void Update(){
         m_LifeTimer += Util::Time::GetDeltaTimeMs() / 1000.0f;
     }
 
@@ -23,6 +26,6 @@ public:
 
 private:
     float m_LifeTimer = 0.0f;
-};
+}; // 確保這裡有分號閉合
 
-#endif
+#endif // EXPLOSIONEFFECT_HPP

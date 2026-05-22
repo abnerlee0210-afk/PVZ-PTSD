@@ -26,6 +26,7 @@ public:
     int GetRow() const { return m_Row; }
     int GetDamage() const { return m_Damage; }
     bool IsAlive() const { return m_Alive; }
+    virtual bool AppliesSlowEffect() const { return false; }
 
 protected:
     int m_Row;

@@ -1,22 +1,24 @@
 #ifndef CHERRYBOMB_HPP
 #define CHERRYBOMB_HPP
 
-#include "Plant.hpp"
+#include "Entity/Plant.hpp"
 
 class CherryBomb : public Plant {
 public:
     CherryBomb(int row, int col, const glm::vec2& position);
+
     void Update() override;
+
     bool IsExploded() const { return m_Exploded; }
-    float GetExplosionRadius() const { return 160.0f; } // 160 像素通常能穩定覆蓋 3x3
+    float GetExplosionRadius() const { return 200.0f; }
 
 protected:
     void InitAnimations() override;
 
 private:
     float m_ExplodeTimer = 0.0f;
-    float m_ExplodeDelay = 0.6f;
+    float m_ExplodeDelay = 1.2f;
     bool m_Exploded = false;
 };
 
-#endif
+#endif // CHERRYBOMB_HPP

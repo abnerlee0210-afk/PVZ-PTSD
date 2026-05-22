@@ -8,6 +8,7 @@
 #include "Entity/ExplosionEffect.hpp" // 必須包含，否則 m_Effects 報錯
 #include "Board/BoardLayout.hpp"
 
+class CherryBomb;
 class Plant;
 
 class GameBoard {
@@ -33,6 +34,13 @@ private:
 
     // 管理場上所有爆炸特效
     std::vector<std::shared_ptr<ExplosionEffect>> m_Effects;
+
+    int GetNearestColumn(float x) const;
+    bool IsZombieInsideCherryBombArea(
+        const CherryBomb& cherry,
+        const Zombie& zombie,
+        const glm::vec2& explosionCenter
+    ) const;
 };
 
 #endif

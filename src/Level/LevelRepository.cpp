@@ -50,6 +50,8 @@ LevelConfig LevelRepository::CreateLevel1() {
         PlantType::SNOW_PEA,
         PlantType::SUNFLOWER,
         PlantType::CHERRY_BOMB,
+        PlantType::CHOMPER,
+        PlantType::REPEATER_PEA,
     };
 
     Wave wave1;

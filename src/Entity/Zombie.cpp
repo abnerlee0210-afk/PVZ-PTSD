@@ -1,6 +1,8 @@
 #include "Entity/Zombie.hpp"
 #include "Util/Time.hpp"
-#include "Factory/AnimationFactory.hpp" // 必須包含
+#include "Factory/AnimationFactory.hpp"
+
+#include <algorithm>
 
 Zombie::Zombie(const std::string& imagePath,
                int row,
@@ -9,7 +11,7 @@ Zombie::Zombie(const std::string& imagePath,
                float speed)
     : Util::GameObject(std::make_shared<Util::Image>(imagePath), 10.0f),
       m_Row(row),
-      m_HP(hp), // 統一使用 m_HP
+      m_HP(hp),
       m_Speed(speed),
       m_Alive(true),
       m_AttackTimer(0.0f),
@@ -34,7 +36,7 @@ void Zombie::Update() {
         speedMultiplier = 0.5f;
         m_SlowTimer -= deltaTime;
         if (m_SlowTimer <= 0) {
-            m_IsSlowed = false;
+            ClearSlow();
         }
     }
 
@@ -42,7 +44,6 @@ void Zombie::Update() {
     if (m_IsAttacking) {
         m_AttackTimer += deltaTime;
     } else {
-        // 確保將 speedMultiplier 乘進去
         m_Transform.translation.x -= (m_Speed * speedMultiplier) * deltaTime;
     }
 
@@ -53,22 +54,29 @@ void Zombie::Update() {
 void Zombie::TakeDamage(int damage, bool isExplosion) {
     if (!m_Alive) return;
 
-    m_HP -= damage; // 統一使用 m_HP
+    m_HP -= damage;
 
     if (m_HP <= 0) {
         m_HP = 0;
         m_Alive = false;
+        m_IsAttacking = false;
+        ClearSlow();
 
         if (isExplosion) {
-            // 切換到焦黑死亡動畫
-            m_Speed = 0; // 停止移動
+            // 1. 停止移動
+            m_Speed = 0.0f;
+
+            // 2. 建立焦黑靜態圖/動畫
             auto boomAnim = AnimationFactory::CreateZombieBoomDie();
-            // 直接取代目前的動畫狀態或手動 Set
-            m_AnimController.AddAnimation(ZombieAnimState::DIE, boomAnim);
-            m_AnimController.SetState(ZombieAnimState::DIE);
+
+            // 3. 註冊並切換至對應的 BOOM_DIE 狀態
+            m_AnimController.AddAnimation(ZombieAnimState::BOOM_DIE, boomAnim);
+            m_AnimController.SetState(ZombieAnimState::BOOM_DIE);
+
+            // 4. 更換顯示圖片
             SetDrawable(boomAnim);
         } else {
-            // 普通死亡邏輯...
+            // 普通死亡邏輯
             m_AnimController.SetState(ZombieAnimState::DIE);
         }
     }
@@ -83,11 +91,45 @@ void Zombie::ResetAttackTimer() {
 }
 
 void Zombie::SlowDown(float duration) {
+    if (!m_Alive || duration <= 0.0f) {
+        return;
+    }
+
     m_IsSlowed = true;
-    m_SlowTimer = duration;
+    m_SlowTimer = std::max(m_SlowTimer, duration);
+    ApplySlowColor();
+}
+
+bool Zombie::IsBoomDying() const {
+    return m_AnimController.GetState() == ZombieAnimState::BOOM_DIE;
+}
+
+bool Zombie::IsDeathAnimationFinished() const {
+    auto anim = m_AnimController.GetCurrentAnimation();
+    if (!anim) {
+        return true;
+    }
+
+    return anim->GetState() == Util::Animation::State::ENDED;
+}
+
+void Zombie::ApplySlowColor() {
+    SetColor(glm::vec4{0.45f, 0.70f, 1.0f, 1.0f});
+}
+
+void Zombie::ClearSlow() {
+    m_IsSlowed = false;
+    m_SlowTimer = 0.0f;
+    SetColor(glm::vec4{1.0f, 1.0f, 1.0f, 1.0f});
 }
 
 void Zombie::UpdateAnimationState() {
+    // 如果已經在爆炸死亡狀態，交由 TakeDamage 手動更換的圖片控制，不強制複寫
+    auto currentState = m_AnimController.GetState(); // 假設控制器有 GetState()
+    if (currentState == ZombieAnimState::BOOM_DIE) {
+        return;
+    }
+
     if (!m_Alive) {
         m_AnimController.SetState(ZombieAnimState::DIE);
     }

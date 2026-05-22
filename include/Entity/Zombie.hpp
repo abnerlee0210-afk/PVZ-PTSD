@@ -6,7 +6,6 @@
 #define ZOMBIE_HPP
 
 #include "pch.hpp"
-
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
 #include "Animation/AnimationStateController.hpp"
@@ -30,19 +29,27 @@ public:
 
     virtual void Update();
 
+    // 核心受傷多載：只保留這一個帶有預設值的虛擬函式，解決二義性
     virtual void TakeDamage(int damage, bool isExplosion = false);
 
     int GetRow() const { return m_Row; }
     int GetHP() const { return m_HP; }
     float GetSpeed() const { return m_Speed; }
     bool IsAlive() const { return m_Alive; }
+    bool IsSlowed() const { return m_IsSlowed; }
+    bool IsBoomDying() const;
+    bool IsDeathAnimationFinished() const;
 
     bool CanAttack() const;
     void ResetAttackTimer();
-    void SetAttacking(bool attacking) {m_IsAttacking = attacking;
-    bool IsAttacking() const {return m_IsAttacking;}
 
-    virtual void InitAnimations(){}
+    // 【已修正】將大括號完整閉合
+    void SetAttacking(bool attacking) { m_IsAttacking = attacking; }
+    bool IsAttacking() const { return m_IsAttacking; }
+
+    void SlowDown(float duration);
+
+    virtual void InitAnimations() {}
     void UpdateAnimationState();
 
 protected:
@@ -55,11 +62,15 @@ protected:
     float m_AttackInterval;
     bool m_IsAttacking;
 
-    void SlowDown(float duration);
+    // 寒冰減速機制變數
     bool m_IsSlowed = false;
     float m_SlowTimer = 0.0f;
 
     AnimationStateController<ZombieAnimState> m_AnimController;
+
+private:
+    void ApplySlowColor();
+    void ClearSlow();
 };
 
 #endif //ZOMBIE_HPP

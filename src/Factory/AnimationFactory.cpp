@@ -1,68 +1,143 @@
-//
-// Created by hankl on 2026/4/24.
-//
 #include "Factory/AnimationFactory.hpp"
 
-std::shared_ptr<Util::Animation> AnimationFactory::CreateBasicZombieWalk() {
+namespace {
+std::shared_ptr<Util::Animation> CreateNumberedAnimation(
+    const std::string& prefix,
+    const std::string& suffix,
+    int firstFrame,
+    int lastFrame,
+    bool play,
+    std::size_t interval,
+    bool looping,
+    std::size_t cooldown = 0
+) {
     std::vector<std::string> paths;
-    paths.reserve(22); // 預分配記憶體提升效能
+    paths.reserve(static_cast<std::size_t>(lastFrame - firstFrame + 1));
 
-    for (int i = 0; i <= 21; ++i) {
-        paths.push_back(RESOURCE_DIR "/graphics/Zombies/NormalZombie/Zombie/Zombie_" + std::to_string(i) + ".png");
+    for (int i = firstFrame; i <= lastFrame; ++i) {
+        paths.push_back(prefix + std::to_string(i) + suffix);
     }
 
-    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+    return std::make_shared<Util::Animation>(paths, play, interval, looping, cooldown);
+}
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreateBasicZombieWalk() {
+    return CreateNumberedAnimation(
+        RESOURCE_DIR "/graphics/Zombies/NormalZombie/Zombie/Zombie_",
+        ".png",
+        0,
+        21,
+        true,
+        100,
+        true
+    );
 }
 
 std::shared_ptr<Util::Animation> AnimationFactory::CreatePeashooterIdle() {
-    std::vector<std::string> paths;
-    paths.reserve(22); // 預分配記憶體提升效能
+    return CreateNumberedAnimation(
+        RESOURCE_DIR "/graphics/Plants/Peashooter/Peashooter_",
+        ".png",
+        0,
+        12,
+        true,
+        100,
+        true
+    );
+}
 
-    for (int i = 0; i <= 12; ++i) {
-        paths.push_back(RESOURCE_DIR "/graphics/Plants/Peashooter/Peashooter_" + std::to_string(i) + ".png");
-    }
-
-    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+std::shared_ptr<Util::Animation> AnimationFactory::CreateRepeaterPeaIdle() {
+    return CreateNumberedAnimation(
+        RESOURCE_DIR "/graphics/Plants/RepeaterPea/RepeaterPea_",
+        ".png",
+        0,
+        14,
+        true,
+        100,
+        true
+    );
 }
 
 std::shared_ptr<Util::Animation> AnimationFactory::CreateSunflowerIdle() {
-    std::vector<std::string> paths;
-    paths.reserve(22); // 預分配記憶體提升效能
-
-    for (int i = 0; i <= 17; ++i) {
-        paths.push_back(RESOURCE_DIR "/graphics/Plants/SunFlower/SunFlower_" + std::to_string(i) + ".png");
-    }
-
-    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+    return CreateNumberedAnimation(
+        RESOURCE_DIR "/graphics/Plants/SunFlower/SunFlower_",
+        ".png",
+        0,
+        17,
+        true,
+        100,
+        true
+    );
 }
 
 std::shared_ptr<Util::Animation> AnimationFactory::CreateSnowPeaIdle() {
-    std::vector<std::string> paths;
-    for (int i = 0; i <= 14; ++i) { // 根據你的檔案 SnowPea_0 ~ SnowPea_14
-        paths.push_back(RESOURCE_DIR "/graphics/Plants/SnowPea/SnowPea_" + std::to_string(i) + ".png");
-    }
-    return std::make_shared<Util::Animation>(paths, true, 100); // 100ms 間隔
+    return CreateNumberedAnimation(
+        RESOURCE_DIR "/graphics/Plants/SnowPea/SnowPea_",
+        ".png",
+        0,
+        14,
+        true,
+        100,
+        true
+    );
 }
 
 std::shared_ptr<Util::Animation> AnimationFactory::CreateCherryBombExplode() {
-    std::vector<std::string> paths;
-    for (int i = 0; i <= 6; ++i) { // 根據資源檔 CherryBomb_0 ~ CherryBomb_6
-        paths.push_back(RESOURCE_DIR "/graphics/Plants/CherryBomb/CherryBomb_" + std::to_string(i) + ".png");
-    }
-    // 設定不循環(false)，因為炸完就消失
-    return std::make_shared<Util::Animation>(paths, false, 100);
+    return CreateNumberedAnimation(
+        RESOURCE_DIR "/graphics/Plants/CherryBomb/CherryBomb_",
+        ".png",
+        0,
+        6,
+        true,
+        100,
+        false
+    );
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreateChomperIdle() {
+    return CreateNumberedAnimation(
+        RESOURCE_DIR "/graphics/Plants/Chomper/Chomper/Chomper_",
+        ".png",
+        0,
+        12,
+        true,
+        100,
+        true
+    );
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreateChomperAttack() {
+    return CreateNumberedAnimation(
+        RESOURCE_DIR "/graphics/Plants/Chomper/ChomperAttack/ChomperAttack_",
+        ".png",
+        0,
+        8,
+        false,
+        60,
+        false
+    );
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreateChomperDigest() {
+    return CreateNumberedAnimation(
+        RESOURCE_DIR "/graphics/Plants/Chomper/ChomperDigest/ChomperDigest_",
+        ".png",
+        0,
+        5,
+        true,
+        140,
+        true
+    );
 }
 
 std::shared_ptr<Util::Animation> AnimationFactory::CreateZombieBoomDie() {
-    std::vector<std::string> paths;
-
-    // 指向你指定的新圖片路徑
-    // 假設你將該圖片命名為 BoomDie_0.png 放在這個目錄下
-    for (int i = 0; i <= 20; ++i)
-    {
-        // 根據資源檔 CherryBomb_0 ~ CherryBomb_6
-        paths.push_back(RESOURCE_DIR "/graphics/Zombies/zm_dead"+ std::to_string(i) + ".png");
-    }
-    // 因為只有一張圖，時間間隔設長一點也沒關係，false 代表不循環
-    return std::make_shared<Util::Animation>(paths, false, 100);
+    return CreateNumberedAnimation(
+        RESOURCE_DIR "/graphics/Zombies/NormalZombie/BoomDie/BoomDie_",
+        ".png",
+        0,
+        19,
+        true,
+        60,
+        false
+    );
 }

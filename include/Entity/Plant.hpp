@@ -17,8 +17,11 @@
 enum class PlantAnimState {
     IDLE,
     ATTACK,
+    CHEWING,
     DIE
 };
+
+class Zombie;
 
 class Plant : public Util::GameObject {
 public:
@@ -29,8 +32,12 @@ public:
           int hp,
           int cost);
     virtual ~Plant() = default;
-
+    void SetAlive(bool alive) { m_Alive = alive; }
     virtual void Update() {}
+    virtual void UpdateWithZombies(const std::vector<std::shared_ptr<Zombie>>& zombies) {
+        (void)zombies;
+        Update();
+    }
     virtual void TakeDamage(int damage);
 
     int GetRow() const { return m_Row; }
@@ -42,6 +49,11 @@ public:
     virtual bool CanShoot() const { return false; }
     virtual ProjectileType GetProjectileType() const { return  ProjectileType::PEA;}
     virtual glm::vec2 GetProjectileSpawnPosition() const { return {0.0f, 0.0f}; }
+    virtual int GetProjectileCountPerShot() const { return 1; }
+    virtual glm::vec2 GetProjectileSpawnPositionByIndex(int projectileIndex) const {
+        (void)projectileIndex;
+        return GetProjectileSpawnPosition();
+    }
     virtual void ResetShootTimer() {}
 
     virtual bool CanGenerateSun() const { return false; }

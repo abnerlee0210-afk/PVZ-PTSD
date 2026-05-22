@@ -105,6 +105,11 @@ add_executable(${PROJECT_NAME}
         include/Entity/PeaIce.hpp
         include/Entity/CherryBomb.hpp
         src/Entity/CherryBomb.cpp
+        include/Entity/Chomper.hpp
+        src/Entity/Chomper.cpp
+        src/Entity/PeaIce.cpp
+        include/Entity/RepeaterPea.hpp
+        src/Entity/RepeaterPea.cpp
         include/Entity/ExplosionEffect.hpp
 )
 
