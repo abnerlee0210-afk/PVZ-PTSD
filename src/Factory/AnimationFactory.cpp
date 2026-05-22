@@ -95,6 +95,43 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreateWallNutCracked2() {
     return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
 }
 
+// ===========================================================
+// POTATO_MINE
+// ===========================================================
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreatePotatoMineInit() {
+    std::vector<std::string> paths;
+    paths.reserve(1);
+
+    for (int i = 0; i <= 0; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Plants/PotatoMine/PotatoMineInit/PotatoMineInit_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreatePotatoMineArmed() {
+    std::vector<std::string> paths;
+    paths.reserve(8);
+
+    for (int i = 0; i <= 7; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Plants/PotatoMine/PotatoMine/PotatoMine_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreatePotatoMineExplode() {
+    std::vector<std::string> paths;
+    paths.reserve(1);
+
+    for (int i = 0; i <= 0; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Plants/PotatoMine/PotatoMineExplode/PotatoMineExplode_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+
 // ===================================================
 // Zombie Attack
 // ===================================================

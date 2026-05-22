@@ -106,6 +106,8 @@ add_executable(${PROJECT_NAME}
         src/Entity/PoleVaultingZombie.cpp
         include/Entity/WallNut.hpp
         src/Entity/WallNut.cpp
+        include/Entity/PotatoMine.hpp
+        src/Entity/PotatoMine.cpp
 )
 
 if(MSVC)

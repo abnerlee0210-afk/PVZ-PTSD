@@ -7,11 +7,12 @@
 #include "Entity/Sunflower.hpp"
 #include "Entity/CherryBomb.hpp"
 #include "Entity/WallNut.hpp"
+#include "Entity/PotatoMine.hpp"
 
 // 之後你有實作這些類別時，再把 include 打開
 
 
-// #include "Entity/PotatoMine.hpp"
+
 // #include "Entity/SnowPea.hpp"
 // #include "Entity/Chomper.hpp"
 // #include "Entity/RepeaterPea.hpp"
@@ -34,12 +35,11 @@ std::shared_ptr<Plant> PlantFactory::CreatePlant(
 
         case PlantType::WALL_NUT:
             return std::make_shared<WallNut>(row, col, position);
+
+        case PlantType::POTATO_MINE:
+            return std::make_shared<PotatoMine>(row, col, position);
             // 你之後有實作對應類別時再打開
             /*
-
-
-
-
             case PlantType::POTATO_MINE:
                 return std::make_shared<PotatoMine>(row, col, position);
 

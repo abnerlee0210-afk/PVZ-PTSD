@@ -21,7 +21,11 @@ enum class PlantAnimState {
     // for WallNut
     COMPLETE,
     CRACKED1,
-    CRACKED2
+    CRACKED2,
+    // for PotatoMin
+    INIT,
+    ARMED,
+    EXPLODE,
 };
 
 class Plant : public Util::GameObject {
@@ -57,6 +61,10 @@ public:
     virtual float GetExplosionRadius() const { return 0.0f; }
     virtual int GetExplosionDamage() const { return 0; }
     virtual void MarkExploded() {}
+
+    virtual bool CanExplodeOnContact() const { return false; }
+    virtual int GetContactExplosionDamage() const { return 0; }
+    virtual void TriggerContactExplosion() {}
 
     virtual void InitAnimations(){}
     virtual void UpdateAnimationState(){}

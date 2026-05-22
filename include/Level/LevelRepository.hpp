@@ -16,6 +16,7 @@ private:
     static LevelConfig CreateLevel2();
     static LevelConfig CreateLevel3();
     static LevelConfig CreateLevel4();
+    static LevelConfig CreateLevel6();
 };
 
 #endif //LEVELREPOSITORY_HPP

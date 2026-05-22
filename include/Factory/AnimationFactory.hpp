@@ -22,6 +22,9 @@ public:
     static std::shared_ptr<Util::Animation> CreateWallNutComplete();
     static std::shared_ptr<Util::Animation> CreateWallNutCracked1();
     static std::shared_ptr<Util::Animation> CreateWallNutCracked2();
+    static std::shared_ptr<Util::Animation> CreatePotatoMineInit();
+    static std::shared_ptr<Util::Animation> CreatePotatoMineArmed();
+    static std::shared_ptr<Util::Animation> CreatePotatoMineExplode();
 
     static std::shared_ptr<Util::Animation> CreateBasicZombieAttack();
     static std::shared_ptr<Util::Animation> CreateConeheadZombieAttack();

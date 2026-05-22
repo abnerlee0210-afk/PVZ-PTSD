@@ -804,6 +804,14 @@ void NormalLevelScene::CheckZombiePlantCollisions() {
             );
 
             if (dx > 0 && dx < 45.0f) {
+                if (plant->CanExplodeOnContact()) {
+                    zombie->TakeDamage(plant->GetContactExplosionDamage());
+                    plant->TriggerContactExplosion();
+
+                    foundPlantToAttack = true;
+                    zombie->SetAttacking(false);
+                    break;
+                }
                 if (zombie->CanJumpOverPlant()) {
                     zombie->StartJumpOverPlant(plant->m_Transform.translation);
                     foundPlantToAttack = true;
