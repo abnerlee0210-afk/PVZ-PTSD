@@ -1,7 +1,7 @@
 //
 // Created by hankl on 2026/3/10.
 //
-#include "Entity/Pea.hpp"
+#include "Entity/Projectile/Pea.hpp"
 
 Pea::Pea(int row, const glm::vec2& position)
     : Projectile(RESOURCE_DIR "/graphics/Bullets/PeaNormal/PeaNormal_0.png",

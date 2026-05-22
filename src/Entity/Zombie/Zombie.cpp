@@ -1,7 +1,7 @@
 //
 // Created by hankl on 2026/3/10.
 //
-#include "Entity/Zombie.hpp"
+#include "Entity/Zombie/Zombie.hpp"
 
 #include "Util/Time.hpp"
 

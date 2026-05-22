@@ -21,11 +21,11 @@
 #include "Util/Text.hpp"
 #include <random>
 
-#include "Entity/Plant.hpp"
-#include "Entity/Zombie.hpp"
-#include "Entity/Projectile.hpp"
-#include "Entity/Sun.hpp"
-#include "Entity/LawnMower.hpp"
+#include "Entity/Plant/Plant.hpp"
+#include "Entity/Zombie/Zombie.hpp"
+#include "Entity/Projectile/Projectile.hpp"
+#include "Entity/Object/Sun.hpp"
+#include "Entity/Object/LawnMower.hpp"
 
 class SceneManager;
 

@@ -5,7 +5,7 @@
 #ifndef CHERRYBOMB_HPP
 #define CHERRYBOMB_HPP
 
-#include "Entity/Plant.hpp"
+#include "Plant.hpp"
 
 class CherryBomb : public Plant {
 public:

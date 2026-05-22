@@ -1,7 +1,7 @@
 //
 // Created by hankl on 2026/3/13.
 //
-#include "Entity/Sun.hpp"
+#include "Entity/Object/Sun.hpp"
 
 #include "Util/Time.hpp"
 #include "Factory/AnimationFactory.hpp"

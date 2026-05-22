@@ -7,7 +7,7 @@
 
 #include "pch.hpp"
 
-#include "Entity/Projectile.hpp"
+#include "Entity/Projectile/Projectile.hpp"
 #include "Level/LevelTypes.hpp"
 
 class ProjectileFactory {

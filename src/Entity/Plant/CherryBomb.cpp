@@ -1,7 +1,7 @@
 //
 // Created by hankl on 2026/5/12.
 //
-#include "Entity/CherryBomb.hpp"
+#include "Entity/Plant/CherryBomb.hpp"
 
 #include "Util/Time.hpp"
 

@@ -2,9 +2,9 @@
 // Created by hankl on 2026/4/8.
 //
 #include "Factory/ZombieFactory.hpp"
-#include "Entity/BasicZombie.hpp"
-#include "Entity/ConeheadZombie.hpp"
-#include "Entity/PoleVaultingZombie.hpp"
+#include "Entity/Zombie/BasicZombie.hpp"
+#include "Entity/Zombie/ConeheadZombie.hpp"
+#include "Entity/Zombie/PoleVaultingZombie.hpp"
 
 std::shared_ptr<Zombie> ZombieFactory::CreateZombie(
     ZombieType type,

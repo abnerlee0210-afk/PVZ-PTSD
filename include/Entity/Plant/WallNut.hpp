@@ -5,7 +5,7 @@
 #ifndef WALLNUT_HPP
 #define WALLNUT_HPP
 
-#include "Entity/Plant.hpp"
+#include "Plant.hpp"
 
 enum class WallNutState {
     COMPLETE,

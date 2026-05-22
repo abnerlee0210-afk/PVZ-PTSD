@@ -8,7 +8,7 @@
 #include "pch.hpp"
 
 #include "Level/LevelTypes.hpp"
-#include "Entity/Plant.hpp"
+#include "Entity/Plant/Plant.hpp"
 
 class PlantFactory {
 public:

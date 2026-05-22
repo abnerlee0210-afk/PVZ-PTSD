@@ -1,7 +1,7 @@
 //
 // Created by 李政翰 on 2026/5/13.
 //
-#include "Entity/PoleVaultingZombie.hpp"
+#include "Entity/Zombie/PoleVaultingZombie.hpp"
 
 #include "Util/Time.hpp"
 

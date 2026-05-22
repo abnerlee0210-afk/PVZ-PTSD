@@ -5,7 +5,7 @@
 #ifndef POLEVAULTINGZOMBIE_HPP
 #define POLEVAULTINGZOMBIE_HPP
 
-#include "Entity/Zombie.hpp"
+#include "Zombie.hpp"
 
 class PoleVaultingZombie : public Zombie {
 public:

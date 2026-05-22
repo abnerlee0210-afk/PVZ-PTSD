@@ -5,7 +5,7 @@
 #ifndef SUNFLOWER_HPP
 #define SUNFLOWER_HPP
 
-#include "Entity/Plant.hpp"
+#include "Plant.hpp"
 
 class Sunflower : public Plant {
 public:

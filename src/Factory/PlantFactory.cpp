@@ -3,11 +3,11 @@
 //
 #include "Factory/PlantFactory.hpp"
 
-#include "Entity/Peashooter.hpp"
-#include "Entity/Sunflower.hpp"
-#include "Entity/CherryBomb.hpp"
-#include "Entity/WallNut.hpp"
-#include "Entity/PotatoMine.hpp"
+#include "Entity/Plant/Peashooter.hpp"
+#include "Entity/Plant/Sunflower.hpp"
+#include "Entity/Plant/CherryBomb.hpp"
+#include "Entity/Plant//WallNut.hpp"
+#include "Entity/Plant/PotatoMine.hpp"
 
 // 之後你有實作這些類別時，再把 include 打開
 

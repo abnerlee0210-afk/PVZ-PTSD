@@ -2,7 +2,7 @@
 // Created by 李政翰 on 2026/3/31.
 //
 #include "Scene/MenuScene.hpp"
-#include "../../include/Manager/SceneManager.hpp"
+#include "Manager/SceneManager.hpp"
 
 MenuScene::MenuScene(SceneManager* manager) : m_Manager(manager) {
     LOG_DEBUG("MenuScene Constructor with Manager");

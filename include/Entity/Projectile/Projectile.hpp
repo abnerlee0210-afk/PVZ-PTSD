@@ -27,6 +27,8 @@ public:
     int GetDamage() const { return m_Damage; }
     bool IsAlive() const { return m_Alive; }
 
+    virtual bool CanSlow() const { return false; }
+
 protected:
     int m_Row;
     int m_Damage;

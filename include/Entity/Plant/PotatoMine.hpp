@@ -1,7 +1,7 @@
 #ifndef POTATOMINE_HPP
 #define POTATOMINE_HPP
 
-#include "Entity/Plant.hpp"
+#include "Plant.hpp"
 
 class PotatoMine : public Plant {
 public:

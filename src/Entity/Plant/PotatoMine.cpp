@@ -1,4 +1,4 @@
-#include "Entity/PotatoMine.hpp"
+#include "Entity/Plant/PotatoMine.hpp"
 #include "Factory/AnimationFactory.hpp"
 
 #include "Util/Time.hpp"

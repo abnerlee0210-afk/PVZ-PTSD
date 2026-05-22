@@ -3,7 +3,7 @@
 //
 #include "Factory/ProjectileFactory.hpp"
 
-#include "Entity/Pea.hpp"
+#include "Entity/Projectile/Pea.hpp"
 // 之後再加 SnowPea projectile
 // #include "Entity/SnowPeaProjectile.hpp"
 

@@ -8,7 +8,7 @@
 #include "pch.hpp"
 
 #include "Level/LevelTypes.hpp"
-#include "Entity/Zombie.hpp"
+#include "Entity/Zombie/Zombie.hpp"
 
 class ZombieFactory {
 public:

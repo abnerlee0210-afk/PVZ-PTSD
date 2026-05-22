@@ -1,7 +1,7 @@
 //
 // Created by hankl on 2026/3/20.
 //
-#include "Entity/ConeheadZombie.hpp"
+#include "Entity/Zombie/ConeheadZombie.hpp"
 #include "Factory/AnimationFactory.hpp"
 
 ConeheadZombie::ConeheadZombie(int row, const glm::vec2& position)

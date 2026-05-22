@@ -1,7 +1,7 @@
 //
 // Created by hankl on 2026/3/10.
 //
-#include "Entity/BasicZombie.hpp"
+#include "Entity/Zombie/BasicZombie.hpp"
 #include "Factory/AnimationFactory.hpp"
 
 #include "Util/Logger.hpp"

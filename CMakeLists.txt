@@ -50,16 +50,16 @@ add_executable(${PROJECT_NAME}
         src/Manager/SceneManager.cpp
         include/Board/GameBoard.hpp
         src/Board/GameBoard.cpp
-        include/Entity/BasicZombie.hpp
-        "include/Entity/ConeheadZombie.hpp"
-        include/Entity/LawnMower.hpp
-        include/Entity/Pea.hpp
-        include/Entity/Peashooter.hpp
-        include/Entity/Plant.hpp
-        include/Entity/Projectile.hpp
-        include/Entity/Sun.hpp
-        include/Entity/Sunflower.hpp
-        include/Entity/Zombie.hpp
+        include/Entity/Zombie/BasicZombie.hpp
+        "include/Entity/Zombie/ConeheadZombie.hpp"
+        include/Entity/Object/LawnMower.hpp
+        include/Entity/Projectile/Pea.hpp
+        include/Entity/Plant/Peashooter.hpp
+        include/Entity/Plant/Plant.hpp
+        include/Entity/Projectile/Projectile.hpp
+        include/Entity/Object/Sun.hpp
+        include/Entity/Plant/Sunflower.hpp
+        include/Entity/Zombie/Zombie.hpp
         include/Level/LevelConfig.hpp
         include/Level/LevelRepository.hpp
         include/Level/LevelTypes.hpp
@@ -67,16 +67,16 @@ add_executable(${PROJECT_NAME}
         include/UI/ShovelButton.hpp
         include/Scene/BowlingLevelScene.hpp
         include/Scene/NormalLevelScene.hpp
-        src/Entity/BasicZombie.cpp
-        src/Entity/ConeheadZombie.cpp
-        src/Entity/LawnMower.cpp
-        src/Entity/Pea.cpp
-        src/Entity/Peashooter.cpp
-        src/Entity/Plant.cpp
-        src/Entity/Projectile.cpp
-        src/Entity/Sun.cpp
-        src/Entity/Sunflower.cpp
-        src/Entity/Zombie.cpp
+        src/Entity/Zombie/BasicZombie.cpp
+        src/Entity/Zombie/ConeheadZombie.cpp
+        src/Entity/Object/LawnMower.cpp
+        src/Entity/Projectile/Pea.cpp
+        src/Entity/Plant/Peashooter.cpp
+        src/Entity/Plant/Plant.cpp
+        src/Entity/Projectile/Projectile.cpp
+        src/Entity/Object/Sun.cpp
+        src/Entity/Plant/Sunflower.cpp
+        src/Entity/Zombie/Zombie.cpp
         src/Level/LevelRepository.cpp
         src/Scene/BowlingLevelScene.cpp
         src/Scene/NormalLevelScene.cpp
@@ -100,14 +100,14 @@ add_executable(${PROJECT_NAME}
         include/Animation/AnimationStateController.hpp
         include/Factory/AnimationFactory.hpp
         src/Factory/AnimationFactory.cpp
-        include/Entity/CherryBomb.hpp
-        src/Entity/CherryBomb.cpp
-        include/Entity/PoleVaultingZombie.hpp
-        src/Entity/PoleVaultingZombie.cpp
-        include/Entity/WallNut.hpp
-        src/Entity/WallNut.cpp
-        include/Entity/PotatoMine.hpp
-        src/Entity/PotatoMine.cpp
+        include/Entity/Plant/CherryBomb.hpp
+        src/Entity/Plant/CherryBomb.cpp
+        include/Entity/Zombie/PoleVaultingZombie.hpp
+        src/Entity/Zombie/PoleVaultingZombie.cpp
+        include/Entity/Plant/WallNut.hpp
+        src/Entity/Plant/WallNut.cpp
+        include/Entity/Plant/PotatoMine.hpp
+        src/Entity/Plant/PotatoMine.cpp
 )
 
 if(MSVC)

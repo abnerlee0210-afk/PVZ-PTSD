@@ -1,7 +1,7 @@
 //
 // Created by hankl on 2026/5/16.
 //
-#include "Entity/WallNut.hpp"
+#include "Entity/Plant/WallNut.hpp"
 #include "Factory/AnimationFactory.hpp"
 
 WallNut::WallNut(int row, int col, const glm::vec2& position)

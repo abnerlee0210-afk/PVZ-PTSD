@@ -3,7 +3,7 @@
 #include <limits>
 #include <cmath>
 
-#include "Entity/Plant.hpp"
+#include "Entity/Plant/Plant.hpp"
 
 GameBoard::GameBoard(
     int rows,

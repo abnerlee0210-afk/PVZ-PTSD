@@ -1,7 +1,7 @@
 //
 // Created by hankl on 2026/3/10.
 //
-#include "Entity/Plant.hpp"
+#include "Entity/Plant/Plant.hpp"
 
 Plant::Plant(const std::string& imagePath,
              int row,

@@ -1,7 +1,7 @@
 //
 // Created by hankl on 2026/3/10.
 //
-#include "Entity/Peashooter.hpp"
+#include "Entity/Plant/Peashooter.hpp"
 
 #include "Level/LevelTypes.hpp"
 #include "Util/Time.hpp"

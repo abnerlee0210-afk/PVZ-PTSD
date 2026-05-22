@@ -15,10 +15,10 @@
 #include "Util/Time.hpp"
 #include <cmath>
 
-#include "Entity/Peashooter.hpp"
-#include "Entity/Sunflower.hpp"
-#include "Entity/BasicZombie.hpp"
-#include "Entity/Pea.hpp"
+#include "Entity/Plant/Peashooter.hpp"
+#include "Entity/Plant//Sunflower.hpp"
+#include "Entity/Zombie/BasicZombie.hpp"
+#include "Entity/Projectile/Pea.hpp"
 
 NormalLevelScene::NormalLevelScene(const LevelConfig& config, SceneManager* manager)
     : m_Manager(manager),
