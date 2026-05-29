@@ -3,6 +3,7 @@
 //
 #include "Entity/Plant/Plant.hpp"
 #include "Render/RenderLayer.hpp"
+#include "Render/RenderLayer.hpp"
 
 Plant::Plant(const std::string& imagePath,
              int row,
@@ -31,19 +32,8 @@ void Plant::TakeDamage(int damage) {
     }
 }
 
-// void Plant::UpdateAnimationState() {
-//     if (!m_Alive) {
-//         m_AnimController.SetState(PlantAnimState::DIE);
-//     }
-//     // else if (m_IsAttacking) {
-//     //     m_AnimController.SetState(PlantAnimState::ATTACK);
-//     // }
-//     else {
-//         m_AnimController.SetState(PlantAnimState::IDLE);
-//     }
-//
-//     auto anim = m_AnimController.GetCurrentAnimation();
-//     if (anim) {
-//         SetDrawable(anim);
-//     }
-// }
+
+
+void Plant::UpdateZIndexByY() {
+    SetZIndex(RenderLayer::WorldYSort(RenderLayer::PLANT_BASE, m_Transform.translation.y));
+}

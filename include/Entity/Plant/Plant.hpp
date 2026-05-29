@@ -66,6 +66,8 @@ public:
     virtual int GetContactExplosionDamage() const { return 0; }
     virtual void TriggerContactExplosion() {}
 
+    void UpdateZIndexByY();
+
     virtual void InitAnimations(){}
     virtual void UpdateAnimationState(){}
 

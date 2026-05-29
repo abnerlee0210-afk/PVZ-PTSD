@@ -49,6 +49,8 @@ public:
     void ApplySlow();
     bool IsSlowed() const { return m_IsSlowed; }
 
+    void UpdateZIndexByY();
+
     virtual void InitAnimations(){}
     void UpdateAnimationState();
 

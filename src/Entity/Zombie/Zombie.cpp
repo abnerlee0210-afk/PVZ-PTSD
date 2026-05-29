@@ -5,6 +5,7 @@
 #include "Render/RenderLayer.hpp"
 
 #include "Util/Time.hpp"
+#include "Render/RenderLayer.hpp"
 
 Zombie::Zombie(const std::string& imagePath,
                int row,
@@ -56,6 +57,7 @@ void Zombie::Update() {
     }
 
     UpdateAnimationState();
+    UpdateZIndexByY();
 }
 
 void Zombie::TakeDamage(int damage) {
@@ -100,4 +102,9 @@ void Zombie::ApplySlow() {
     m_SlowTimer = m_SlowDuration;
     m_Speed = m_BaseSpeed * 0.5f;
 
+}
+
+
+void Zombie::UpdateZIndexByY() {
+    SetZIndex(RenderLayer::WorldYSort(RenderLayer::ZOMBIE_BASE, m_Transform.translation.y));
 }

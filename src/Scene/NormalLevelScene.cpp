@@ -345,6 +345,7 @@ void NormalLevelScene::CreatePreviewZombies() {
             //zombie->SetPreviewMode(true); // 如果你有做
             m_PreviewZombies.push_back(zombie);
             m_Root.AddChild(zombie);
+            zombie->UpdateZIndexByY();
         }
 
         ++index;
@@ -619,6 +620,7 @@ void NormalLevelScene::UpdatePlants() {
 }
 void NormalLevelScene::UpdateSinglePlant(const std::shared_ptr<Plant>& plant) {
     plant->Update();
+    plant->UpdateZIndexByY();
 
     TryHandlePlantShooting(plant); // 射擊處理
     TryHandlePlantSunGeneration(plant);
