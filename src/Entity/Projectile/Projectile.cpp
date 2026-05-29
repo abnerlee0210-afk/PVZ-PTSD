@@ -17,6 +17,7 @@ Projectile::Projectile(const std::string& imagePath,
       m_Speed(speed),
       m_Alive(true) {
     m_Transform.translation = position;
+    m_CollisionRadius = 15.0f;
 }
 
 void Projectile::Update() {

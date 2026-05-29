@@ -764,7 +764,10 @@ void NormalLevelScene::CheckProjectileZombieCollisions() {
                 zombie->m_Transform.translation.x
             );
 
-            if (dx < 30.0f) {
+            float hitDistance =
+                projectile->GetCollisionRadius() + zombie->GetCollisionRadius();
+
+            if (dx < hitDistance) {
                 zombie->TakeDamage(projectile->GetDamage());
 
                 if (projectile->CanSlow()) {
@@ -811,7 +814,10 @@ void NormalLevelScene::CheckZombiePlantCollisions() {
                 plant->m_Transform.translation.x
             );
 
-            if (dx > 0 && dx < 45.0f) {
+            float attackDistance =
+                zombie->GetAttackRange() + plant->GetCollisionRadius();
+
+            if (dx > 0 && dx < attackDistance) {
                 if (plant->CanExplodeOnContact()) {
                     plant->TriggerContactExplosion();
                     zombie->TakeDamage(plant->GetContactExplosionDamage());

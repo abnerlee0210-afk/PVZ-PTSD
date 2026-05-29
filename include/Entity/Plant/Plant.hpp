@@ -47,6 +47,8 @@ public:
     int GetCost() const { return m_Cost; }
     bool IsAlive() const { return m_Alive; }
 
+    float GetCollisionRadius() const { return m_CollisionRadius; }
+
     virtual bool CanShoot() const { return false; }
     virtual ProjectileType GetProjectileType() const { return  ProjectileType::PEA;}
     virtual glm::vec2 GetProjectileSpawnPosition() const { return {0.0f, 0.0f}; }
@@ -77,6 +79,7 @@ protected:
     int m_HP;
     int m_Cost;
     bool m_Alive;
+    float m_CollisionRadius = 25.0f;
 
     AnimationStateController<PlantAnimState> m_AnimController;
 };

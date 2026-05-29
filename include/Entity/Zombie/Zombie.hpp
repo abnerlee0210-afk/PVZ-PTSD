@@ -37,6 +37,9 @@ public:
     float GetSpeed() const { return m_Speed; }
     bool IsAlive() const { return m_Alive; }
 
+    float GetCollisionRadius() const { return m_CollisionRadius; }
+    float GetAttackRange() const { return m_AttackRange; }
+
     bool CanAttack() const;
     void ResetAttackTimer();
     void SetAttacking(bool attacking) {m_IsAttacking = attacking;}
@@ -69,6 +72,9 @@ protected:
     bool m_IsSlowed;
     float m_SlowTimer;
     float m_SlowDuration;
+
+    float m_CollisionRadius = 20.0f;
+    float m_AttackRange = 20.0f;
 
     AnimationStateController<ZombieAnimState> m_AnimController;
 };

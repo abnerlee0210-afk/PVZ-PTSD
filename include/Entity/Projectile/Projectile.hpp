@@ -16,7 +16,8 @@ public:
                int row,
                const glm::vec2& position,
                int damage,
-               float speed);
+               float speed
+               );
 
     virtual ~Projectile() = default;
 
@@ -25,6 +26,7 @@ public:
 
     int GetRow() const { return m_Row; }
     int GetDamage() const { return m_Damage; }
+    float GetCollisionRadius() const { return m_CollisionRadius; }
     bool IsAlive() const { return m_Alive; }
 
     virtual bool CanSlow() const { return false; }
@@ -34,6 +36,7 @@ protected:
     int m_Damage;
     float m_Speed;
     bool m_Alive;
+    float m_CollisionRadius;
 };
 
 #endif //PROJECTILE_HPP
