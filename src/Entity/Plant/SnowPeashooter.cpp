@@ -1,65 +1,63 @@
 //
-// Created by hankl on 2026/3/10.
+// Created by LAB1223 on 2026/5/29.
 //
-#include "Entity/Plant/Peashooter.hpp"
-
-#include "Level/LevelTypes.hpp"
-#include "Util/Time.hpp"
+#include "Entity/Plant/SnowPeashooter.hpp"
 #include "Factory/AnimationFactory.hpp"
 
-Peashooter::Peashooter(int row, int col, const glm::vec2& position)
+#include "Util/Time.hpp"
+
+SnowPeashooter::SnowPeashooter(int row, int col, const glm::vec2& position)
     : Plant(
-        RESOURCE_DIR "/graphics/Plants/Peashooter/Peashooter_0.png",
+        RESOURCE_DIR "/graphics/Plants/SnowPea/SnowPea_0.png",
         row,
         col,
         position,
         100,
-        100
-    ),
-      m_ShootTimer(0.0f),
-      m_ShootInterval(2.1f) {
+        175
+    ) {
     InitAnimations();
     m_AnimController.SetState(PlantAnimState::IDLE);
     SetDrawable(m_AnimController.GetCurrentAnimation());
 }
 
-void Peashooter::Update() {
+void SnowPeashooter::Update() {
     if (!m_Alive) {
-        UpdateAnimationState();
         return;
     }
 
     m_ShootTimer += Util::Time::GetDeltaTimeMs() / 1000.0f;
+
     UpdateAnimationState();
 }
 
-bool Peashooter::CanShoot() const {
+bool SnowPeashooter::CanShoot() const {
     return m_ShootTimer >= m_ShootInterval;
 }
 
-ProjectileType Peashooter::GetProjectileType() const {
-    return ProjectileType::PEA;
-}
-
-glm::vec2 Peashooter::GetProjectileSpawnPosition() const {
+glm::vec2 SnowPeashooter::GetProjectileSpawnPosition() const {
     glm::vec2 pos = m_Transform.translation;
-    pos.x += 10.0f;
+    pos.x += 35.0f;
+    pos.y += 5.0f;
     return pos;
 }
 
-void Peashooter::ResetShootTimer() {
+void SnowPeashooter::ResetShootTimer() {
     m_ShootTimer = 0.0f;
 }
 
-void Peashooter::InitAnimations() {
-    auto idle = AnimationFactory::CreatePeashooterIdle();
+ProjectileType SnowPeashooter::GetProjectileType() const {
+    return ProjectileType::SNOW_PEA;
+}
+
+void SnowPeashooter::InitAnimations() {
+    auto idle = AnimationFactory::CreateSnowPeashooterIdle();
 
     m_AnimController.AddAnimation(PlantAnimState::IDLE, idle);
     m_AnimController.AddAnimation(PlantAnimState::ATTACK, idle);
     m_AnimController.AddAnimation(PlantAnimState::DIE, idle);
 }
 
-void Peashooter::UpdateAnimationState() {
+void SnowPeashooter::UpdateAnimationState() {
     if (!m_Alive) {
         m_AnimController.SetState(PlantAnimState::DIE);
     }

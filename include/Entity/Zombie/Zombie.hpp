@@ -46,6 +46,9 @@ public:
     virtual void StartJumpOverPlant(const glm::vec2& plantPos) {}
     virtual bool IsJumping() const { return false; }
 
+    void ApplySlow();
+    bool IsSlowed() const { return m_IsSlowed; }
+
     virtual void InitAnimations(){}
     void UpdateAnimationState();
 
@@ -59,6 +62,11 @@ protected:
     float m_AttackTimer;
     float m_AttackInterval;
     bool m_IsAttacking;
+
+    float m_BaseSpeed;
+    bool m_IsSlowed;
+    float m_SlowTimer;
+    float m_SlowDuration;
 
     AnimationStateController<ZombieAnimState> m_AnimController;
 };

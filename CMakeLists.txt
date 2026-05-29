@@ -108,6 +108,10 @@ add_executable(${PROJECT_NAME}
         src/Entity/Plant/WallNut.cpp
         include/Entity/Plant/PotatoMine.hpp
         src/Entity/Plant/PotatoMine.cpp
+        include/Entity/Projectile/SnowPea.hpp
+        src/Entity/Projectile/SnowPea.cpp
+        src/Entity/Plant/SnowPeashooter.cpp
+        include/Entity/Plant/SnowPeashooter.hpp
 )
 
 if(MSVC)

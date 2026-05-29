@@ -8,12 +8,13 @@
 #include "Entity/Plant/CherryBomb.hpp"
 #include "Entity/Plant//WallNut.hpp"
 #include "Entity/Plant/PotatoMine.hpp"
+#include "Entity/Plant/SnowPeashooter.hpp"
 
 // 之後你有實作這些類別時，再把 include 打開
 
 
 
-// #include "Entity/SnowPea.hpp"
+
 // #include "Entity/Chomper.hpp"
 // #include "Entity/RepeaterPea.hpp"
 
@@ -38,13 +39,12 @@ std::shared_ptr<Plant> PlantFactory::CreatePlant(
 
         case PlantType::POTATO_MINE:
             return std::make_shared<PotatoMine>(row, col, position);
+
+        case PlantType::SNOW_PEASHOOTER:
+            return std::make_shared<SnowPeashooter>(row, col, position);
             // 你之後有實作對應類別時再打開
             /*
-            case PlantType::POTATO_MINE:
-                return std::make_shared<PotatoMine>(row, col, position);
 
-            case PlantType::SNOW_PEA:
-                return std::make_shared<SnowPea>(row, col, position);
 
             case PlantType::CHOMPER:
                 return std::make_shared<Chomper>(row, col, position);
@@ -75,7 +75,7 @@ int PlantFactory::GetCost(PlantType type) {
         case PlantType::POTATO_MINE:
             return 25;
 
-        case PlantType::SNOW_PEA:
+        case PlantType::SNOW_PEASHOOTER:
             return 175;
 
         case PlantType::CHOMPER:

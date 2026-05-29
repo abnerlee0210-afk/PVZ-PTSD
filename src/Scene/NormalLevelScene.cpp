@@ -763,6 +763,11 @@ void NormalLevelScene::CheckProjectileZombieCollisions() {
 
             if (dx < 30.0f) {
                 zombie->TakeDamage(projectile->GetDamage());
+
+                if (projectile->CanSlow()) {
+                    zombie->ApplySlow();
+                }
+
                 projectile->Destroy();
 
                 LOG_DEBUG(

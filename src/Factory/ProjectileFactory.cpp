@@ -4,8 +4,7 @@
 #include "Factory/ProjectileFactory.hpp"
 
 #include "Entity/Projectile/Pea.hpp"
-// 之後再加 SnowPea projectile
-// #include "Entity/SnowPeaProjectile.hpp"
+#include "Entity/Projectile/SnowPea.hpp"
 
 std::shared_ptr<Projectile> ProjectileFactory::CreateProjectile(
     ProjectileType type,
@@ -17,8 +16,7 @@ std::shared_ptr<Projectile> ProjectileFactory::CreateProjectile(
             return std::make_shared<Pea>(row, position);
 
         case ProjectileType::SNOW_PEA:
-            // 之後補
-                return nullptr;
+            return std::make_shared<SnowPeaProjectile>(row, position);;
 
         default:
             return nullptr;

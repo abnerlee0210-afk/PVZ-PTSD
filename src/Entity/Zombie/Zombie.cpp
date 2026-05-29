@@ -16,10 +16,14 @@ Zombie::Zombie(const std::string& imagePath,
       m_HP(hp),
       m_AD(ad),
       m_Speed(speed),
+      m_BaseSpeed(speed),
       m_Alive(true),
       m_AttackTimer(0.0f),
       m_AttackInterval(1.0f),
-      m_IsAttacking(false) {
+      m_IsAttacking(false),
+      m_IsSlowed(false),
+      m_SlowTimer(0.0f),
+      m_SlowDuration(5.0f) {
     m_Transform.translation = position;
 }
 
@@ -30,6 +34,16 @@ void Zombie::Update() {
     }
 
     const float deltaTime = Util::Time::GetDeltaTimeMs() / 1000.0f;
+
+    if (m_IsSlowed) {
+        m_SlowTimer -= deltaTime;
+
+        if (m_SlowTimer <= 0.0f) {
+            m_IsSlowed = false;
+            m_SlowTimer = 0.0f;
+            m_Speed = m_BaseSpeed;
+        }
+    }
 
     if (m_IsAttacking) {
         m_AttackTimer += deltaTime;
@@ -78,4 +92,11 @@ void Zombie::UpdateAnimationState() {
     if (anim) {
         SetDrawable(anim);
     }
+}
+
+void Zombie::ApplySlow() {
+    m_IsSlowed = true;
+    m_SlowTimer = m_SlowDuration;
+    m_Speed = m_BaseSpeed * 0.5f;
+
 }

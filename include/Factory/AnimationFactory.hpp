@@ -19,6 +19,7 @@ public:
     static std::shared_ptr<Util::Animation> CreateSunIdle();
     static std::shared_ptr<Util::Animation> CreateSunflowerIdle();
     static std::shared_ptr<Util::Animation> CreatePeashooterIdle();
+    static std::shared_ptr<Util::Animation> CreateSnowPeashooterIdle();
     static std::shared_ptr<Util::Animation> CreateWallNutComplete();
     static std::shared_ptr<Util::Animation> CreateWallNutCracked1();
     static std::shared_ptr<Util::Animation> CreateWallNutCracked2();

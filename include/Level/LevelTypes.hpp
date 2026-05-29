@@ -24,7 +24,7 @@ enum class PlantType {
     CHERRY_BOMB,
     WALL_NUT,
     POTATO_MINE,
-    SNOW_PEA,
+    SNOW_PEASHOOTER,
     CHOMPER,
     REPEATER_PEA
 };

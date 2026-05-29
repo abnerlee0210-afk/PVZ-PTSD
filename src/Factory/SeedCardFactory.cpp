@@ -50,12 +50,12 @@ std::shared_ptr<SeedCard> SeedCardFactory::CreateSeedCard(PlantType type, const 
             position
         );
 
-    case PlantType::SNOW_PEA:
+    case PlantType::SNOW_PEASHOOTER:
         return std::make_shared<SeedCard>(
             RESOURCE_DIR "/graphics/Cards/card_snowpea.png",
-            PlantType::SNOW_PEA,
+            PlantType::SNOW_PEASHOOTER,
             175,
-            7.0f,
+            7.5f,
             position
         );
 
