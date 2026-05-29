@@ -35,6 +35,9 @@ public:
     void Collect();
     bool ContainsPoint(const glm::vec2& point) const;
 
+    bool IsCollecting() const { return m_State == SunState::FLYING; }
+    bool IsCollectable() const { return m_Alive && m_State != SunState::FLYING; }
+
     void InitAnimations();
     void UpdateAnimationState();
 
