@@ -2,6 +2,7 @@
 // Created by 李政翰 on 2026/3/31.
 //
 #include "UI/LevelCard.hpp"
+#include "Render/RenderLayer.hpp"
 
 LevelCard::LevelCard(int levelId,
                      const std::string &imagePath,
@@ -11,7 +12,7 @@ LevelCard::LevelCard(int levelId,
       m_Selected(false),
       m_Position(position) {
     auto image = std::make_shared<Util::Image>(imagePath);
-    m_ImageObject = std::make_shared<Util::GameObject>(image, 20.0f);
+    m_ImageObject = std::make_shared<Util::GameObject>(image, RenderLayer::LEVEL_CARD);
     m_ImageObject->m_Transform.translation = position;
     m_ImageObject->m_Transform.scale = {1.0f, 1.0f};
 }

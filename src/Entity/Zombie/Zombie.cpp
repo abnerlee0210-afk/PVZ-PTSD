@@ -2,6 +2,7 @@
 // Created by hankl on 2026/3/10.
 //
 #include "Entity/Zombie/Zombie.hpp"
+#include "Render/RenderLayer.hpp"
 
 #include "Util/Time.hpp"
 
@@ -11,7 +12,7 @@ Zombie::Zombie(const std::string& imagePath,
                int hp,
                int ad,
                float speed)
-    : Util::GameObject(std::make_shared<Util::Image>(imagePath), 10.0f),
+    : Util::GameObject(std::make_shared<Util::Image>(imagePath), RenderLayer::ZOMBIE_BASE),
       m_Row(row),
       m_HP(hp),
       m_AD(ad),

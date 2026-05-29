@@ -2,6 +2,7 @@
 // Created by hankl on 2026/3/13.
 //
 #include "Entity/Object/Sun.hpp"
+#include "Render/RenderLayer.hpp"
 
 #include "Util/Time.hpp"
 #include "Factory/AnimationFactory.hpp"
@@ -9,7 +10,7 @@
 
 // 固定位置生成
 Sun::Sun(const glm::vec2& position, int value, float lifetime)
-    : Util::GameObject(std::make_shared<Util::Image>(RESOURCE_DIR "/graphics/Plants/Sun/Sun_0.png"), 12.0f),
+    : Util::GameObject(std::make_shared<Util::Image>(RESOURCE_DIR "/graphics/Plants/Sun/Sun_0.png"), RenderLayer::SUN),
       m_Value(value),
       m_Alive(true),
       m_HalfWidth(40.0f),

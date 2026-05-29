@@ -2,11 +2,12 @@
 // Created by hankl on 2026/3/20.
 //
 #include "Entity/Object/LawnMower.hpp"
+#include "Render/RenderLayer.hpp"
 
 #include "Util/Time.hpp"
 
 LawnMower::LawnMower(int row, const glm::vec2& position)
-    : Util::GameObject(std::make_shared<Util::Image>(RESOURCE_DIR "/graphics/Screen/car.png"), 20.0f),
+    : Util::GameObject(std::make_shared<Util::Image>(RESOURCE_DIR "/graphics/Screen/car.png"), RenderLayer::LAWN_MOWER_BASE),
       m_Row(row),
       m_IsActive(false),
       m_Alive(true),

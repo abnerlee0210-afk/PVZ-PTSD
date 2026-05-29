@@ -7,6 +7,7 @@
 #include "Factory/PlantFactory.hpp"
 #include "Factory/ZombieFactory.hpp"
 #include "Factory/ProjectileFactory.hpp"
+#include "Render/RenderLayer.hpp"
 
 #include "Level/LevelTypes.hpp"
 #include "Util/Logger.hpp"
@@ -1008,7 +1009,7 @@ void NormalLevelScene::ShowVictoryScreen() {
     auto image = std::make_shared<Util::Image>(m_Config.VictoryScreenPath);
     m_VictoryScreen = std::make_shared<Util::GameObject>(
         image,
-        1.0f
+        RenderLayer::END_SCREEN
     );
 
     m_VictoryScreen->m_Transform.translation = {0.0f, 0.0f};
@@ -1027,7 +1028,7 @@ void NormalLevelScene::ShowGameOverScreen() {
         std::make_shared<Util::Image>(
             m_Config.LooseScreenPath
         ),
-        1.0f
+        RenderLayer::END_SCREEN
     );
 
     m_GameOverScreen->m_Transform.translation = {0.0f, 0.0f};

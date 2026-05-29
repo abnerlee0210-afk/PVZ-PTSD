@@ -2,6 +2,7 @@
 // Created by hankl on 2026/3/13.
 //
 #include "UI/SeedCard.hpp"
+#include "Render/RenderLayer.hpp"
 
 #include "Util/Logger.hpp"
 
@@ -10,7 +11,7 @@ SeedCard::SeedCard(const std::string& imagePath,
                    int cost,
                    float cooldown,
                    const glm::vec2& position)
-    : Util::GameObject(std::make_shared<Util::Image>(imagePath), 30.0f),
+    : Util::GameObject(std::make_shared<Util::Image>(imagePath), RenderLayer::SEED_CARD),
       m_PlantType(plantType),
       m_Cost(cost),
       m_Selected(false),
@@ -28,18 +29,18 @@ SeedCard::SeedCard(const std::string& imagePath,
     m_Transform.scale = m_BaseScale;
 
     auto frameImage = std::make_shared<Util::Image>(RESOURCE_DIR "/graphics/Cards/OuterFrame.png");
-    m_OuterFrame = std::make_shared<Util::GameObject>(frameImage,100.0f);
+    m_OuterFrame = std::make_shared<Util::GameObject>(frameImage,RenderLayer::OUTER_FRAME);
     m_OuterFrame->m_Transform.translation = {0.0f,0.0f};
     m_OuterFrame->SetVisible(false);
 
     auto overlayImage = std::make_shared<Util::Image>(RESOURCE_DIR "/graphics/Cards/CardCooldownOverlay.png");
-    m_CooldownOverlay = std::make_shared<Util::GameObject>(overlayImage,90.0f);
+    m_CooldownOverlay = std::make_shared<Util::GameObject>(overlayImage,RenderLayer::COOLDOWN_OVERLAY);
     m_CooldownOverlay->m_Transform.translation = {0.0f,0.0f};
     m_CooldownOverlay->SetVisible(false);
 
     m_CooldownText = std::make_shared<Text>("0",20);
     m_CooldownText->m_Transform.translation = {0.0f,0.0f};
-    m_CooldownText->SetZIndex(99.0f);
+    m_CooldownText->SetZIndex(RenderLayer::COOLDOWN_TEXT);
     m_CooldownText->SetVisible(false);
 }
 

@@ -2,6 +2,7 @@
 // Created by hankl on 2026/3/10.
 //
 #include "Entity/Plant/Plant.hpp"
+#include "Render/RenderLayer.hpp"
 
 Plant::Plant(const std::string& imagePath,
              int row,
@@ -9,7 +10,7 @@ Plant::Plant(const std::string& imagePath,
              const glm::vec2& position,
              int hp,
              int cost)
-    : Util::GameObject(std::make_shared<Util::Image>(imagePath), 10.0f),
+    : Util::GameObject(std::make_shared<Util::Image>(imagePath), RenderLayer::PLANT_BASE),
       m_Row(row),
       m_Col(col),
       m_HP(hp),

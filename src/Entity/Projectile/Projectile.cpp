@@ -2,6 +2,7 @@
 // Created by hankl on 2026/3/10.
 //
 #include "Entity/Projectile/Projectile.hpp"
+#include "Render/RenderLayer.hpp"
 
 #include "Util/Time.hpp"
 
@@ -10,7 +11,7 @@ Projectile::Projectile(const std::string& imagePath,
                        const glm::vec2& position,
                        int damage,
                        float speed)
-    : Util::GameObject(std::make_shared<Util::Image>(imagePath), 12.0f),
+    : Util::GameObject(std::make_shared<Util::Image>(imagePath), RenderLayer::PROJECTILE),
       m_Row(row),
       m_Damage(damage),
       m_Speed(speed),
