@@ -4,6 +4,7 @@
 #include "Entity/Plant/CherryBomb.hpp"
 
 #include "Util/Time.hpp"
+#include "Factory/AnimationFactory.hpp"
 
 CherryBomb::CherryBomb(int row, int col, const glm::vec2& position)
     : Plant(
@@ -14,6 +15,9 @@ CherryBomb::CherryBomb(int row, int col, const glm::vec2& position)
         9999,
         150
     ) {
+    InitAnimations();
+    m_AnimController.SetState(PlantAnimState::ATTACK);
+    SetDrawable(m_AnimController.GetCurrentAnimation());
 }
 
 void CherryBomb::Update() {
@@ -22,6 +26,7 @@ void CherryBomb::Update() {
     }
 
     m_ExplodeTimer += Util::Time::GetDeltaTimeMs() / 1000.0f;
+    UpdateAnimationState();
 }
 
 bool CherryBomb::CanExplode() const {
@@ -43,4 +48,19 @@ int CherryBomb::GetExplosionDamage() const {
 void CherryBomb::MarkExploded() {
     m_HasExploded = true;
     m_Alive = false;
+}
+
+void CherryBomb::InitAnimations() {
+    auto explode = AnimationFactory::CreateCherryBombexplode();
+
+    m_AnimController.AddAnimation(PlantAnimState::ATTACK, explode);
+}
+
+void CherryBomb::UpdateAnimationState() {
+    m_AnimController.SetState(PlantAnimState::ATTACK);
+
+    auto anim = m_AnimController.GetCurrentAnimation();
+    if (anim) {
+        SetDrawable(anim);
+    }
 }

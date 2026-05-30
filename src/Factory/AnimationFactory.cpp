@@ -107,6 +107,21 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreateWallNutCracked2() {
 }
 
 // ===========================================================
+// CherryBomb
+// ===========================================================
+std::shared_ptr<Util::Animation> AnimationFactory::CreateCherryBombexplode() {
+    std::vector<std::string> paths;
+    paths.reserve(8);
+
+    for (int i = 0; i <= 7; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Plants/CherryBomb/CherryBomb_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, false, 0);
+}
+
+
+// ===========================================================
 // POTATO_MINE
 // ===========================================================
 

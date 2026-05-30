@@ -703,9 +703,9 @@ void NormalLevelScene::TryHandlePlantExplosion(const std::shared_ptr<Plant>& pla
 
         if (inNineGrid) {
             zombie->TakeDamage(damage);
-            plant->MarkExploded();
         }
     }
+    plant->MarkExploded();
 }
 bool NormalLevelScene::IsZombieInRow(const std::shared_ptr<Plant>& plant) const {
     if (!plant || !plant->IsAlive()) {

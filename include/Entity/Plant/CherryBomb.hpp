@@ -19,6 +19,10 @@ public:
     int GetExplosionDamage() const override;
     void MarkExploded() override;
 
+protected:
+    void InitAnimations() override;
+    void UpdateAnimationState() override;
+
 private:
     float m_ExplodeTimer = 0.0f;
     float m_ExplodeDelay = 1.0f;
