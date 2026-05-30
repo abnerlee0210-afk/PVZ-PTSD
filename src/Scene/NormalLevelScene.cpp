@@ -636,6 +636,9 @@ void NormalLevelScene::TryHandlePlantShooting(const std::shared_ptr<Plant>& plan
     if (!plant->CanShoot()) {
         return;
     }
+    if (!IsZombieInFrontOfPlant(plant)) {
+        return;
+    }
     auto projectile = ProjectileFactory::CreateProjectile(
         plant->GetProjectileType(),
         plant->GetRow(),
@@ -720,6 +723,32 @@ bool NormalLevelScene::IsZombieInRow(const std::shared_ptr<Plant>& plant) const 
             return true;
         }
     }
+    return false;
+}
+bool NormalLevelScene::IsZombieInFrontOfPlant(const std::shared_ptr<Plant>& plant) const {
+    if (!plant || !plant->IsAlive()) {
+        return false;
+    }
+
+    float plantX = plant->m_Transform.translation.x;
+
+    for (const auto& zombie : m_Zombies) {
+        if (!zombie || !zombie->IsAlive()) {
+            continue;
+        }
+
+        if (zombie->GetRow() != plant->GetRow()) {
+            continue;
+        }
+
+        float zombieX = zombie->m_Transform.translation.x;
+
+        // 殭屍必須在植物右邊，植物才會射擊
+        if (zombieX > plantX) {
+            return true;
+        }
+    }
+
     return false;
 }
 

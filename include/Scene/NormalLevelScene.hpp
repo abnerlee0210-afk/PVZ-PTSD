@@ -116,6 +116,7 @@ private:
     void CheckProjectileZombieCollisions();
     void CheckZombieLawnMowerCollisions();
     void CheckZombiePlantCollisions();
+    bool IsZombieInFrontOfPlant(const std::shared_ptr<Plant>& plant) const;
     bool IsZombieInRow(const std::shared_ptr<Plant>& plant) const;
 
     // ============================
