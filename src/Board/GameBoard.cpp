@@ -96,3 +96,28 @@ Plant* GameBoard::GetPlant(int row, int col) const {
 
     return m_Grid[row][col];
 }
+
+bool GameBoard::WorldXToCol(float x, int& col) const {
+    if (m_ColCenters.empty()) {
+        return false;
+    }
+
+    int bestCol = -1;
+    float bestDist = std::numeric_limits<float>::max();
+
+    for (int c = 0; c < m_Cols; ++c) {
+        float dist = std::abs(x - m_ColCenters[c]);
+
+        if (dist < bestDist) {
+            bestDist = dist;
+            bestCol = c;
+        }
+    }
+
+    if (bestCol == -1) {
+        return false;
+    }
+
+    col = bestCol;
+    return true;
+}

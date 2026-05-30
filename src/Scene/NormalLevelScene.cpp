@@ -681,8 +681,8 @@ void NormalLevelScene::TryHandlePlantExplosion(const std::shared_ptr<Plant>& pla
         return;
     }
 
-    glm::vec2 center = plant->GetExplosionCenter();
-    float radius = plant->GetExplosionRadius();
+    int centerRow = plant->GetRow();
+    int centerCol = plant->GetCol();
     int damage = plant->GetExplosionDamage();
 
     for (auto& zombie : m_Zombies) {
@@ -690,19 +690,22 @@ void NormalLevelScene::TryHandlePlantExplosion(const std::shared_ptr<Plant>& pla
             continue;
         }
 
-        float dx = zombie->m_Transform.translation.x - center.x;
-        float dy = zombie->m_Transform.translation.y - center.y;
-        float distance = std::sqrt(dx * dx + dy * dy);
+        int zombieRow = zombie->GetRow();
+        int zombieCol = 0;
 
-        if (distance <= radius) {
+        if (!m_Board.WorldXToCol(zombie->m_Transform.translation.x, zombieCol)) {
+            continue;
+        }
+
+        bool inNineGrid =
+            std::abs(zombieRow - centerRow) <= 1 &&
+            std::abs(zombieCol - centerCol) <= 1;
+
+        if (inNineGrid) {
             zombie->TakeDamage(damage);
             plant->MarkExploded();
         }
     }
-
-
-
-    LOG_DEBUG("CherryBomb exploded at row={}, col={}", plant->GetRow(), plant->GetCol());
 }
 bool NormalLevelScene::IsZombieInRow(const std::shared_ptr<Plant>& plant) const {
     if (!plant || !plant->IsAlive()) {

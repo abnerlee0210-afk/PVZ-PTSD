@@ -16,6 +16,7 @@ public:
     GameBoard(int rows, int cols, const BoardLayout& layout); // 建構子
 
     bool ScreenToGrid(float x, float y, int& row, int& col) const;  // 螢幕座標轉網格索引
+    bool WorldXToCol(float x, int& col) const;
     glm::vec2 GetCellCenter(int row, int col) const;                // 網格索引轉中心點座標
 
     bool IsCellEmpty(int row, int col) const;                       // 檢查該格是否有植物
