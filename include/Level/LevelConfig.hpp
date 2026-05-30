@@ -63,7 +63,7 @@ struct LevelConfig {
 
     float skySunMinInterval = 4.0f;
     float skySunMaxInterval = 8.0f;
-    float sunLifeTime = 12.0f;
+    float sunLifeTime = 8.0f;
 
 
 

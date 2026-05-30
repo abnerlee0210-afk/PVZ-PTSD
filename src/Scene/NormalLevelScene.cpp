@@ -809,40 +809,53 @@ void NormalLevelScene::CheckZombiePlantCollisions() {
                 continue;
             }
 
-            float dx = std::abs(
-                zombie->m_Transform.translation.x -
-                plant->m_Transform.translation.x
-            );
+            float zombieX = zombie->m_Transform.translation.x;
+            float plantX = plant->m_Transform.translation.x;
+
+            float dx = std::abs(zombieX - plantX);
 
             float attackDistance =
                 zombie->GetAttackRange() + plant->GetCollisionRadius();
 
             if (dx > 0 && dx < attackDistance) {
+
+                // 1. 接觸型爆炸植物：不管殭屍是否已經走過中心，都可以觸發
                 if (plant->CanExplodeOnContact()) {
                     plant->TriggerContactExplosion();
                     zombie->TakeDamage(plant->GetContactExplosionDamage());
 
                     foundPlantToAttack = true;
                     zombie->SetAttacking(false);
+
+                    LOG_DEBUG("Zombie triggered contact explosion plant");
                     break;
                 }
+
+                // 2. 如果殭屍已經走過植物中心，不要回頭攻擊
+                if (zombieX <= plantX) {
+                    continue;
+                }
+
+                // 3. 撐竿跳：只在殭屍還在植物右側時觸發
                 if (zombie->CanJumpOverPlant()) {
                     zombie->StartJumpOverPlant(plant->m_Transform.translation);
                     foundPlantToAttack = true;
                     zombie->SetAttacking(false);
                     break;
                 }
+
                 if (zombie->IsJumping()) {
                     foundPlantToAttack = true;
                     zombie->SetAttacking(false);
                     break;
                 }
 
+                // 4. 普通攻擊
                 foundPlantToAttack = true;
                 zombie->SetAttacking(true);
 
                 if (zombie->CanAttack()) {
-                    plant->TakeDamage(zombie->GetAD()); // 目前寫死 之後要修改
+                    plant->TakeDamage(zombie->GetAD());
                     zombie->ResetAttackTimer();
 
                     LOG_DEBUG(
