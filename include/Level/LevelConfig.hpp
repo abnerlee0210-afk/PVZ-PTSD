@@ -42,6 +42,7 @@ struct LevelConfig {
     float previewZombieStartY = 160.0f;
 
     glm::vec2 BackgroundPos = glm::vec2(190.0f,0.0f);
+    glm::vec2 LevelTextPos = glm::vec2(450.0f,-290.0f);
     glm::vec2 SeedChooserPos = glm::vec2(-170.0f, 260.0f);
     glm::vec2 ShovelPos = glm::vec2(180.0f, 260.0f);
 

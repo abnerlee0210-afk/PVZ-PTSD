@@ -150,6 +150,15 @@ void NormalLevelScene::CreateBackground() {
 
     m_Objects.push_back(m_Background);
     m_Root.AddChild(m_Background);
+
+}
+void NormalLevelScene::CreateLevelText() {
+    m_LevelText = std::make_shared<Text>("Level " + std::to_string(m_Config.levelId), 35);
+    m_LevelText->m_Transform.translation = m_Config.LevelTextPos;
+    m_LevelText->SetColor(Util::Color(0, 0, 0, 255));
+
+    m_Objects.push_back(m_LevelText);
+    m_Root.AddChild(m_LevelText);
 }
 void NormalLevelScene::CreateShovelButtonFromConfig() {
     if (!m_Config.hasShovel) {
@@ -292,6 +301,7 @@ void NormalLevelScene::UpdateIntro(float deltaTime) {
                 m_IntroState = IntroState::DONE;
                 m_IntroTimer = 0.0f;
 
+                CreateLevelText();
                 CreateShovelButtonFromConfig();
                 CreateLawnMowersFromConfig();
                 CreateSeedChooserFromConfig();

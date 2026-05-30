@@ -64,6 +64,7 @@ private:
     // Init
     // ============================
     void CreateBackground();
+    void CreateLevelText();
     void CreateShovelButtonFromConfig();
     void CreateSeedChooserFromConfig();
     void CreateLawnMowersFromConfig();
@@ -162,6 +163,7 @@ private:
     // ============================
     GameBoard m_Board;
     std::shared_ptr<BackgroundImage> m_Background;
+    std::shared_ptr<Text> m_LevelText;
     std::shared_ptr<SeedChooser> m_SeedChooser;
     std::shared_ptr<ShovelButton> m_ShovelButton;
     std::shared_ptr<Util::GameObject> m_VictoryScreen;

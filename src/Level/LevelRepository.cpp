@@ -394,7 +394,7 @@ LevelConfig LevelRepository::CreateLevel6() {
     level.skySunMaxInterval = 7.0f;
     level.sunLifeTime = 8.0f;
 
-    level.lawnMowerRows = {0,1,2,3,4};
+    level.lawnMowerRows = {1,2,3};
 
     level.allowedPlants = {
         PlantType::PEASHOOTER,
@@ -493,7 +493,7 @@ LevelConfig LevelRepository::CreateLevel7() {
     level.skySunMaxInterval = 7.0f;
     level.sunLifeTime = 8.0f;
 
-    level.lawnMowerRows = {0,1,2,3,4};
+    level.lawnMowerRows = {1,2,3};
 
     level.allowedPlants = {
         PlantType::PEASHOOTER,
