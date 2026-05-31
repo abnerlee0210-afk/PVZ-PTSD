@@ -30,9 +30,14 @@ public:
 
     static std::shared_ptr<Util::Animation> CreateBasicZombieWalk();
     static std::shared_ptr<Util::Animation> CreateConeheadZombieWalk();
+    static std::shared_ptr<Util::Animation> CreatePoleVaultingZombieWalk();
 
     static std::shared_ptr<Util::Animation> CreateBasicZombieAttack();
     static std::shared_ptr<Util::Animation> CreateConeheadZombieAttack();
+    static std::shared_ptr<Util::Animation> CreatePoleVaultingZombieAttack();
+
+    static std::shared_ptr<Util::Animation> CreatePoleVaultingZombieJump();
+    static std::shared_ptr<Util::Animation> CreatePoleVaultingZombieRun();
 };
 
 #endif

@@ -183,3 +183,46 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreateConeheadZombieAttack() 
     return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
 }
 
+std::shared_ptr<Util::Animation> AnimationFactory::CreatePoleVaultingZombieAttack() {
+    std::vector<std::string> paths;
+    paths.reserve(28);
+
+    for (int i = 1; i <= 28; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Zombies/PoleVaultingZombie/PoleVaultingZombie_attack/" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreatePoleVaultingZombieJump() {
+    std::vector<std::string> paths;
+    paths.reserve(42);
+
+    for (int i = 1; i <= 42; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Zombies/PoleVaultingZombie/PoleVaultingZombie_jump/" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreatePoleVaultingZombieRun() {
+    std::vector<std::string> paths;
+    paths.reserve(37);
+
+    for (int i = 1; i <= 37; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Zombies/PoleVaultingZombie/PoleVaultingZombie_run/" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreatePoleVaultingZombieWalk() {
+    std::vector<std::string> paths;
+    paths.reserve(45);
+
+    for (int i = 1; i <= 45; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Zombies/PoleVaultingZombie/PoleVaultingZombie_walk/" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}

@@ -13,6 +13,8 @@
 
 enum class ZombieAnimState {
     WALK,
+    RUN, // For PoleVaultingZombie
+    JUMP, // For PoleVaultingZombie
     ATTACK,
     DIE
 };
@@ -55,7 +57,7 @@ public:
     void UpdateZIndexByY();
 
     virtual void InitAnimations(){}
-    void UpdateAnimationState();
+    virtual void UpdateAnimationState();
 
 protected:
     int m_Row;

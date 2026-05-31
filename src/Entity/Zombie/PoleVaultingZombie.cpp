@@ -2,19 +2,23 @@
 // Created by 李政翰 on 2026/5/13.
 //
 #include "Entity/Zombie/PoleVaultingZombie.hpp"
+#include "Factory/AnimationFactory.hpp"
 
 #include "Util/Time.hpp"
 
 PoleVaultingZombie::PoleVaultingZombie(int row, const glm::vec2& position)
     : Zombie(
-        RESOURCE_DIR "/graphics/Zombies/FlagZombie/FlagZombie/FlagZombie_0.png",
+        RESOURCE_DIR "/graphics/Zombies/PoleVaultingZombie/PoleVaultingZombie_run/1.png",
         row,
         position,
         100,
         30,
-        70.0f
+        30.0f
     ) {
     m_Speed = m_PoleSpeed;
+    InitAnimations();
+    m_AnimController.SetState(ZombieAnimState::RUN);
+    SetDrawable(m_AnimController.GetCurrentAnimation());
 }
 
 void PoleVaultingZombie::Update() {
@@ -71,4 +75,36 @@ void PoleVaultingZombie::StartJumpOverPlant(const glm::vec2& plantPos) {
     // 殭屍往左走，所以跳到植物左邊一點
     m_JumpTargetPos = plantPos;
     m_JumpTargetPos.x -= 80.0f;
+}
+
+void PoleVaultingZombie::InitAnimations() {
+    auto run = AnimationFactory::CreatePoleVaultingZombieRun();
+    auto jump = AnimationFactory::CreatePoleVaultingZombieJump();
+    auto walk = AnimationFactory::CreatePoleVaultingZombieWalk();
+    auto attack = AnimationFactory::CreatePoleVaultingZombieAttack();
+
+    m_AnimController.AddAnimation(ZombieAnimState::RUN, run);
+    m_AnimController.AddAnimation(ZombieAnimState::JUMP, jump);
+    m_AnimController.AddAnimation(ZombieAnimState::WALK, walk);
+    m_AnimController.AddAnimation(ZombieAnimState::ATTACK, attack);
+}
+
+void PoleVaultingZombie::UpdateAnimationState() {
+    if (m_IsJumping) {
+        m_AnimController.SetState(ZombieAnimState::JUMP);
+    }
+    else if (m_IsAttacking) {
+        m_AnimController.SetState(ZombieAnimState::ATTACK);
+    }
+    else if (m_HasPole) {
+        m_AnimController.SetState(ZombieAnimState::RUN);
+    }
+    else {
+        m_AnimController.SetState(ZombieAnimState::WALK);
+    }
+
+    auto anim = m_AnimController.GetCurrentAnimation();
+    if (anim) {
+        SetDrawable(anim);
+    }
 }

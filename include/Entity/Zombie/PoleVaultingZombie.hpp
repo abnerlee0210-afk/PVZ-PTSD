@@ -17,6 +17,10 @@ public:
     void StartJumpOverPlant(const glm::vec2& plantPos) override;
     bool IsJumping() const override { return m_IsJumping; }
 
+protected:
+    void InitAnimations() override;
+    void UpdateAnimationState() override;
+
 private:
     bool m_HasPole = true;
     bool m_IsJumping = false;
@@ -27,8 +31,9 @@ private:
     glm::vec2 m_JumpStartPos;
     glm::vec2 m_JumpTargetPos;
 
-    float m_NormalSpeed = 35.0f;
-    float m_PoleSpeed = 70.0f;
+    float m_NormalSpeed = 18.0f;
+    float m_PoleSpeed = 30.0f;
+
 };
 
 #endif // POLEVAULTINGZOMBIE_HPP

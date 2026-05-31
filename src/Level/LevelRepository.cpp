@@ -521,13 +521,15 @@ LevelConfig LevelRepository::CreateLevel7() {
     Wave wave1;
     wave1.isFinalWave = false;
     wave1.events = {
-        {ZombieType::BASIC, -1, 18.0f}
+        {ZombieType::POLE_VAULTING, -1, 18.0f},
+        {ZombieType::CONEHEAD, -1, 18.0f},
+        {ZombieType::CONEHEAD, -1, 18.0f}
     };
 
     Wave wave2;
     wave2.isFinalWave = false;
     wave2.events = {
-        {ZombieType::BASIC, -1, 38.0f}
+        {ZombieType::POLE_VAULTING, -1, 38.0f}
     };
 
     Wave wave3;
