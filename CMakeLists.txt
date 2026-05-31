@@ -115,6 +115,10 @@ add_executable(${PROJECT_NAME}
         include/Render/RenderLayer.hpp
         include/UI/ChoosePlantPanel.hpp
         src/UI/ChoosePlantPanel.cpp
+        include/Entity/Plant/RepeaterPea.hpp
+        src/Entity/Plant/RepeaterPea.cpp
+        include/Entity/Zombie/BucketheadZombie.hpp
+        src/Entity/Zombie/BucketheadZombie.cpp
 )
 
 if(MSVC)

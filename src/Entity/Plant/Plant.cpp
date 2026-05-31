@@ -32,8 +32,43 @@ void Plant::TakeDamage(int damage) {
     }
 }
 
-
-
 void Plant::UpdateZIndexByY() {
     SetZIndex(RenderLayer::WorldYSort(RenderLayer::PLANT_BASE, m_Transform.translation.y));
+}
+
+void Plant::ScheduleProjectiles() {
+    m_ScheduledProjectileTimers = GetProjectileFireDelays();
+}
+
+void Plant::UpdateScheduledProjectiles(float deltaTime) {
+    for (auto& timer : m_ScheduledProjectileTimers) {
+        timer -= deltaTime;
+    }
+}
+
+bool Plant::HasPendingProjectiles() const {
+    return !m_ScheduledProjectileTimers.empty();
+}
+
+bool Plant::HasScheduledProjectileReady() const {
+    for (float timer : m_ScheduledProjectileTimers) {
+        if (timer <= 0.0f) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Plant::ConsumeScheduledProjectile() {
+    auto it = std::find_if(
+        m_ScheduledProjectileTimers.begin(),
+        m_ScheduledProjectileTimers.end(),
+        [](float timer) {
+            return timer <= 0.0f;
+        }
+    );
+
+    if (it != m_ScheduledProjectileTimers.end()) {
+        m_ScheduledProjectileTimers.erase(it);
+    }
 }

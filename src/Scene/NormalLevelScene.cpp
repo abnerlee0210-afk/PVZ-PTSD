@@ -655,27 +655,49 @@ void NormalLevelScene::TryHandlePlantShooting(const std::shared_ptr<Plant>& plan
     if (!plant || !plant->IsAlive()) {
         return;
     }
+
+    float deltaTime = Util::Time::GetDeltaTimeMs() / 1000.0f;
+
+    // 1. 先處理已排程的子彈
+    plant->UpdateScheduledProjectiles(deltaTime);
+
+    while (plant->HasScheduledProjectileReady()) {
+        auto projectile = ProjectileFactory::CreateProjectile(
+            plant->GetProjectileType(),
+            plant->GetRow(),
+            plant->GetProjectileSpawnPosition()
+        );
+
+        if (projectile) {
+            SpawnProjectile(projectile);
+        } else {
+            LOG_DEBUG("Failed to create scheduled projectile");
+        }
+
+        plant->ConsumeScheduledProjectile();
+    }
+
+    // 2. 沒有殭屍時，不安排新一輪射擊
     if (!IsZombieInRow(plant)) {
         return;
     }
-    if (!plant->CanShoot()) {
-        return;
-    }
+
     if (!IsZombieInFrontOfPlant(plant)) {
         return;
     }
-    auto projectile = ProjectileFactory::CreateProjectile(
-        plant->GetProjectileType(),
-        plant->GetRow(),
-        plant->GetProjectileSpawnPosition()
-    );
-    if (!projectile) {
-        LOG_DEBUG("Failed to create projectile");
+
+    if (!plant->CanShoot()) {
         return;
     }
-    SpawnProjectile(projectile);
+
+    // 3. 如果上一輪還有延遲子彈沒射完，就先不要安排新一輪
+    if (plant->HasPendingProjectiles()) {
+        return;
+    }
+
+    // 4. 安排這一輪子彈
+    plant->ScheduleProjectiles();
     plant->ResetShootTimer();
-    LOG_DEBUG("Plant fired projectile");
 }
 void NormalLevelScene::TryHandlePlantSunGeneration(const std::shared_ptr<Plant>& plant) {
     if (!plant || !plant->IsAlive()) {

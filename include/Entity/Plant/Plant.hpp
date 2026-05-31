@@ -53,6 +53,9 @@ public:
     virtual ProjectileType GetProjectileType() const { return  ProjectileType::PEA;}
     virtual glm::vec2 GetProjectileSpawnPosition() const { return {0.0f, 0.0f}; }
     virtual void ResetShootTimer() {}
+    virtual std::vector<float> GetProjectileFireDelays() const {
+        return {0.0f};
+    }
 
     virtual bool CanGenerateSun() const { return false; }
     virtual glm::vec2 GetSunSpawnPosition() const { return {0.0f, 0.0f}; }
@@ -72,6 +75,16 @@ public:
 
     virtual void InitAnimations(){}
     virtual void UpdateAnimationState(){}
+
+    // 後續新增repeaterPea和triplePea可用
+    void ScheduleProjectiles();
+    void UpdateScheduledProjectiles(float deltaTime);
+    bool HasScheduledProjectileReady() const;
+    bool HasPendingProjectiles() const;
+    void ConsumeScheduledProjectile();
+
+protected:
+    std::vector<float> m_ScheduledProjectileTimers;
 
 protected:
     int m_Row;

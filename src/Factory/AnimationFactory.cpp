@@ -58,6 +58,17 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreateSnowPeashooterIdle() {
     return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
 }
 
+std::shared_ptr<Util::Animation> AnimationFactory::CreateRepeaterPeaIdle() {
+    std::vector<std::string> paths;
+    paths.reserve(15);
+
+    for (int i = 0; i <= 14; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Plants/RepeaterPea/RepeaterPea_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+
 std::shared_ptr<Util::Animation> AnimationFactory::CreateSunflowerIdle() {
     std::vector<std::string> paths;
     paths.reserve(18);
@@ -189,6 +200,28 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreatePoleVaultingZombieAttac
 
     for (int i = 1; i <= 28; ++i) {
         paths.push_back(RESOURCE_DIR "/graphics/Zombies/PoleVaultingZombie/PoleVaultingZombie_attack/" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreateBucketheadZombieWalk() {
+    std::vector<std::string> paths;
+    paths.reserve(15);
+
+    for (int i = 0; i <= 14; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Zombies/BucketheadZombie/BucketheadZombie/BucketheadZombie_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreateBucketheadZombieAttack() {
+    std::vector<std::string> paths;
+    paths.reserve(11);
+
+    for (int i = 0; i <= 10; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Zombies/BucketheadZombie/BucketheadZombieAttack/BucketheadZombieAttack_" + std::to_string(i) + ".png");
     }
 
     return std::make_shared<Util::Animation>(paths, true, 100, true, 0);

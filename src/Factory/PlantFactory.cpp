@@ -9,14 +9,10 @@
 #include "Entity/Plant//WallNut.hpp"
 #include "Entity/Plant/PotatoMine.hpp"
 #include "Entity/Plant/SnowPeashooter.hpp"
+#include "Entity/Plant/RepeaterPea.hpp"
 
 // 之後你有實作這些類別時，再把 include 打開
-
-
-
-
 // #include "Entity/Chomper.hpp"
-// #include "Entity/RepeaterPea.hpp"
 
 std::shared_ptr<Plant> PlantFactory::CreatePlant(
     PlantType type,
@@ -42,17 +38,13 @@ std::shared_ptr<Plant> PlantFactory::CreatePlant(
 
         case PlantType::SNOW_PEASHOOTER:
             return std::make_shared<SnowPeashooter>(row, col, position);
+        case PlantType::REPEATER_PEA:
+            return std::make_shared<RepeaterPea>(row, col, position);
             // 你之後有實作對應類別時再打開
             /*
-
-
             case PlantType::CHOMPER:
                 return std::make_shared<Chomper>(row, col, position);
-
-            case PlantType::REPEATER_PEA:
-                return std::make_shared<RepeaterPea>(row, col, position);
             */
-
         default:
             return nullptr;
     }

@@ -56,7 +56,7 @@ BoardLayout BoardPresets::GetLayout(BoardTypes type) {
                 -139.0f,
                 -56.0f,
                 29.0f,
-                102.0f,
+                108.0f,
                 184.0f,
                 263.0f,
                 347.0f,

@@ -17,6 +17,7 @@ public:
     static std::shared_ptr<Util::Animation> CreateSunflowerIdle();
     static std::shared_ptr<Util::Animation> CreatePeashooterIdle();
     static std::shared_ptr<Util::Animation> CreateSnowPeashooterIdle();
+    static std::shared_ptr<Util::Animation> CreateRepeaterPeaIdle();
 
     static std::shared_ptr<Util::Animation> CreateWallNutComplete();
     static std::shared_ptr<Util::Animation> CreateWallNutCracked1();
@@ -31,10 +32,12 @@ public:
     static std::shared_ptr<Util::Animation> CreateBasicZombieWalk();
     static std::shared_ptr<Util::Animation> CreateConeheadZombieWalk();
     static std::shared_ptr<Util::Animation> CreatePoleVaultingZombieWalk();
+    static std::shared_ptr<Util::Animation> CreateBucketheadZombieWalk();
 
     static std::shared_ptr<Util::Animation> CreateBasicZombieAttack();
     static std::shared_ptr<Util::Animation> CreateConeheadZombieAttack();
     static std::shared_ptr<Util::Animation> CreatePoleVaultingZombieAttack();
+    static std::shared_ptr<Util::Animation> CreateBucketheadZombieAttack();
 
     static std::shared_ptr<Util::Animation> CreatePoleVaultingZombieJump();
     static std::shared_ptr<Util::Animation> CreatePoleVaultingZombieRun();

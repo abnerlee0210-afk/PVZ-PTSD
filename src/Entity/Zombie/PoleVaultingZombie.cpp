@@ -11,7 +11,7 @@ PoleVaultingZombie::PoleVaultingZombie(int row, const glm::vec2& position)
         RESOURCE_DIR "/graphics/Zombies/PoleVaultingZombie/PoleVaultingZombie_run/1.png",
         row,
         position,
-        100,
+        30,
         30,
         30.0f
     ) {
@@ -74,7 +74,7 @@ void PoleVaultingZombie::StartJumpOverPlant(const glm::vec2& plantPos) {
 
     // 殭屍往左走，所以跳到植物左邊一點
     m_JumpTargetPos = plantPos;
-    m_JumpTargetPos.x -= 80.0f;
+    m_JumpTargetPos.x -= 50.0f;
 }
 
 void PoleVaultingZombie::InitAnimations() {

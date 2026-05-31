@@ -5,6 +5,7 @@
 #include "Entity/Zombie/BasicZombie.hpp"
 #include "Entity/Zombie/ConeheadZombie.hpp"
 #include "Entity/Zombie/PoleVaultingZombie.hpp"
+#include "Entity/Zombie/BucketheadZombie.hpp"
 
 std::shared_ptr<Zombie> ZombieFactory::CreateZombie(
     ZombieType type,
@@ -18,6 +19,8 @@ std::shared_ptr<Zombie> ZombieFactory::CreateZombie(
             return std::make_shared<ConeheadZombie>(row,position);
         case ZombieType::POLE_VAULTING:
             return std::make_shared<PoleVaultingZombie>(row,position);
+        case ZombieType::BUCKETHEAD:
+            return std::make_shared<BucketheadZombie>(row, position);
         default:
             return nullptr;
     }

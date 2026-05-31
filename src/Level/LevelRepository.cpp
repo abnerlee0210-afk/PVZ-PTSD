@@ -515,7 +515,7 @@ LevelConfig LevelRepository::CreateLevel7() {
         PlantType::CHERRY_BOMB,
         PlantType::WALL_NUT,
         PlantType::POTATO_MINE,
-        PlantType::SNOW_PEASHOOTER
+        PlantType::SNOW_PEASHOOTER,
     };
 
     Wave wave1;
@@ -620,7 +620,8 @@ LevelConfig LevelRepository::CreateLevel8() {
         PlantType::CHERRY_BOMB,
         PlantType::WALL_NUT,
         PlantType::POTATO_MINE,
-        PlantType::SNOW_PEASHOOTER
+        PlantType::SNOW_PEASHOOTER,
+        PlantType::REPEATER_PEA
     };
 
     level.allowedPlants = {};
@@ -628,7 +629,8 @@ LevelConfig LevelRepository::CreateLevel8() {
     Wave wave1;
     wave1.isFinalWave = false;
     wave1.events = {
-        {ZombieType::BASIC, -1, 18.0f}
+        {ZombieType::BUCKETHEAD, -1, 18.0f},
+        {ZombieType::POLE_VAULTING, -1, 20.0f}
     };
 
     Wave wave2;

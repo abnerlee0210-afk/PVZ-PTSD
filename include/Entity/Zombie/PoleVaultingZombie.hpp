@@ -26,7 +26,7 @@ private:
     bool m_IsJumping = false;
 
     float m_JumpTimer = 0.0f;
-    float m_JumpDuration = 0.45f;
+    float m_JumpDuration = 1.0f;
 
     glm::vec2 m_JumpStartPos;
     glm::vec2 m_JumpTargetPos;
