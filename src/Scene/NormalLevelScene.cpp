@@ -1300,6 +1300,14 @@ void NormalLevelScene::HandleChoosePlantInput() {
 
     m_WasChooseMousePressed = isMousePressed;
 
+    if (m_ChoosePlantPanel) {
+        m_ChoosePlantPanel->Update();
+
+        if (m_ChoosePlantPanel->IsStartRequested()) {
+            StartAfterChoosePlants();
+        }
+    }
+
     if (Util::Input::IsKeyUp(Util::Keycode::RETURN)) {
         StartAfterChoosePlants();
     }

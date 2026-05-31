@@ -23,6 +23,26 @@ void ChoosePlantPanel::Create(Util::Renderer& root) {
     m_Background->m_Transform.translation = {0.0f, 0.0f};
     root.AddChild(m_Background);
 
+    m_StartButton = std::make_shared<Button>(
+        m_StartButtonImage,
+        glm::vec2(0.0f, -220.0f)
+    );
+
+    m_StartButton->SetCallback([this]() {
+        if (!IsReadyToStart()) {
+            LOG_DEBUG(
+                "Need {} plants, current {}",
+                m_MaxChoosePlants,
+                m_SelectedPlants.size()
+            );
+            return;
+        }
+
+        m_StartRequested = true;
+    });
+
+    root.AddChild(m_StartButton);
+
     float startX = -185.0f;
     float startY = 185.0f;
     float spacingX = 53.0f;
@@ -91,6 +111,18 @@ void ChoosePlantPanel::Destroy(Util::Renderer& root) {
     }
     m_Created = false;
     m_StartRequested = false;
+}
+
+void ChoosePlantPanel::Update() {
+    if (m_StartButton) {
+        m_StartButton->Update();
+
+        if (m_StartButton->IsMouseHovering()) {
+            m_StartButton->SetVisualScaleFactor(1.08f);
+        } else {
+            m_StartButton->SetVisualScaleFactor(1.0f);
+        }
+    }
 }
 
 void ChoosePlantPanel::HandleClick(const glm::vec2& mousePos) {

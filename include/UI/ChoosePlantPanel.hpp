@@ -23,6 +23,7 @@ public:
 
     void Create(Util::Renderer& root);
     void Destroy(Util::Renderer& root);
+    void Update();
 
     void HandleClick(const glm::vec2& mousePos);
 
@@ -45,7 +46,7 @@ private:
         RESOURCE_DIR "/graphics/Screen/PanelBackground.png";
 
     std::string m_StartButtonImage =
-        RESOURCE_DIR "/graphics/Screen/StartBattleButton.png";
+        RESOURCE_DIR "/graphics/Screen/StartButton.png";
 
     std::vector<PlantType> m_AvailablePlants;
     std::vector<PlantType> m_SelectedPlants;
