@@ -138,6 +138,7 @@ void NormalLevelScene::on_exit() {
             }
         }
         m_SeedChooser = nullptr;
+        ClearChoosePlantUI();
     }
 }
 
@@ -240,17 +241,29 @@ void NormalLevelScene::UpdateIntro(float deltaTime) {
             ApplyWorldOffset();
 
             if (t >= 1.0f) {
-                m_IntroState = IntroState::WAIT;
+                m_IntroState = IntroState::CHOOSE_PLANTS;
                 m_IntroTimer = 0.0f;
             }
             break;
         }
 
-        case IntroState::WAIT:
+        case IntroState::CHOOSE_PLANTS:
+
+            if (m_Config.needChoosePlants) {
+
+                if (!m_ChoosePlantPanel) {
+                    CreateChoosePlantUI();
+                }
+
+                HandleChoosePlantInput();
+                return;
+            }
+
             if (m_IntroTimer >= 1.0f) {
                 m_IntroState = IntroState::PAN_LEFT;
                 m_IntroTimer = 0.0f;
             }
+
             break;
 
         case IntroState::PAN_LEFT: {
@@ -304,8 +317,10 @@ void NormalLevelScene::UpdateIntro(float deltaTime) {
                 CreateLevelText();
                 CreateShovelButtonFromConfig();
                 CreateLawnMowersFromConfig();
-                CreateSeedChooserFromConfig();
-                UpdateSunText();
+                if (!m_Config.needChoosePlants) {
+                    CreateSeedChooserFromConfig();
+                    UpdateSunText();
+                }
 
                 HideIntroText();
             }
@@ -1255,4 +1270,64 @@ void NormalLevelScene::RemoveDeadEntities() {
         }
     }
 
+}
+
+
+void NormalLevelScene::CreateChoosePlantUI() {
+    if (m_ChoosePlantPanel) {
+        return;
+    }
+
+    m_ChoosePlantPanel = std::make_shared<ChoosePlantPanel>(
+        m_Config.availablePlants,
+        m_Config.maxChoosePlants
+    );
+
+    m_ChoosePlantPanel->Create(m_Root);
+}
+
+
+void NormalLevelScene::HandleChoosePlantInput() {
+    bool isMousePressed = Util::Input::IsKeyDown(Util::Keycode::MOUSE_LB);
+
+    if (!isMousePressed && m_WasChooseMousePressed) {
+        glm::vec2 mousePos = Util::Input::GetCursorPosition();
+
+        if (m_ChoosePlantPanel) {
+            m_ChoosePlantPanel->HandleClick(mousePos);
+        }
+    }
+
+    m_WasChooseMousePressed = isMousePressed;
+
+    if (Util::Input::IsKeyUp(Util::Keycode::RETURN)) {
+        StartAfterChoosePlants();
+    }
+}
+
+void NormalLevelScene::StartAfterChoosePlants() {
+    if (!m_ChoosePlantPanel || !m_ChoosePlantPanel->IsReadyToStart()) {
+        LOG_DEBUG("You must choose exactly {} plants", m_Config.maxChoosePlants);
+        return;
+    }
+
+    m_Config.allowedPlants = m_ChoosePlantPanel->GetSelectedPlants();
+
+    ClearChoosePlantUI();
+
+    CreateSeedChooserFromConfig();
+    UpdateSunText();
+
+    m_IntroState = IntroState::PAN_LEFT;
+    m_IntroTimer = 0.0f;
+}
+
+void NormalLevelScene::ClearChoosePlantUI() {
+    if (!m_ChoosePlantPanel) {
+        return;
+    }
+
+    m_ChoosePlantPanel->Destroy(m_Root);
+    m_ChoosePlantPanel = nullptr;
+    m_WasChooseMousePressed = false;
 }

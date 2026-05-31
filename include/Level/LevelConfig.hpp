@@ -66,10 +66,14 @@ struct LevelConfig {
     float skySunMaxInterval = 8.0f;
     float sunLifeTime = 8.0f;
 
-
+    bool needChoosePlants = false;
+    int maxChoosePlants = 6;
 
     std::vector<int> lawnMowerRows;
-    std::vector<PlantType> allowedPlants;
+
+    std::vector<PlantType> availablePlants; // 選卡畫面可選植物
+    std::vector<PlantType> allowedPlants; // 實際進戰鬥的植物
+
     std::vector<Wave> waves;
 };
 

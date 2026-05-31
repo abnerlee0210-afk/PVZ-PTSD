@@ -113,6 +113,8 @@ add_executable(${PROJECT_NAME}
         src/Entity/Plant/SnowPeashooter.cpp
         include/Entity/Plant/SnowPeashooter.hpp
         include/Render/RenderLayer.hpp
+        include/UI/ChoosePlantPanel.hpp
+        src/UI/ChoosePlantPanel.cpp
 )
 
 if(MSVC)

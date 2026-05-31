@@ -14,6 +14,7 @@
 #include "UI/SeedCard.hpp"
 #include "UI/SeedChooser.hpp"
 #include "UI/Base/Button.hpp"
+#include "UI/ChoosePlantPanel.hpp"
 
 #include "Factory/SeedCardFactory.hpp"
 
@@ -42,7 +43,7 @@ enum class GameState {
 
 enum class IntroState {
     PAN_RIGHT,
-    WAIT,
+    CHOOSE_PLANTS,
     PAN_LEFT,
     READY,
     SET,
@@ -148,6 +149,14 @@ private:
     void RemoveDeadEntities();
     void RemoveAllEntity();
 
+    // ============================
+    // 選卡介面
+    // ============================
+    void CreateChoosePlantUI();
+    void HandleChoosePlantInput();
+    void StartAfterChoosePlants();
+    void ClearChoosePlantUI();
+
 
 
 
@@ -205,6 +214,12 @@ private:
     // Input狀態
     // ============================
     bool m_WasMousePressed = false;
+
+    // ============================
+    // 選卡介面
+    // ============================
+    std::shared_ptr<ChoosePlantPanel> m_ChoosePlantPanel;
+    bool m_WasChooseMousePressed = false;
     
 
     //
