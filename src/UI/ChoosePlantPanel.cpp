@@ -49,8 +49,8 @@ void ChoosePlantPanel::Create(Util::Renderer& root) {
     float spacingY = 72.0f;
 
     for (int i = 0; i < static_cast<int>(m_AvailablePlants.size()); ++i) {
-        int row = i / 7;
-        int col = i % 7;
+        int row = i / 8;
+        int col = i % 8;
 
         glm::vec2 pos = {
             startX + col * spacingX,

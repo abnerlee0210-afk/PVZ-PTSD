@@ -26,6 +26,8 @@ enum class PlantAnimState {
     INIT,
     ARMED,
     EXPLODE,
+    // for Chomper
+    DIGEST
 };
 
 class Plant : public Util::GameObject {
@@ -70,6 +72,11 @@ public:
     virtual bool CanExplodeOnContact() const { return false; }
     virtual int GetContactExplosionDamage() const { return 0; }
     virtual void TriggerContactExplosion() {}
+
+    virtual bool CanBite() const { return false; }
+    virtual bool IsDigesting() const { return false; }
+    virtual float GetBiteRange() const { return 0.0f; }
+    virtual void BiteZombie() {}
 
     void UpdateZIndexByY();
 

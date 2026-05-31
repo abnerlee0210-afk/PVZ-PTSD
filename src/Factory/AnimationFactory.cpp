@@ -259,3 +259,36 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreatePoleVaultingZombieWalk(
 
     return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
 }
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreateChomperIdle(){
+    std::vector<std::string> paths;
+    paths.reserve(13);
+
+    for (int i = 0; i <= 12; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Plants/Chomper/Chomper/Chomper_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreateChomperAttack(){
+    std::vector<std::string> paths;
+    paths.reserve(9);
+
+    for (int i = 0; i <= 8; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Plants/Chomper/ChomperAttack/ChomperAttack_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreateChomperDigest(){
+    std::vector<std::string> paths;
+    paths.reserve(6);
+
+    for (int i = 0; i <= 5; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Plants/Chomper/ChomperDigest/ChomperDigest_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}

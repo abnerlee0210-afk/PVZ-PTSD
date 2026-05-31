@@ -647,6 +647,7 @@ void NormalLevelScene::UpdateSinglePlant(const std::shared_ptr<Plant>& plant) {
     plant->Update();
     plant->UpdateZIndexByY();
 
+    TryHandlePlantBite(plant);
     TryHandlePlantShooting(plant); // 射擊處理
     TryHandlePlantSunGeneration(plant);
     TryHandlePlantExplosion(plant);
@@ -754,6 +755,45 @@ void NormalLevelScene::TryHandlePlantExplosion(const std::shared_ptr<Plant>& pla
     }
     plant->MarkExploded();
 }
+void NormalLevelScene::TryHandlePlantBite(const std::shared_ptr<Plant>& plant) {
+    if (!plant || !plant->IsAlive()) {
+        return;
+    }
+
+    if (!plant->CanBite()) {
+        return;
+    }
+
+    float plantX = plant->m_Transform.translation.x;
+
+    for (auto& zombie : m_Zombies) {
+        if (!zombie || !zombie->IsAlive()) {
+            continue;
+        }
+
+        if (zombie->GetRow() != plant->GetRow()) {
+            continue;
+        }
+
+        float zombieX = zombie->m_Transform.translation.x;
+
+        // 只咬前方，也就是植物右邊的殭屍
+        if (zombieX <= plantX) {
+            continue;
+        }
+
+        float dx = zombieX - plantX;
+
+        if (dx <= plant->GetBiteRange()) {
+            zombie->TakeDamage(99999);
+            plant->BiteZombie();
+
+            LOG_DEBUG("Chomper ate zombie");
+            break;
+        }
+    }
+}
+
 bool NormalLevelScene::IsZombieInRow(const std::shared_ptr<Plant>& plant) const {
     if (!plant || !plant->IsAlive()) {
         return false;

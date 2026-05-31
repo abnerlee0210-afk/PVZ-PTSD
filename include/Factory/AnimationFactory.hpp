@@ -18,12 +18,16 @@ public:
     static std::shared_ptr<Util::Animation> CreatePeashooterIdle();
     static std::shared_ptr<Util::Animation> CreateSnowPeashooterIdle();
     static std::shared_ptr<Util::Animation> CreateRepeaterPeaIdle();
+    static std::shared_ptr<Util::Animation> CreateChomperIdle();
 
     static std::shared_ptr<Util::Animation> CreateWallNutComplete();
     static std::shared_ptr<Util::Animation> CreateWallNutCracked1();
     static std::shared_ptr<Util::Animation> CreateWallNutCracked2();
 
     static std::shared_ptr<Util::Animation> CreateCherryBombexplode();
+
+    static std::shared_ptr<Util::Animation> CreateChomperAttack();
+    static std::shared_ptr<Util::Animation> CreateChomperDigest();
 
     static std::shared_ptr<Util::Animation> CreatePotatoMineInit();
     static std::shared_ptr<Util::Animation> CreatePotatoMineArmed();

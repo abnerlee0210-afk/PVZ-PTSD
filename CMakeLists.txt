@@ -119,6 +119,8 @@ add_executable(${PROJECT_NAME}
         src/Entity/Plant/RepeaterPea.cpp
         include/Entity/Zombie/BucketheadZombie.hpp
         src/Entity/Zombie/BucketheadZombie.cpp
+        include/Entity/Plant/Chomper.hpp
+        src/Entity/Plant/Chomper.cpp
 )
 
 if(MSVC)
