@@ -49,13 +49,32 @@ void NormalLevelScene::on_enter() {
 }
 
 void NormalLevelScene::on_update() {
+    if (m_GameState == GameState::PLAYING || m_GameState == GameState::PAUSED) {
+        HandlePauseInput();
+    }
+
+    if (m_GameState == GameState::PAUSED) {
+        if (m_PauseMenuPanel) {
+            m_PauseMenuPanel->Update();
+
+            if (m_PauseMenuPanel->IsResumeRequested()) {
+                ResumeGame();
+                return;
+            }
+
+            if (m_PauseMenuPanel->IsMenuRequested()) {
+                ReturnToMenu();
+                return;
+            }
+        }
+
+        return;
+    }
     if (m_GameState == GameState::VICTORY || m_GameState == GameState::GAME_OVER) {
         HanldeEndScreenInput();
         return;
     }
     if (m_GameState!=GameState::PLAYING) {return;}
-
-
 
     float deltaTime = Util::Time::GetDeltaTimeMs() / 1000.0f;
 
@@ -71,6 +90,7 @@ void NormalLevelScene::on_update() {
     UpdateSkySunSystem(deltaTime);
 
     // Update
+    UpdateMenuButton();
     UpdateSeedCards();
     UpdateWaveSpawning();
     UpdatePlants();
@@ -99,6 +119,7 @@ void NormalLevelScene::on_render() {
 void NormalLevelScene::on_exit() {
     LOG_DEBUG("Exit NormalLevelScene => Level {}", m_Config.levelId);
 
+    ClearPauseMenu();
     RemoveAllEntity();
 
     if (m_VictoryScreen) {
@@ -139,6 +160,7 @@ void NormalLevelScene::on_exit() {
         }
         m_SeedChooser = nullptr;
         ClearChoosePlantUI();
+        ClearMenuButton();
     }
 }
 
@@ -151,6 +173,17 @@ void NormalLevelScene::CreateBackground() {
 
     m_Objects.push_back(m_Background);
     m_Root.AddChild(m_Background);
+
+}
+void NormalLevelScene::CreateButtons() {
+    m_PauseButton = std::make_shared<Button>(m_Config.PauseButtonPath,glm::vec2(380.0f, 260.0f));
+
+    m_PauseButton->SetCallback([this]() {
+        if (m_GameState == GameState::PLAYING) {
+            EnterPause();
+        }
+    });
+    m_Root.AddChild(m_PauseButton);
 
 }
 void NormalLevelScene::CreateLevelText() {
@@ -317,6 +350,7 @@ void NormalLevelScene::UpdateIntro(float deltaTime) {
                 CreateLevelText();
                 CreateShovelButtonFromConfig();
                 CreateLawnMowersFromConfig();
+                CreateButtons();
                 if (!m_Config.needChoosePlants) {
                     CreateSeedChooserFromConfig();
                     UpdateSunText();
@@ -1336,7 +1370,9 @@ void NormalLevelScene::RemoveDeadEntities() {
 
 }
 
-
+// ============================
+// 選卡介面
+// ============================
 void NormalLevelScene::CreateChoosePlantUI() {
     if (m_ChoosePlantPanel) {
         return;
@@ -1402,4 +1438,95 @@ void NormalLevelScene::ClearChoosePlantUI() {
     m_ChoosePlantPanel->Destroy(m_Root);
     m_ChoosePlantPanel = nullptr;
     m_WasChooseMousePressed = false;
+}
+
+// ============================
+// Pause/Menu介面
+// ============================
+
+void NormalLevelScene::HandlePauseInput() {
+    bool isPausePressed = Util::Input::IsKeyDown(Util::Keycode::P);
+
+    if (!isPausePressed && m_WasPausePressed) {
+        if (m_GameState == GameState::PLAYING) {
+            EnterPause();
+        } else if (m_GameState == GameState::PAUSED) {
+            ResumeGame();
+        }
+    }
+
+    m_WasPausePressed = isPausePressed;
+}
+
+void NormalLevelScene::EnterPause() {
+    if (m_GameState != GameState::PLAYING) {
+        return;
+    }
+    if (m_PauseButton) {
+        m_PauseButton->SetVisible(false);
+    }
+
+    m_GameState = GameState::PAUSED;
+
+    m_PauseMenuPanel = std::make_shared<PauseMenuPanel>();
+    m_PauseMenuPanel->Create(m_Root);
+
+    LOG_DEBUG("Game paused");
+}
+
+void NormalLevelScene::ResumeGame() {
+    if (m_GameState != GameState::PAUSED) {
+        return;
+    }
+    if (m_PauseButton) {
+        m_PauseButton->SetVisible(true);
+    }
+
+    ClearPauseMenu();
+    m_GameState = GameState::PLAYING;
+
+    LOG_DEBUG("Game resumed");
+}
+
+void NormalLevelScene::ReturnToMenu() {
+    ClearPauseMenu();
+    RemoveAllEntity();
+
+    m_GameState = GameState::PLAYING;
+
+    if (m_Manager) {
+        m_Manager->switch_to(SceneManager::SceneType::MENU);
+    }
+
+    LOG_DEBUG("Return to menu");
+}
+
+void NormalLevelScene::ClearPauseMenu() {
+    if (!m_PauseMenuPanel) {
+        return;
+    }
+
+    m_PauseMenuPanel->Destroy(m_Root);
+    m_PauseMenuPanel = nullptr;
+}
+
+void NormalLevelScene::UpdateMenuButton() {
+    if (!m_PauseButton) {
+        return;
+    }
+
+    m_PauseButton->Update();
+
+    if (m_PauseButton->IsMouseHovering()) {
+        m_PauseButton->SetVisualScaleFactor(1.08f);
+    } else {
+        m_PauseButton->SetVisualScaleFactor(1.0f);
+    }
+}
+
+void NormalLevelScene::ClearMenuButton() {
+    if (m_PauseButton) {
+        m_Root.RemoveChild(m_PauseButton);
+        m_PauseButton = nullptr;
+    }
 }

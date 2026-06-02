@@ -24,9 +24,9 @@ namespace RenderLayer {
     constexpr float COOLDOWN_TEXT = 99.0f;
     constexpr float OUTER_FRAME = 100.0f;
 
-    constexpr float UI = 120.0f;
-    constexpr float UI_OVERLAY = 150.0f;
-    constexpr float END_SCREEN = 100.0f;
+    constexpr float PAUSE_SCREEN = 99.0f;
+    constexpr float PAUSE_SCREEN_BUTTON = 100.0f;
+    constexpr float END_SCREEN = 99.0f;
 
     constexpr float Y_SORT_FACTOR = 0.1f;
 

@@ -49,6 +49,7 @@ struct LevelConfig {
     std::string fontDir = RESOURCE_DIR "/font.ttf";
     std::string VictoryScreenPath = RESOURCE_DIR "/graphics/Screen/GameVictory.png";
     std::string LooseScreenPath = RESOURCE_DIR "/graphics/Screen/GameLoose.png";
+    std::string PauseButtonPath = RESOURCE_DIR "/graphics/Screen/pause_button.png";
 
     std::string backgroundPath;
 

@@ -15,6 +15,7 @@
 #include "UI/SeedChooser.hpp"
 #include "UI/Base/Button.hpp"
 #include "UI/ChoosePlantPanel.hpp"
+#include "UI/PauseMenuPanel.hpp"
 
 #include "Factory/SeedCardFactory.hpp"
 
@@ -37,6 +38,7 @@ enum class PlayerMode {
 
 enum class GameState {
     PLAYING,
+    PAUSED,
     VICTORY,
     GAME_OVER
 };
@@ -65,11 +67,13 @@ private:
     // Init
     // ============================
     void CreateBackground();
+    void CreateButtons();
     void CreateLevelText();
     void CreateShovelButtonFromConfig();
     void CreateSeedChooserFromConfig();
     void CreateLawnMowersFromConfig();
     void UpdateSunText();
+
 
     // ============================
     // Input
@@ -159,6 +163,18 @@ private:
     void ClearChoosePlantUI();
 
 
+    // ============================
+    // Pause/Menu介面
+    // ============================
+    void HandlePauseInput();
+    void EnterPause();
+    void ResumeGame();
+    void ReturnToMenu();
+    void ClearPauseMenu();
+    void UpdateMenuButton();
+    void ClearMenuButton();
+
+
 
 
 private:
@@ -221,7 +237,13 @@ private:
     // ============================
     std::shared_ptr<ChoosePlantPanel> m_ChoosePlantPanel;
     bool m_WasChooseMousePressed = false;
-    
+
+    // ============================
+    // Pause/Menu介面
+    // ============================
+    std::shared_ptr<Button> m_PauseButton;
+    std::shared_ptr<PauseMenuPanel> m_PauseMenuPanel;
+    bool m_WasPausePressed = false;
 
     //
     std::mt19937 m_Rng{std::random_device{}()};

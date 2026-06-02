@@ -121,6 +121,8 @@ add_executable(${PROJECT_NAME}
         src/Entity/Zombie/BucketheadZombie.cpp
         include/Entity/Plant/Chomper.hpp
         src/Entity/Plant/Chomper.cpp
+        include/UI/PauseMenuPanel.hpp
+        src/UI/PauseMenuPanel.cpp
 )
 
 if(MSVC)
