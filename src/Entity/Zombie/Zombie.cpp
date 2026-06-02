@@ -81,13 +81,7 @@ void Zombie::TakeDamage(int damage) {
 
     if (m_HP <= 0) {
         m_HP = 0;
-        m_Alive = false;
-        m_IsDying = true;
-        m_ShouldRemove = false;
-        m_DieTimer = 0.0f;
-        m_IsAttacking = false;
-
-        m_AnimController.SetState(ZombieAnimState::DIE);
+        StartDying(ZombieDeathType::NORMAL);
     }
 }
 
@@ -101,7 +95,11 @@ void Zombie::ResetAttackTimer() {
 
 void Zombie::UpdateAnimationState() {
     if (m_IsDying) {
-        m_AnimController.SetState(ZombieAnimState::DIE);
+        if (m_DeathType == ZombieDeathType::BOOM) {
+            m_AnimController.SetState(ZombieAnimState::BOOM_DIE);
+        } else {
+            m_AnimController.SetState(ZombieAnimState::DIE);
+        }
     }
     else if (m_IsAttacking) {
         m_AnimController.SetState(ZombieAnimState::ATTACK);
@@ -126,4 +124,47 @@ void Zombie::ApplySlow() {
 
 void Zombie::UpdateZIndexByY() {
     SetZIndex(RenderLayer::WorldYSort(RenderLayer::ZOMBIE_BASE, m_Transform.translation.y));
+}
+
+void Zombie::TakeDamageByExplosion(int damage) {
+    if (!m_Alive || m_IsDying) {
+        return;
+    }
+
+    m_HP -= damage;
+
+    if (m_HP <= 0) {
+        m_HP = 0;
+        StartDying(ZombieDeathType::BOOM);
+    }
+}
+
+void Zombie::BeEaten() {
+    if (m_ShouldRemove) {
+        return;
+    }
+
+    m_HP = 0;
+    m_Alive = false;
+    m_IsDying = false;
+    m_ShouldRemove = true;
+    m_IsAttacking = false;
+    m_DeathType = ZombieDeathType::EATEN;
+}
+
+void Zombie::StartDying(ZombieDeathType deathType) {
+    m_Alive = false;
+    m_IsDying = true;
+    m_ShouldRemove = false;
+    m_DieTimer = 0.0f;
+    m_IsAttacking = false;
+    m_DeathType = deathType;
+
+    if (deathType == ZombieDeathType::BOOM) {
+        m_DieDuration = 0.6f;
+    } else {
+        m_DieDuration = 0.8f;
+    }
+
+    UpdateAnimationState();
 }

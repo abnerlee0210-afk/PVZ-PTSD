@@ -89,17 +89,24 @@ void PoleVaultingZombie::InitAnimations() {
     auto walk = AnimationFactory::CreatePoleVaultingZombieWalk();
     auto attack = AnimationFactory::CreatePoleVaultingZombieAttack();
     auto die = AnimationFactory::CreateZombieDie();
+    auto boomDieAnim = AnimationFactory::CreateZombieBoomDie();
+
 
     m_AnimController.AddAnimation(ZombieAnimState::RUN, run);
     m_AnimController.AddAnimation(ZombieAnimState::JUMP, jump);
     m_AnimController.AddAnimation(ZombieAnimState::WALK, walk);
     m_AnimController.AddAnimation(ZombieAnimState::ATTACK, attack);
     m_AnimController.AddAnimation(ZombieAnimState::DIE, die);
+    m_AnimController.AddAnimation(ZombieAnimState::BOOM_DIE, boomDieAnim);
 }
 
 void PoleVaultingZombie::UpdateAnimationState() {
     if (m_IsDying) {
-        m_AnimController.SetState(ZombieAnimState::DIE);
+        if (m_DeathType == ZombieDeathType::BOOM) {
+            m_AnimController.SetState(ZombieAnimState::BOOM_DIE);
+        } else {
+            m_AnimController.SetState(ZombieAnimState::DIE);
+        }
     }
     else if (m_IsJumping) {
         m_AnimController.SetState(ZombieAnimState::JUMP);

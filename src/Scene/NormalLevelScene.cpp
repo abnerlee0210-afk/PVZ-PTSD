@@ -750,7 +750,7 @@ void NormalLevelScene::TryHandlePlantExplosion(const std::shared_ptr<Plant>& pla
             std::abs(zombieCol - centerCol) <= 1;
 
         if (inNineGrid) {
-            zombie->TakeDamage(damage);
+            zombie->TakeDamageByExplosion(damage);
         }
     }
     plant->MarkExploded();
@@ -785,7 +785,7 @@ void NormalLevelScene::TryHandlePlantBite(const std::shared_ptr<Plant>& plant) {
         float dx = zombieX - plantX;
 
         if (dx <= plant->GetBiteRange()) {
-            zombie->TakeDamage(99999);
+            zombie->BeEaten();
             plant->BiteZombie();
 
             LOG_DEBUG("Chomper ate zombie");
@@ -941,7 +941,7 @@ void NormalLevelScene::CheckZombiePlantCollisions() {
                 // 1. 接觸型爆炸植物：不管殭屍是否已經走過中心，都可以觸發
                 if (plant->CanExplodeOnContact()) {
                     plant->TriggerContactExplosion();
-                    zombie->TakeDamage(plant->GetContactExplosionDamage());
+                    zombie->TakeDamageByExplosion(plant->GetContactExplosionDamage());
 
                     foundPlantToAttack = true;
                     zombie->SetAttacking(false);
@@ -956,7 +956,7 @@ void NormalLevelScene::CheckZombiePlantCollisions() {
                 }
 
                 // 3. 撐竿跳：只在殭屍還在植物右側時觸發
-                if (zombie->CanJumpOverPlant()) {
+                if (zombie->CanJumpOverPlant() && !plant->IsExplosivePlant()) {
                     zombie->StartJumpOverPlant(plant->m_Transform.translation);
                     foundPlantToAttack = true;
                     zombie->SetAttacking(false);

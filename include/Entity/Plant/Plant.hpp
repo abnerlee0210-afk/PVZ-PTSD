@@ -78,6 +78,8 @@ public:
     virtual float GetBiteRange() const { return 0.0f; }
     virtual void BiteZombie() {}
 
+    virtual bool IsExplosivePlant() const { return false; }
+
     void UpdateZIndexByY();
 
     virtual void InitAnimations(){}

@@ -19,6 +19,8 @@ public:
     int GetExplosionDamage() const override;
     void MarkExploded() override;
 
+    bool IsExplosivePlant() const override { return true; }
+
 protected:
     void InitAnimations() override;
     void UpdateAnimationState() override;

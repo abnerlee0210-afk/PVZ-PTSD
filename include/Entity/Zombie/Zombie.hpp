@@ -16,7 +16,14 @@ enum class ZombieAnimState {
     RUN, // For PoleVaultingZombie
     JUMP, // For PoleVaultingZombie
     ATTACK,
-    DIE
+    DIE,
+    BOOM_DIE
+};
+
+enum class ZombieDeathType {
+    NORMAL,
+    BOOM,
+    EATEN
 };
 
 class Zombie : public Util::GameObject {
@@ -40,6 +47,11 @@ public:
     bool IsAlive() const { return m_Alive; }
     bool ShouldRemove() const { return m_ShouldRemove; }
 
+    void TakeDamageByExplosion(int damage);
+    void BeEaten();
+
+    ZombieDeathType GetDeathType() const { return m_DeathType; }
+
     float GetCollisionRadius() const { return m_CollisionRadius; }
     float GetAttackRange() const { return m_AttackRange; }
 
@@ -59,6 +71,9 @@ public:
 
     virtual void InitAnimations(){}
     virtual void UpdateAnimationState();
+
+protected:
+    void StartDying(ZombieDeathType deathType);
 
 protected:
     int m_Row;
@@ -81,6 +96,8 @@ protected:
 
     bool m_IsDying = false;
     bool m_ShouldRemove = false;
+
+    ZombieDeathType m_DeathType = ZombieDeathType::NORMAL;
 
     float m_DieTimer = 0.0f;
     float m_DieDuration = 0.8f;

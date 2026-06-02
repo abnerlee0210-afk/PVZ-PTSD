@@ -303,3 +303,14 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreateZombieDie() {
 
     return std::make_shared<Util::Animation>(paths, true, 100, false, 0);
 }
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreateZombieBoomDie() {
+    std::vector<std::string> paths;
+    paths.reserve(10);
+
+    for (int i = 0; i <= 9; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Zombies/BoomDie/BoomDie_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, false, 0);
+}

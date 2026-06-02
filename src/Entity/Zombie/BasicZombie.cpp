@@ -27,8 +27,10 @@ void BasicZombie::InitAnimations() {
     auto walk = AnimationFactory::CreateBasicZombieWalk();
     auto attack = AnimationFactory::CreateBasicZombieAttack();
     auto die = AnimationFactory::CreateZombieDie();
+    auto boomDieAnim = AnimationFactory::CreateZombieBoomDie();
 
     m_AnimController.AddAnimation(ZombieAnimState::WALK, walk);
     m_AnimController.AddAnimation(ZombieAnimState::ATTACK, attack);
     m_AnimController.AddAnimation(ZombieAnimState::DIE, die);
+    m_AnimController.AddAnimation(ZombieAnimState::BOOM_DIE, boomDieAnim);
 }
