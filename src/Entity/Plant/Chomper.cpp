@@ -28,9 +28,26 @@ void Chomper::Update() {
         return;
     }
 
+    const float dt = Util::Time::GetDeltaTimeMs() / 1000.0f;
+
+    if (m_IsBiting) {
+        m_BiteTimer += dt;
+
+        if (m_BiteTimer >= m_BiteDuration) {
+            m_IsBiting = false;
+            m_IsDigesting = true;
+            m_BiteTimer = 0.0f;
+            m_DigestTimer = 0.0f;
+
+            LOG_DEBUG("Chomper started digesting");
+        }
+
+        UpdateAnimationState();
+        return;
+    }
+
     if (m_IsDigesting) {
-        m_AnimController.SetState(PlantAnimState::DIGEST);
-        m_DigestTimer += Util::Time::GetDeltaTimeMs() / 1000.0f;
+        m_DigestTimer += dt;
 
         if (m_DigestTimer >= m_DigestDuration) {
             m_IsDigesting = false;
@@ -38,12 +55,16 @@ void Chomper::Update() {
 
             LOG_DEBUG("Chomper finished digesting");
         }
+
+        UpdateAnimationState();
+        return;
     }
+
     UpdateAnimationState();
 }
 
 bool Chomper::CanBite() const {
-    return m_Alive && !m_IsDigesting;
+    return m_Alive && !m_IsBiting && !m_IsDigesting;
 }
 
 bool Chomper::IsDigesting() const {
@@ -60,7 +81,7 @@ void Chomper::BiteZombie() {
     }
     m_AnimController.SetState(PlantAnimState::ATTACK);
 
-    m_IsDigesting = true;
+    m_IsBiting = true;
     m_DigestTimer = 0.0f;
 
     LOG_DEBUG("Chomper bit zombie");
@@ -77,7 +98,13 @@ void Chomper::InitAnimations() {
 }
 
 void Chomper::UpdateAnimationState() {
-    if ((! m_IsDigesting) && (m_AnimController.GetState() != PlantAnimState::ATTACK)) {
+    if (m_IsBiting) {
+        m_AnimController.SetState(PlantAnimState::ATTACK);
+    }
+    else if (m_IsDigesting) {
+        m_AnimController.SetState(PlantAnimState::DIGEST);
+    }
+    else {
         m_AnimController.SetState(PlantAnimState::IDLE);
     }
 

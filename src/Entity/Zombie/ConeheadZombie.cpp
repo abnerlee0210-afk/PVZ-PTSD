@@ -23,8 +23,9 @@ void ConeheadZombie::Update() {
 void ConeheadZombie::InitAnimations() {
     auto walk = AnimationFactory::CreateConeheadZombieWalk();
     auto attack = AnimationFactory::CreateConeheadZombieAttack();
+    auto die = AnimationFactory::CreateZombieDie();
 
     m_AnimController.AddAnimation(ZombieAnimState::WALK, walk);
     m_AnimController.AddAnimation(ZombieAnimState::ATTACK, attack);
-    m_AnimController.AddAnimation(ZombieAnimState::DIE, walk);
+    m_AnimController.AddAnimation(ZombieAnimState::DIE, die);
 }

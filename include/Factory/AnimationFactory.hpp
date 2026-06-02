@@ -45,6 +45,8 @@ public:
 
     static std::shared_ptr<Util::Animation> CreatePoleVaultingZombieJump();
     static std::shared_ptr<Util::Animation> CreatePoleVaultingZombieRun();
+
+    static std::shared_ptr<Util::Animation> CreateZombieDie();
 };
 
 #endif

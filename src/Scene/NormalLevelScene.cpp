@@ -624,7 +624,7 @@ void NormalLevelScene::SpawnZombieByType(ZombieType type, int row) {
 }
 void NormalLevelScene::UpdateZombies() {
     for (auto& zombie : m_Zombies) {
-        if (zombie && zombie->IsAlive()) {
+        if (zombie && !zombie->ShouldRemove()) {
             zombie->Update();
         }
     }
@@ -1287,9 +1287,11 @@ void NormalLevelScene::RemoveDeadEntities() {
 
     // 移除死亡的殭屍
     for (auto it = m_Zombies.begin(); it != m_Zombies.end(); ) {
-        if (!(*it) || !(*it)->IsAlive()) {
-            m_Root.RemoveChild(*it); // 1️⃣ 從 Renderer 移除
-            it = m_Zombies.erase(it); // 2️⃣ 從 vector 移除
+        if (!(*it) || (*it)->ShouldRemove()) {
+            if (*it) {
+                m_Root.RemoveChild(*it);
+            }
+            it = m_Zombies.erase(it);
         } else {
             ++it;
         }

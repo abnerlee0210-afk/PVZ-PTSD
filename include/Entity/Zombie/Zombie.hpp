@@ -38,6 +38,7 @@ public:
     int GetAD() const { return m_AD; }
     float GetSpeed() const { return m_Speed; }
     bool IsAlive() const { return m_Alive; }
+    bool ShouldRemove() const { return m_ShouldRemove; }
 
     float GetCollisionRadius() const { return m_CollisionRadius; }
     float GetAttackRange() const { return m_AttackRange; }
@@ -77,6 +78,12 @@ protected:
 
     float m_CollisionRadius = 20.0f;
     float m_AttackRange = 20.0f;
+
+    bool m_IsDying = false;
+    bool m_ShouldRemove = false;
+
+    float m_DieTimer = 0.0f;
+    float m_DieDuration = 0.8f;
 
     AnimationStateController<ZombieAnimState> m_AnimController;
 };

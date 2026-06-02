@@ -22,7 +22,8 @@ PoleVaultingZombie::PoleVaultingZombie(int row, const glm::vec2& position)
 }
 
 void PoleVaultingZombie::Update() {
-    if (!m_Alive) {
+    if (m_IsDying || !m_Alive) {
+        Zombie::Update();
         return;
     }
 
@@ -39,11 +40,16 @@ void PoleVaultingZombie::Update() {
         m_Transform.translation.x =
             m_JumpStartPos.x + (m_JumpTargetPos.x - m_JumpStartPos.x) * t;
 
-        // 簡單跳躍弧線：中間往上
         float jumpHeight = 45.0f;
         float arc = 4.0f * t * (1.0f - t);
+
         m_Transform.translation.y =
-            m_JumpStartPos.y + (m_JumpTargetPos.y - m_JumpStartPos.y) * t + jumpHeight * arc;
+            m_JumpStartPos.y +
+            (m_JumpTargetPos.y - m_JumpStartPos.y) * t +
+            jumpHeight * arc;
+
+        UpdateAnimationState();
+        UpdateZIndexByY();
 
         if (m_JumpTimer >= m_JumpDuration) {
             m_IsJumping = false;
@@ -82,15 +88,20 @@ void PoleVaultingZombie::InitAnimations() {
     auto jump = AnimationFactory::CreatePoleVaultingZombieJump();
     auto walk = AnimationFactory::CreatePoleVaultingZombieWalk();
     auto attack = AnimationFactory::CreatePoleVaultingZombieAttack();
+    auto die = AnimationFactory::CreateZombieDie();
 
     m_AnimController.AddAnimation(ZombieAnimState::RUN, run);
     m_AnimController.AddAnimation(ZombieAnimState::JUMP, jump);
     m_AnimController.AddAnimation(ZombieAnimState::WALK, walk);
     m_AnimController.AddAnimation(ZombieAnimState::ATTACK, attack);
+    m_AnimController.AddAnimation(ZombieAnimState::DIE, die);
 }
 
 void PoleVaultingZombie::UpdateAnimationState() {
-    if (m_IsJumping) {
+    if (m_IsDying) {
+        m_AnimController.SetState(ZombieAnimState::DIE);
+    }
+    else if (m_IsJumping) {
         m_AnimController.SetState(ZombieAnimState::JUMP);
     }
     else if (m_IsAttacking) {

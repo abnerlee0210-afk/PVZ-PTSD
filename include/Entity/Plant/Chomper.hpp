@@ -23,9 +23,15 @@ protected:
     void UpdateAnimationState() override;
 
 private:
+    bool m_IsBiting = false;
     bool m_IsDigesting = false;
+
+    float m_BiteTimer = 0.0f;
+    float m_BiteDuration = 0.7f;
+
     float m_DigestTimer = 0.0f;
     float m_DigestDuration = 25.0f;
+
     float m_BiteRange = 50.0f;
 };
 

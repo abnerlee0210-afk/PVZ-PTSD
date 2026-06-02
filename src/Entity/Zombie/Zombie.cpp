@@ -30,12 +30,24 @@ Zombie::Zombie(const std::string& imagePath,
 }
 
 void Zombie::Update() {
-    if (!m_Alive) {
+    const float deltaTime = Util::Time::GetDeltaTimeMs() / 1000.0f;
+
+    if (m_IsDying) {
+        m_DieTimer += deltaTime;
+
         UpdateAnimationState();
+        UpdateZIndexByY();
+
+        if (m_DieTimer >= m_DieDuration) {
+            m_ShouldRemove = true;
+        }
+
         return;
     }
 
-    const float deltaTime = Util::Time::GetDeltaTimeMs() / 1000.0f;
+    if (!m_Alive) {
+        return;
+    }
 
     if (m_IsSlowed) {
         m_SlowTimer -= deltaTime;
@@ -61,14 +73,21 @@ void Zombie::Update() {
 }
 
 void Zombie::TakeDamage(int damage) {
-    if (!m_Alive) {
+    if (!m_Alive || m_IsDying) {
         return;
     }
 
     m_HP -= damage;
+
     if (m_HP <= 0) {
         m_HP = 0;
         m_Alive = false;
+        m_IsDying = true;
+        m_ShouldRemove = false;
+        m_DieTimer = 0.0f;
+        m_IsAttacking = false;
+
+        m_AnimController.SetState(ZombieAnimState::DIE);
     }
 }
 
@@ -81,7 +100,7 @@ void Zombie::ResetAttackTimer() {
 }
 
 void Zombie::UpdateAnimationState() {
-    if (!m_Alive) {
+    if (m_IsDying) {
         m_AnimController.SetState(ZombieAnimState::DIE);
     }
     else if (m_IsAttacking) {

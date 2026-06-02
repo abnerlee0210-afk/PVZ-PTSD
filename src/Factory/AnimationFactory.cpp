@@ -268,7 +268,7 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreateChomperIdle(){
         paths.push_back(RESOURCE_DIR "/graphics/Plants/Chomper/Chomper/Chomper_" + std::to_string(i) + ".png");
     }
 
-    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+    return std::make_shared<Util::Animation>(paths, true, 120, true, 0);
 }
 
 std::shared_ptr<Util::Animation> AnimationFactory::CreateChomperAttack(){
@@ -279,7 +279,7 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreateChomperAttack(){
         paths.push_back(RESOURCE_DIR "/graphics/Plants/Chomper/ChomperAttack/ChomperAttack_" + std::to_string(i) + ".png");
     }
 
-    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+    return std::make_shared<Util::Animation>(paths, true, 100, false, 0);
 }
 
 std::shared_ptr<Util::Animation> AnimationFactory::CreateChomperDigest(){
@@ -290,5 +290,16 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreateChomperDigest(){
         paths.push_back(RESOURCE_DIR "/graphics/Plants/Chomper/ChomperDigest/ChomperDigest_" + std::to_string(i) + ".png");
     }
 
-    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+    return std::make_shared<Util::Animation>(paths, true, 180, true, 0);
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreateZombieDie() {
+    std::vector<std::string> paths;
+    paths.reserve(10);
+
+    for (int i = 0; i <= 9; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Zombies/ZombieDie/ZombieDie_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, false, 0);
 }
