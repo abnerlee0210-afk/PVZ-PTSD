@@ -273,9 +273,9 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreateChomperIdle(){
 
 std::shared_ptr<Util::Animation> AnimationFactory::CreateChomperAttack(){
     std::vector<std::string> paths;
-    paths.reserve(9);
+    paths.reserve(5);
 
-    for (int i = 0; i <= 8; ++i) {
+    for (int i = 0; i <= 4; ++i) {
         paths.push_back(RESOURCE_DIR "/graphics/Plants/Chomper/ChomperAttack/ChomperAttack_" + std::to_string(i) + ".png");
     }
 
