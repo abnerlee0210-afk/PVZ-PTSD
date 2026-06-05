@@ -41,7 +41,7 @@ LevelConfig LevelRepository::CreateLevel1() {
 
     level.startY = -70.0f;
 
-    level.initialSun = 1500;
+    level.initialSun = 50;
 
     level.needChoosePlants = false;
 
@@ -493,7 +493,7 @@ LevelConfig LevelRepository::CreateLevel7() {
 
     level.startY = -70.0f;
 
-    level.initialSun = 5000;
+    level.initialSun = 50;
 
     level.needChoosePlants = false;
 

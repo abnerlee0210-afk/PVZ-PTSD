@@ -123,6 +123,8 @@ add_executable(${PROJECT_NAME}
         src/Entity/Plant/Chomper.cpp
         include/UI/PauseMenuPanel.hpp
         src/UI/PauseMenuPanel.cpp
+        include/UI/WaveProgressBar.hpp
+        src/UI/WaveProgressBar.cpp
 )
 
 if(MSVC)

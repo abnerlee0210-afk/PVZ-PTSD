@@ -86,6 +86,7 @@ void NormalLevelScene::on_update() {
     HandleInput();
 
     m_LevelTimer += deltaTime;
+    UpdateWaveProgressBar();
 
     UpdateSkySunSystem(deltaTime);
 
@@ -161,6 +162,7 @@ void NormalLevelScene::on_exit() {
         m_SeedChooser = nullptr;
         ClearChoosePlantUI();
         ClearMenuButton();
+        ClearWaveProgressBar();
     }
 }
 
@@ -351,6 +353,7 @@ void NormalLevelScene::UpdateIntro(float deltaTime) {
                 CreateShovelButtonFromConfig();
                 CreateLawnMowersFromConfig();
                 CreateButtons();
+                CreateWaveProgressBar();
                 if (!m_Config.needChoosePlants) {
                     CreateSeedChooserFromConfig();
                     UpdateSunText();
@@ -1216,7 +1219,7 @@ void NormalLevelScene::HanldeEndScreenInput() {
 
     if (Util::Input::IsKeyUp(Util::Keycode::RETURN) ||
         Util::Input::IsKeyUp(Util::Keycode::MOUSE_LB)) {
-        m_Manager->switch_to(SceneManager::SceneType::MENU);
+        m_Manager->switch_to(SceneManager::SceneType::SELECT);
         }
 }
 
@@ -1529,4 +1532,48 @@ void NormalLevelScene::ClearMenuButton() {
         m_Root.RemoveChild(m_PauseButton);
         m_PauseButton = nullptr;
     }
+}
+
+
+// ============================
+// 進度條
+// ============================
+void NormalLevelScene::CreateWaveProgressBar() {
+    m_WaveProgressBar = std::make_shared<WaveProgressBar>(
+        glm::vec2(190.0f, 260.0f)
+    );
+
+    m_WaveProgressBar->Create(m_Root);
+}
+
+
+void NormalLevelScene::UpdateWaveProgressBar() {
+    if (!m_WaveProgressBar) {
+        return;
+    }
+
+    m_WaveProgressBar->SetProgress(GetLevelProgress());
+}
+
+void NormalLevelScene::ClearWaveProgressBar() {
+    if (!m_WaveProgressBar) {
+        return;
+    }
+
+    m_WaveProgressBar->Destroy(m_Root);
+    m_WaveProgressBar = nullptr;
+}
+
+float NormalLevelScene::GetLevelProgress() const {
+    float lastSpawnTime = 1.0f;
+
+    for (const auto& wave : m_Config.waves) {
+        for (const auto& event : wave.events) {
+            if (event.spawnTime > lastSpawnTime) {
+                lastSpawnTime = event.spawnTime;
+            }
+        }
+    }
+
+    return m_LevelTimer / lastSpawnTime;
 }

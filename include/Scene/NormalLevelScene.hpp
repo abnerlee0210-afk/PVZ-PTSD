@@ -16,6 +16,7 @@
 #include "UI/Base/Button.hpp"
 #include "UI/ChoosePlantPanel.hpp"
 #include "UI/PauseMenuPanel.hpp"
+#include "UI/WaveProgressBar.hpp"
 
 #include "Factory/SeedCardFactory.hpp"
 
@@ -174,7 +175,13 @@ private:
     void UpdateMenuButton();
     void ClearMenuButton();
 
-
+    // ============================
+    // 進度條
+    // ============================
+    void CreateWaveProgressBar();
+    void UpdateWaveProgressBar();
+    void ClearWaveProgressBar();
+    float GetLevelProgress() const;
 
 
 private:
@@ -244,6 +251,11 @@ private:
     std::shared_ptr<Button> m_PauseButton;
     std::shared_ptr<PauseMenuPanel> m_PauseMenuPanel;
     bool m_WasPausePressed = false;
+
+    // ============================
+    // 進度條
+    // ============================
+    std::shared_ptr<WaveProgressBar> m_WaveProgressBar;
 
     //
     std::mt19937 m_Rng{std::random_device{}()};
