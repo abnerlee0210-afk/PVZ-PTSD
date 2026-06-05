@@ -125,6 +125,8 @@ add_executable(${PROJECT_NAME}
         src/UI/PauseMenuPanel.cpp
         include/UI/WaveProgressBar.hpp
         src/UI/WaveProgressBar.cpp
+        include/Entity/Zombie/FlagZombie.hpp
+        src/Entity/Zombie/FlagZombie.cpp
 )
 
 if(MSVC)

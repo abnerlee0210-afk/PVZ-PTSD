@@ -739,10 +739,7 @@ LevelConfig LevelRepository::CreateLevel9() {
     Wave wave1;
     wave1.isFinalWave = false;
     wave1.events = {
-        {ZombieType::POLE_VAULTING, 4, 18.0f},
-        {ZombieType::POLE_VAULTING, 1, 20.0f},
-        {ZombieType::POLE_VAULTING, 0, 20.0f},
-        {ZombieType::POLE_VAULTING, 2, 20.0f}
+        {ZombieType::FLAG, 4, 18.0f},
     };
 
     Wave wave2;

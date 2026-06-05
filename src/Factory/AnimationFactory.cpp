@@ -314,3 +314,25 @@ std::shared_ptr<Util::Animation> AnimationFactory::CreateZombieBoomDie() {
 
     return std::make_shared<Util::Animation>(paths, true, 100, false, 0);
 }
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreateFlagZombieAttack() {
+    std::vector<std::string> paths;
+    paths.reserve(11);
+
+    for (int i = 0; i <= 10; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Zombies/FlagZombie/FlagZombieAttack/FlagZombieAttack_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}
+
+std::shared_ptr<Util::Animation> AnimationFactory::CreateFlagZombieWalk() {
+    std::vector<std::string> paths;
+    paths.reserve(12);
+
+    for (int i = 0; i <= 11; ++i) {
+        paths.push_back(RESOURCE_DIR "/graphics/Zombies/FlagZombie/FlagZombie/FlagZombie_" + std::to_string(i) + ".png");
+    }
+
+    return std::make_shared<Util::Animation>(paths, true, 100, true, 0);
+}

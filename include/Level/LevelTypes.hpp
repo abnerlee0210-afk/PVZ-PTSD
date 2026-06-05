@@ -14,6 +14,7 @@ enum class LevelMode {
 
 enum class ZombieType {
     BASIC,
+    FLAG,
     CONEHEAD,
     POLE_VAULTING,
     BUCKETHEAD
