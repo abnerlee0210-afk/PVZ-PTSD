@@ -26,21 +26,31 @@ void WaveProgressBar::Create(Util::Renderer& root) {
         return;
     }
 
+    auto backImage = std::make_shared<Util::Image>(
+        RESOURCE_DIR "/graphics/UI/WaveProgressBar/Progress_9.png"
+    );
+
+    m_BackBarWidth = backImage->GetSize().x;
+
     m_BackBarObject = std::make_shared<Util::GameObject>(
-        std::make_shared<Util::Image>(
-            RESOURCE_DIR "/graphics/UI/WaveProgressBar/Progress_9.png"
-        ),
+        backImage,
         9.0f
     );
+
     m_BackBarObject->m_Transform.translation = m_Position;
 
+    auto frontImage = std::make_shared<Util::Image>(
+        m_BarFramePaths[0]
+    );
+
+    m_FrontBarWidth = frontImage->GetSize().x;
+
     m_FrontBarObject = std::make_shared<Util::GameObject>(
-        std::make_shared<Util::Image>(
-            RESOURCE_DIR "/graphics/UI/WaveProgressBar/Progress_0.png"
-        ),
+        frontImage,
         10.0f
     );
-    m_FrontBarObject->m_Transform.translation = m_Position;
+
+    UpdateFrontBarPosition();
 
     m_ZombieHeadObject = std::make_shared<Util::GameObject>(
         std::make_shared<Util::Image>(
@@ -50,7 +60,7 @@ void WaveProgressBar::Create(Util::Renderer& root) {
     );
     m_ZombieHeadObject->m_Transform.translation = {
         m_Position.x + m_HeadMinX,
-        m_Position.y + m_HeadY
+        m_Position.y
     };
 
     root.AddChild(m_ZombieHeadObject);
@@ -87,11 +97,14 @@ void WaveProgressBar::SetProgress(float progress) {
     if (frameIndex != m_CurrentFrameIndex) {
         m_CurrentFrameIndex = frameIndex;
 
-        m_FrontBarObject->SetDrawable(
-            std::make_shared<Util::Image>(
-                m_BarFramePaths[m_CurrentFrameIndex]
-            )
+        auto frontImage = std::make_shared<Util::Image>(
+            m_BarFramePaths[m_CurrentFrameIndex]
         );
+
+        m_FrontBarWidth = frontImage->GetSize().x;
+
+        m_FrontBarObject->SetDrawable(frontImage);
+        UpdateFrontBarPosition();
     }
 
     UpdateZombieHeadPosition(m_Progress);
@@ -117,6 +130,20 @@ void WaveProgressBar::UpdateZombieHeadPosition(float progress) {
 
     m_ZombieHeadObject->m_Transform.translation = {
         m_Position.x + x,
-        m_Position.y + m_HeadY
+        m_Position.y
+    };
+}
+
+void WaveProgressBar::UpdateFrontBarPosition() {
+    if (!m_FrontBarObject) {
+        return;
+    }
+
+    float backLeftX = m_Position.x - m_BackBarWidth / 2.0f;
+    float frontCenterX = backLeftX + m_FrontBarWidth / 2.0f;
+
+    m_FrontBarObject->m_Transform.translation = {
+        frontCenterX,
+        m_Position.y
     };
 }

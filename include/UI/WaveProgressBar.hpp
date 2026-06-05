@@ -19,7 +19,7 @@ public:
     void Destroy(Util::Renderer& root);
 
     void SetProgress(float progress);
-
+    void UpdateFrontBarPosition();
 private:
     int ProgressToFrameIndex(float progress) const;
     void UpdateZombieHeadPosition(float progress);
@@ -38,7 +38,9 @@ private:
 
     float m_HeadMinX = -75.0f;
     float m_HeadMaxX = 75.0f;
-    float m_HeadY = -10.0f;
+
+    float m_BackBarWidth = 0.0f;
+    float m_FrontBarWidth = 0.0f;
 
     bool m_Created = false;
 };
