@@ -26,47 +26,28 @@ void WaveProgressBar::Create(Util::Renderer& root) {
         return;
     }
 
+    m_BarFrameImages.clear();
+    for (const auto& path : m_BarFramePaths) {
+        m_BarFrameImages.push_back(std::make_shared<Util::Image>(path));
+    }
+
     auto backImage = std::make_shared<Util::Image>(
         RESOURCE_DIR "/graphics/UI/WaveProgressBar/Progress_9.png"
     );
-
     m_BackBarWidth = backImage->GetSize().x;
-
-    m_BackBarObject = std::make_shared<Util::GameObject>(
-        backImage,
-        9.0f
-    );
-
+    m_BackBarObject = std::make_shared<Util::GameObject>(backImage, 9.0f);
     m_BackBarObject->m_Transform.translation = m_Position;
 
-    auto frontImage = std::make_shared<Util::Image>(
-        m_BarFramePaths[0]
-    );
-
+    auto frontImage = m_BarFrameImages[0];
     m_FrontBarWidth = frontImage->GetSize().x;
-
-    m_FrontBarObject = std::make_shared<Util::GameObject>(
-        frontImage,
-        10.0f
-    );
-
+    m_FrontBarObject = std::make_shared<Util::GameObject>(frontImage, 10.0f);
     UpdateFrontBarPosition();
-
-    m_ZombieHeadObject = std::make_shared<Util::GameObject>(
-        std::make_shared<Util::Image>(
-            RESOURCE_DIR "/graphics/UI/WaveProgressBar/ZombieHead.png"
-        ),
-        11.0f
-    );
-    m_ZombieHeadObject->m_Transform.translation = {
-        m_Position.x + m_HeadMinX,
-        m_Position.y
-    };
-
-    root.AddChild(m_ZombieHeadObject);
 
     root.AddChild(m_BackBarObject);
     root.AddChild(m_FrontBarObject);
+
+    m_CurrentFrameIndex = -1;
+    SetProgress(0.0f);
     m_Created = true;
 }
 
@@ -76,11 +57,12 @@ void WaveProgressBar::Destroy(Util::Renderer& root) {
         m_BackBarObject = nullptr;
     }
 
-    if (m_ZombieHeadObject) {
-        root.RemoveChild(m_ZombieHeadObject);
-        m_ZombieHeadObject = nullptr;
+    if (m_FrontBarObject) {
+        root.RemoveChild(m_FrontBarObject);
+        m_FrontBarObject = nullptr;
     }
 
+    m_BarFrameImages.clear();
     m_Created = false;
     m_CurrentFrameIndex = -1;
 }
@@ -91,47 +73,40 @@ void WaveProgressBar::SetProgress(float progress) {
     }
 
     m_Progress = std::clamp(progress, 0.0f, 1.0f);
-
     int frameIndex = ProgressToFrameIndex(m_Progress);
 
     if (frameIndex != m_CurrentFrameIndex) {
         m_CurrentFrameIndex = frameIndex;
 
-        auto frontImage = std::make_shared<Util::Image>(
-            m_BarFramePaths[m_CurrentFrameIndex]
-        );
+        // 當 m_CurrentFrameIndex 等於 9 (陣列大小) 時，代表進度完全達到 1.0f，才隱藏 FrontBar
+        if (m_CurrentFrameIndex >= static_cast<int>(m_BarFrameImages.size())) {
+            m_FrontBarObject->SetVisible(false);
+        }
+        else {
+            m_FrontBarObject->SetVisible(true);
 
-        m_FrontBarWidth = frontImage->GetSize().x;
+            auto frontImage = m_BarFrameImages[m_CurrentFrameIndex];
+            m_FrontBarWidth = frontImage->GetSize().x;
 
-        m_FrontBarObject->SetDrawable(frontImage);
-        UpdateFrontBarPosition();
+            m_FrontBarObject->SetDrawable(frontImage);
+            UpdateFrontBarPosition();
+        }
     }
-
-    UpdateZombieHeadPosition(m_Progress);
 }
 
 int WaveProgressBar::ProgressToFrameIndex(float progress) const {
-    if (m_BarFramePaths.empty()) {
-        return 0;
+    progress = std::clamp(progress, 0.0f, 1.0f);
+
+    // 修正核心：如果進度百分之百，直接回傳 9 (陣列大小) 來隱藏前端條
+    if (progress >= 1.0f) {
+        return static_cast<int>(m_BarFrameImages.size());
     }
 
-    int maxIndex = static_cast<int>(m_BarFramePaths.size()) - 1;
-    int index = static_cast<int>(progress * maxIndex + 0.5f);
+    // 乘以 9.0f (圖片張數) 而不是 10.0f
+    // 這樣 0.88 ~ 0.999 的進度都會被精準分配在 index 8 (Progress_8.png)
+    int index = static_cast<int>(progress * static_cast<float>(m_BarFrameImages.size()));
 
-    return std::clamp(index, 0, maxIndex);
-}
-
-void WaveProgressBar::UpdateZombieHeadPosition(float progress) {
-    if (!m_ZombieHeadObject) {
-        return;
-    }
-
-    float x = m_HeadMaxX - (m_HeadMaxX - m_HeadMinX) * progress;
-
-    m_ZombieHeadObject->m_Transform.translation = {
-        m_Position.x + x,
-        m_Position.y
-    };
+    return index;
 }
 
 void WaveProgressBar::UpdateFrontBarPosition() {

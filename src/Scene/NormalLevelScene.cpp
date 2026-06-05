@@ -178,7 +178,7 @@ void NormalLevelScene::CreateBackground() {
 
 }
 void NormalLevelScene::CreateButtons() {
-    m_PauseButton = std::make_shared<Button>(m_Config.PauseButtonPath,glm::vec2(380.0f, 260.0f));
+    m_PauseButton = std::make_shared<Button>(m_Config.PauseButtonPath,glm::vec2(-380.0f, -260.0f));
 
     m_PauseButton->SetCallback([this]() {
         if (m_GameState == GameState::PLAYING) {
@@ -1540,7 +1540,7 @@ void NormalLevelScene::ClearMenuButton() {
 // ============================
 void NormalLevelScene::CreateWaveProgressBar() {
     m_WaveProgressBar = std::make_shared<WaveProgressBar>(
-        glm::vec2(190.0f, 260.0f)
+        glm::vec2(350.0f, 260.0f)
     );
 
     m_WaveProgressBar->Create(m_Root);
