@@ -127,6 +127,8 @@ add_executable(${PROJECT_NAME}
         src/UI/WaveProgressBar.cpp
         include/Entity/Zombie/FlagZombie.hpp
         src/Entity/Zombie/FlagZombie.cpp
+        include/AssetPreloader.hpp
+        src/AssetPreloader.cpp
 )
 
 if(MSVC)

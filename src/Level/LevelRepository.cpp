@@ -13,6 +13,8 @@ LevelConfig LevelRepository::GetLevel(int levelId) {
             return CreateLevel3();
         case 4:
             return CreateLevel4();
+        case 5:
+            return CreateLevel5();
         case 6:
             return CreateLevel6();
         case 7:
@@ -373,6 +375,98 @@ LevelConfig LevelRepository::CreateLevel4() {
     };
 
     level.waves = {wave1, wave2, wave3, wave4, wave5, wave6, wave7, finalWave};
+
+    return level;
+}
+
+LevelConfig LevelRepository::CreateLevel5() {
+    LevelConfig level;
+
+    level.backgroundPath = RESOURCE_DIR "/graphics/Items/Background/Background_2.jpg";
+
+    level.levelId = 5;
+    level.mode = LevelMode::BOWLING;
+
+    level.boardTypes = BoardTypes::DAY_FULL_5_ROW;
+
+    level.rows = 5;
+    level.cols = 9;
+
+    level.startY = -70.0f;
+
+    level.initialSun = 50;
+
+    level.needChoosePlants = false;
+
+    level.hasSkySun = true;
+    level.hasShovel = true;
+    level.hasLawnMowers = true;
+
+    level.introPanDuration = 5.0f;
+    level.readySetPlantDuration = 2.0f;
+    level.firstZombieDelay = 18.0f;
+
+    level.skySunMinInterval = 5.0f;
+    level.skySunMaxInterval = 7.0f;
+    level.sunLifeTime = 8.0f;
+
+    level.lawnMowerRows = {1,2,3};
+
+    level.allowedPlants = {
+        PlantType::PEASHOOTER,
+        PlantType::SUNFLOWER,
+        PlantType::CHERRY_BOMB,
+        PlantType::WALL_NUT,
+        PlantType::POTATO_MINE
+    };
+
+    Wave wave1;
+    wave1.isFinalWave = false;
+    wave1.events = {
+        {ZombieType::BASIC, -1, 20.0f}
+    };
+
+    Wave wave2;
+    wave2.isFinalWave = false;
+    wave2.events = {
+        {ZombieType::BASIC, -1, 38.0f},
+        {ZombieType::BASIC, -1, 42.0f}
+    };
+
+    Wave wave3;
+    wave3.isFinalWave = false;
+    wave3.events = {
+        {ZombieType::CONEHEAD, -1, 58.0f}
+    };
+
+    Wave wave4;
+    wave4.isFinalWave = false;
+    wave4.events = {
+        {ZombieType::BASIC, -1, 72.0f},
+        {ZombieType::BASIC, -1, 75.0f},
+        {ZombieType::CONEHEAD, -1, 80.0f}
+    };
+
+    Wave wave5;
+    wave5.isFinalWave = false;
+    wave5.events = {
+        {ZombieType::BASIC, -1, 96.0f},
+        {ZombieType::CONEHEAD, -1, 100.0f},
+        {ZombieType::BASIC, -1, 104.0f}
+    };
+
+    Wave finalWave;
+    finalWave.isFinalWave = true;
+    finalWave.events = {
+        {ZombieType::FLAG, -1, 120.0f},
+        {ZombieType::BASIC, -1, 121.0f},
+        {ZombieType::BASIC, -1, 122.0f},
+        {ZombieType::CONEHEAD, -1, 124.0f},
+        {ZombieType::BASIC, -1, 126.0f},
+        {ZombieType::CONEHEAD, -1, 130.0f}
+    };
+
+    level.waves = {wave1, wave2, wave3, wave4, wave5, finalWave};
 
     return level;
 }

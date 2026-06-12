@@ -4,9 +4,12 @@
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
 #include "Util/Logger.hpp"
+#include "AssetPreloader.hpp"
 
 void App::Start() {
     LOG_TRACE("Start");
+    AssetPreloader::PreloadAllAnimations();
+
     LevelConfig config = LevelRepository::GetLevel(1);
 
     // 1. 建立場景實體
