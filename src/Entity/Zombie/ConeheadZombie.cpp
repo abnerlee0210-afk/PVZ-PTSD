@@ -9,8 +9,8 @@ ConeheadZombie::ConeheadZombie(int row, const glm::vec2& position)
         row,
         position,
         20,
-        20,
-        18.0f) {
+        1,
+        10.0f) {
     InitAnimations();
     m_AnimController.SetState(ZombieAnimState::WALK);
     SetDrawable(m_AnimController.GetCurrentAnimation());

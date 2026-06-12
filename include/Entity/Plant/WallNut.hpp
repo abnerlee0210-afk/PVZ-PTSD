@@ -23,7 +23,7 @@ protected:
     void InitAnimations() override;
     void UpdateAnimationState() override;
 private:
-    int MAX_HP = 400;
+    int MAX_HP = 40;
 };
 
 #endif

@@ -12,7 +12,7 @@ RepeaterPea::RepeaterPea(int row, int col, const glm::vec2& position)
         row,
         col,
         position,
-        100,
+        5,
         200
     ) {
     InitAnimations();

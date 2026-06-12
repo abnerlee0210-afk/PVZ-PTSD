@@ -11,8 +11,8 @@ BucketheadZombie::BucketheadZombie(int row, const glm::vec2& position)
         row,
         position,
         50,
-        40,
-        18.0f
+        1,
+        10.0f
     ) {
     InitAnimations();
     m_AnimController.SetState(ZombieAnimState::WALK);

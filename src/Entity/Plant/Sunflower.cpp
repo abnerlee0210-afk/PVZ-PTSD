@@ -12,7 +12,7 @@ Sunflower::Sunflower(int row, int col, const glm::vec2& position)
         row,
         col,
         position,
-        100,   // HP
+        5,   // HP
         50     // cost
     ),
       m_GenerateSunTimer(0.0f),

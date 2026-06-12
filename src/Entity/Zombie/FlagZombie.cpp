@@ -10,9 +10,9 @@ FlagZombie::FlagZombie(int row, const glm::vec2& position)
         RESOURCE_DIR "/graphics/Zombies/FlagZombie/FlagZombie/FlagZombie_0.png",
         row,
         position,
-        12,
-        20,
-        18.0f
+        13.5,
+        1,
+        13.0f
     ) {
     InitAnimations();
     m_AnimController.SetState(ZombieAnimState::WALK);

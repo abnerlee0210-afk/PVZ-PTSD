@@ -31,7 +31,7 @@ private:
     glm::vec2 m_JumpStartPos;
     glm::vec2 m_JumpTargetPos;
 
-    float m_NormalSpeed = 18.0f;
+    float m_NormalSpeed = 10.0f;
     float m_PoleSpeed = 30.0f;
 
 };

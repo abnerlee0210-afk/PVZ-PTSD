@@ -11,9 +11,9 @@ PoleVaultingZombie::PoleVaultingZombie(int row, const glm::vec2& position)
         RESOURCE_DIR "/graphics/Zombies/PoleVaultingZombie/PoleVaultingZombie_run/1.png",
         row,
         position,
-        30,
-        30,
-        30.0f
+        25,
+        1,
+        25.0f
     ) {
     m_Speed = m_PoleSpeed;
     InitAnimations();

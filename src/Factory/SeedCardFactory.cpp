@@ -10,7 +10,7 @@ std::shared_ptr<SeedCard> SeedCardFactory::CreateSeedCard(PlantType type, const 
             RESOURCE_DIR "/graphics/Cards/card_peashooter.png",
             PlantType::PEASHOOTER,
             100,
-            5.0f,
+            7.5f,
             position
         );
 
@@ -19,7 +19,7 @@ std::shared_ptr<SeedCard> SeedCardFactory::CreateSeedCard(PlantType type, const 
             RESOURCE_DIR "/graphics/Cards/card_sunflower.png",
             PlantType::SUNFLOWER,
             50,
-            5.0f,
+            7.5f,
             position
         );
 
@@ -28,7 +28,7 @@ std::shared_ptr<SeedCard> SeedCardFactory::CreateSeedCard(PlantType type, const 
             RESOURCE_DIR "/graphics/Cards/card_cherrybomb.png",
             PlantType::CHERRY_BOMB,
             150,
-            20.0f,
+            50.0f,
             position
         );
 
@@ -37,7 +37,7 @@ std::shared_ptr<SeedCard> SeedCardFactory::CreateSeedCard(PlantType type, const 
             RESOURCE_DIR "/graphics/Cards/card_wallnut.png",
             PlantType::WALL_NUT,
             50,
-            10.0f,
+            30.0f,
             position
         );
 
@@ -46,7 +46,7 @@ std::shared_ptr<SeedCard> SeedCardFactory::CreateSeedCard(PlantType type, const 
             RESOURCE_DIR "/graphics/Cards/card_potatomine.png",
             PlantType::POTATO_MINE,
             25,
-            8.0f,
+            30.0f,
             position
         );
 
@@ -64,7 +64,7 @@ std::shared_ptr<SeedCard> SeedCardFactory::CreateSeedCard(PlantType type, const 
             RESOURCE_DIR "/graphics/Cards/card_chomper.png",
             PlantType::CHOMPER,
             150,
-            7.0f,
+            7.5f,
             position
         );
 
@@ -73,7 +73,7 @@ std::shared_ptr<SeedCard> SeedCardFactory::CreateSeedCard(PlantType type, const 
             RESOURCE_DIR "/graphics/Cards/card_repeaterpea.png",
             PlantType::REPEATER_PEA,
             200,
-            7.0f,
+            7.5f,
             position
         );
 

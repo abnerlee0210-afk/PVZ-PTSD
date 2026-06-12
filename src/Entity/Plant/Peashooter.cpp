@@ -13,7 +13,7 @@ Peashooter::Peashooter(int row, int col, const glm::vec2& position)
         row,
         col,
         position,
-        100,
+        4,
         100
     ),
       m_ShootTimer(0.0f),

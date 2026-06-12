@@ -10,7 +10,7 @@ WallNut::WallNut(int row, int col, const glm::vec2& position)
         row,
         col,
         position,
-        400,   // HP，可再調高
+        40,   // HP，可再調高
         50     // cost
     ) {
     InitAnimations();
